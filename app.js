@@ -1,27 +1,65 @@
-const gpxFile = "Routes.gpx";
+// HTML Elements
 const readGpxBtn = document.getElementById("read-gpx-btn");
 const rawText = document.getElementById("gpx-raw");
 
+// Variables
+const gpxFile = "Strava.gpx";
 let gpxText;
 let parser;
 let xhr = new XMLHttpRequest();
-let trackPointStart = /<trkpt/;
-let trackPointEnd = /<\/trkpt>/;
-let trackPoint = /(<trkpt)((.|\n)*?)(<\/trkpt>)/g;
 let trackPointList;
 
-
+// Event Listeners
 readGpxBtn.addEventListener("click", readGpx);
 
+
+/* Notes
+1. Figure out a way to execute readGpx function asynchronously.
+*/
+
+// Script body
+class TrackPoint {
+	constructor(id, lat, lon, ele, time) {
+		this.id = id;
+		this.lat = lat;
+		this.lon = lon;
+		this.ele = ele;
+		this.time = time;
+		this.speed = 0;
+	}
+	
+	distance(lat1, lon1, ele1, lat2, lon2, ele2) {}
+	
+	speed(distance, time) {}
+};
+
 function readGpx() {
-  xhr.open("GET", gpxFile, false);
+	let trackPointObjects = [];
+	
+	xhr.open("GET", gpxFile, false);
   xhr.send();
-
-	rawText.innerHTML = xhr.responseText;
-
-	trackPointList = xhr.responseText.match(trackPoint);
-	// const result = trackPoint.exec(trackPointList);
+	
+	
+	let trackPointTemplate = /(<trkpt)((.|\n)*?)(<\/trkpt>)/g;
+	trackPointList = xhr.responseText.match(trackPointTemplate); // We divided GPX into individual trackpoints.
 	console.log(trackPointList);	
+	// Now we need to extract data from trackpoints into elements.
+	let latTemplate = /(lat=")((.|\n)*?)(")/;
+	let lonTemplate = /(lon=")((.|\n)*?)(")/;
+
+	for ( i=0; i<trackPointList.length; i++ ) {
+		let currentTrackpoint = new TrackPoint;
+		let currentTrackpointRaw = trackPointList[i];
+
+		currentTrackpoint.id = i;
+		currentTrackpoint.lat = currentTrackpointRaw.match(latTemplate)[2];
+		currentTrackpoint.lon = currentTrackpointRaw.match(lonTemplate)[2];
+
+		trackPointObjects.push(currentTrackpoint);
+	}
+
+	rawText.innerHTML = trackPointList;
+	console.log(trackPointObjects);
 }
 
 
