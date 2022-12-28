@@ -6,11 +6,10 @@ const rawText = document.getElementById("gpx-raw");
 const gpxFile = "Routes.gpx";
 let gpxText;
 let parser;
-let xhr = new XMLHttpRequest();
 let trackPointList;
 
 // Event Listeners
-readGpxBtn.addEventListener("click", readGpx);
+readGpxBtn.addEventListener('click', fetchDataFromGpx);
 
 
 /* Notes
@@ -53,7 +52,6 @@ class TrackPoint {
 
 		date = time.match(timeTemplate);
 		date = new Date(Date.UTC(date[0], date[1]-1, date[2], date[3], date[4], date[5]));
-		console.log(date);
 
 		return date;
 	}
@@ -71,16 +69,20 @@ class TrackPoint {
 	}
 };
 
-function readGpx() {
+async function fetchDataFromGpx(gpxFile) {
+	console.log('async function started.')
+	let response = await fetch(gpxFile);
+	let gpxContent = await response.text();
+	let processedGpx = await processGpx(gpxContent);
+	console.log(processedGpx);
+	console.log('async function finished.')
+}
+
+function processGpx(content) {
 	let trackPointObjects = [];
 	
-	xhr.open("GET", gpxFile, false);
-  xhr.send();
-	
-	
 	let trackPointTemplate = /(<trkpt)((.|\n)*?)(<\/trkpt>)/g;
-	trackPointList = xhr.responseText.match(trackPointTemplate); // We divided GPX into individual trackpoints.
-	console.log(trackPointList);	
+	trackPointList = content.match(trackPointTemplate); // We divided GPX into individual trackpoints.
 	// Now we need to extract data from trackpoints into elements.
 	let latTemplate = /(lat=")((.|\n)*?)(")/;
 	let lonTemplate = /(lon=")((.|\n)*?)(")/;
@@ -121,11 +123,16 @@ function readGpx() {
 	}
 
 	rawText.innerHTML = JSON.stringify(trackPointObjects);
-	console.log(trackPointObjects);
 }
 
 
-// function extractTrackPoints(stringToProcess, stringStart, stringFinish) {
-// 	return stringToProcess.match()
-// }
+fetch(gpxFile)
+	.then(response => response.text())
+	.then(data => processGpx(data))
+
+
+
+function extractTrackPoints(stringToProcess, stringStart, stringFinish) {
+	return stringToProcess.match()
+}
 
