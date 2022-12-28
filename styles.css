@@ -1,6 +1,19 @@
 body {
-    font-family: 'Poppins', sans-serif;}
+  font-family: 'Poppins', sans-serif;
+}
+
+#data-cluster {
+  display: flex;
+  gap: 1em;
+}
+
+.data-container {
+  height: 500px;
+  display: block;
+  width: 30vw;
+  overflow: scroll;
+}
 
 h1 {
-    font-size: 2rem;
+  font-size: 2rem;
 }
