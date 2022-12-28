@@ -3,7 +3,7 @@ const readGpxBtn = document.getElementById("read-gpx-btn");
 const rawText = document.getElementById("gpx-raw");
 
 // Variables
-const gpxFile = "Strava.gpx";
+const gpxFile = "Routes.gpx";
 let gpxText;
 let parser;
 let xhr = new XMLHttpRequest();
@@ -25,8 +25,9 @@ class TrackPoint {
 		this.lon = lon;
 		this.ele = ele;
 		this.time = time;
-		this.dist; // TO BE DELETED
-		this.speed;
+		this.dist = 0; // TO BE DELETED
+		this.speed = 0;
+		this.interval = 0;
 	}
 	
 	distance(lat1, lon1, lat2, lon2) {
@@ -46,23 +47,27 @@ class TrackPoint {
 		return d;
 	}
 
-	// timeToDate(time) {
-	// 	let timeTemplate = /[0-9.]{1,}/g;
-	// 	let date;
+	timeToDate(time) {
+		let timeTemplate = /[0-9.]{1,}/g;
+		let date;
 
-	// 	date = time.match(timeTemplate);
-	// 	date = new Date(Date.UTC(date[0], date[1]-1, date[2], date[3], date[4], date[5]));
-	// 	console.log(date);
+		date = time.match(timeTemplate);
+		date = new Date(Date.UTC(date[0], date[1]-1, date[2], date[3], date[4], date[5]));
+		console.log(date);
 
-	// 	return date;
-	// }
+		return date;
+	}
 	
-	speedBetweenPoints(distance, time) {
+	speedBetweenPoints(distance, interval) {
 		let speed;
 
-		speed = distance / time;
+		if (interval != 0) {
+			speed = distance / interval;
+		} else {
+			speed = 0;
+		}
 
-		return
+		return speed;
 	}
 };
 
@@ -92,20 +97,24 @@ function readGpx() {
 		currentTrackpoint.lon = currentTrackpointRaw.match(lonTemplate)[2];
 		currentTrackpoint.ele = currentTrackpointRaw.match(eleTemplate)[2];
 		currentTrackpoint.time = currentTrackpointRaw.match(timeTemplate)[2];
-		// currentTrackpoint.time = currentTrackpoint.timeToDate(currentTrackpoint.time);
+		currentTrackpoint.time = currentTrackpoint.timeToDate(currentTrackpoint.time);
+
+		if (i>0) {
+			currentTrackpoint.interval = (currentTrackpoint.time - previousTrackpoint.time)/1000;
+		} else {
+			currentTrackpoint.interval = 0;
+		}
+
 		if (i>0) {
 			currentTrackpoint.dist = currentTrackpoint.distance(
 			previousTrackpoint.lat, previousTrackpoint.lon, currentTrackpoint.lat, currentTrackpoint.lon).toFixed(3);
 		} else {
 			currentTrackpoint.dist = 0;
 		}
-		// if (i>0) {
-		// 	currentTrackpoint.dist = currentTrackpoint.distance(
-		// 	previousTrackpoint.lat, previousTrackpoint.lon, currentTrackpoint.lat, currentTrackpoint.lon).toFixed(3);
-		// } else {
-		// 	currentTrackpoint.dist = 0;
-		// }
-		
+
+		currentTrackpoint.speed = currentTrackpoint.speedBetweenPoints(
+			currentTrackpoint.dist, currentTrackpoint.interval
+		).toFixed(3); 		
 
 		trackPointObjects.push(currentTrackpoint);
 		previousTrackpoint = currentTrackpoint;
