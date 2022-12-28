@@ -12,6 +12,9 @@ let trackPointObjects = [];
 let statList = [];
 let stopTime = 10; // Time interval [s] when we consider user stopped.
 let stopSpeed = 0.3; // Slowest speed [m/s] considered a movement.
+let eleGain = 0;
+let eleLoss = 0;
+
 
 // Event Listeners
 readGpxBtn.addEventListener('click', fetchDataFromGpx);
@@ -19,14 +22,14 @@ readGpxBtn.addEventListener('click', fetchDataFromGpx);
 
 /* Todo list
 	- Create a function to generate overall statistics:
-		- total distance
+		- DONE total distance
 		- elevation gain
 		- elevation loss
 		- steepest gradient
 		- average gradient
 		- max speed
 		- average speed
-		- moving time
+		- DONE moving time
 		- total time
 	- Create a function to generate a line chart from elevation data.
 	- Create a function to generate a pie chart of time at gradients from elevation and time data.
@@ -38,11 +41,43 @@ readGpxBtn.addEventListener('click', fetchDataFromGpx);
 */
 
 
+// General functions
+function secondsToMinutesAndSeconds(sec) {
+	let result;
+	sec = Number(sec);
+	let hours = Math.floor(sec / 3600);
+	let minutes = Math.floor(sec % 3600 / 60);
+	let seconds = Math.floor(sec % 3600 % 60);
+	
+	if (minutes == 0) {
+		minutes = `00`
+	} else if (minutes < 10) {
+		minutes = `0${minutes}`
+	}
+	
+	if (seconds === 0) {
+		seconds = `00`
+	} else if (seconds < 10) {
+		seconds = `0${seconds}`
+	}
+	
+	result = `${hours}:${minutes}:${seconds}`;
+	return result;
+}
+
+function metersToKm(m) {
+	let km;
+
+	km = (m/1000).toFixed(2);
+
+	return km;
+}
+
+console.log(metersToKm(15579.870));
+
+console.log(secondsToMinutesAndSeconds(3300));
 
 // Script body
-
-// General functions
-
 class TrackPoint {
 	constructor(id, lat, lon, ele, time) {
 		this.id = id;
@@ -50,9 +85,10 @@ class TrackPoint {
 		this.lon = lon;
 		this.ele = ele;
 		this.time = time;
-		this.dist = 0; // TO BE DELETED?
+		this.dist = 0;
 		this.speed = 0;
 		this.interval = 0;
+		this.eleDiff = 0;
 	}
 	
 	distance(lat1, lon1, lat2, lon2) {
@@ -92,6 +128,14 @@ class TrackPoint {
 		}
 
 		return speed;
+	}
+
+	elevationDifference(ele1, ele2) {
+		let eleDiff = 0;
+
+		eleDiff = ele2 - ele1;
+
+		return eleDiff;
 	}
 };
 
@@ -152,7 +196,14 @@ function processGpx(content) {
 
 		currentTrackpoint.speed = currentTrackpoint.speedBetweenPoints(
 			currentTrackpoint.dist, currentTrackpoint.interval
-		).toFixed(3); 		
+		).toFixed(3);
+
+		if (i>0) {
+			currentTrackpoint.eleDiff = currentTrackpoint.elevationDifference(
+				previousTrackpoint.ele, currentTrackpoint.ele).toFixed(2);
+		} else {
+			currentTrackpoint.eleDiff = 0;
+		}
 
 		trackPointObjects.push(currentTrackpoint);
 		previousTrackpoint = currentTrackpoint;
@@ -194,9 +245,29 @@ class Statistic {
 		return movingTime;
 	}
 
-	addStat(stat) {
-		statList.push(`
-			<li>${stat.name}: ${stat.value}</li>
+	calcElevationGain(trackPointObjects) {
+		for (i=0; i<trackPointObjects.length; i++) {
+			if (trackPointObjects[i].eleDiff >= 0) {
+				eleGain = eleGain + Number(trackPointObjects[i].eleDiff);
+			} 
+		}
+		eleGain = Number(eleGain);
+		return eleGain.toFixed(0);
+	};
+
+	calcElevationLoss(trackPointObjects) {
+		for (i=0; i<trackPointObjects.length; i++) {
+			if (trackPointObjects[i].eleDiff < 0) {
+				eleLoss = eleLoss + Number(trackPointObjects[i].eleDiff);
+			}
+		}
+		eleLoss = Number(eleLoss);
+		return eleLoss.toFixed(0);
+	}
+
+	addStat(stat, unit) {
+		statList = (`${statList}
+			<li>${stat.name}: ${stat.value} ${unit}</li>
 		`);
 	}
 }
@@ -206,25 +277,37 @@ function calculateStats(trackPointObjects) {
 	// Total distance
 		let totalDistance = new Statistic;
 		totalDistance.name = 'Distance';
-		totalDistance.value = totalDistance.calcDist(trackPointObjects);
-		totalDistance.addStat(totalDistance);
-		console.log(totalDistance);
+		totalDistance.value = metersToKm(
+			totalDistance.calcDist(trackPointObjects));
+		totalDistance.addStat(totalDistance, 'km');
 
 	// Moving time
 		let movingTime = new Statistic;
 		movingTime.name = 'Moving time';
-		movingTime.value = movingTime.calcMovingTime(trackPointObjects);
-		movingTime.addStat(movingTime);
-		console.log(movingTime);
+		movingTime.value = secondsToMinutesAndSeconds(
+			movingTime.calcMovingTime(trackPointObjects));		
+		movingTime.addStat(movingTime, '');
+
+	// Elevation gain
+		let elevationGain  = new Statistic;
+		elevationGain.name = 'Elevation Gain';
+		elevationGain.value = elevationGain.calcElevationGain(trackPointObjects);
+		elevationGain.addStat(elevationGain, 'm');
+
+	// Elevation loss
+		let elevationLoss  = new Statistic;
+		elevationLoss.name = 'Elevation Loss';
+		elevationLoss.value = elevationLoss.calcElevationLoss(trackPointObjects);
+		elevationLoss.addStat(elevationLoss, 'm');
 
 	console.log('stat calculation ended.')
 
 }
 
 function displayAllStats() {
-	rawText.innerHTML = JSON.stringify(trackPointObjects);
+	// rawText.innerHTML = JSON.stringify(trackPointObjects);
+	console.log(trackPointObjects);
 	calculateStats(trackPointObjects);
-	console.log(statList);
 	stats.innerHTML = statList;
 	// stats.innerHTML;
 }

@@ -10,7 +10,7 @@ body {
 .data-container {
   height: 500px;
   display: block;
-  width: 30vw;
+  width: 50vw;
   overflow: scroll;
 }
 
