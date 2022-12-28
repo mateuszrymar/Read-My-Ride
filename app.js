@@ -3,7 +3,7 @@ const readGpxBtn = document.getElementById("read-gpx-btn");
 const rawText = document.getElementById("gpx-raw");
 
 // Variables
-const gpxFile = "Routes.gpx";
+const gpxFile = "Strava.gpx";
 let gpxText;
 let parser;
 let trackPointList;
@@ -69,16 +69,24 @@ class TrackPoint {
 	}
 };
 
-async function fetchDataFromGpx(gpxFile) {
-	console.log('async function started.')
-	let response = await fetch(gpxFile);
-	let gpxContent = await response.text();
-	let processedGpx = await processGpx(gpxContent);
-	console.log(processedGpx);
-	console.log('async function finished.')
+function fetchDataFromGpx() {
+	console.log('fetchDataFromGpx function started.')
+	const fetchPromise = fetch(gpxFile);
+
+	fetchPromise
+		.then((response) => {
+			if (!response.ok) {
+				throw new Error(`HTTP error: ${response.status}`);
+			}
+			return response.text();
+		})
+		.then((data) => {
+			processGpx(data);
+		});
 }
 
 function processGpx(content) {
+	console.log('processGPX function started.')
 	let trackPointObjects = [];
 	
 	let trackPointTemplate = /(<trkpt)((.|\n)*?)(<\/trkpt>)/g;
@@ -126,13 +134,10 @@ function processGpx(content) {
 }
 
 
-fetch(gpxFile)
-	.then(response => response.text())
-	.then(data => processGpx(data))
 
 
 
-function extractTrackPoints(stringToProcess, stringStart, stringFinish) {
-	return stringToProcess.match()
-}
+// function extractTrackPoints(stringToProcess, stringStart, stringFinish) {
+// 	return stringToProcess.match()
+// }
 
