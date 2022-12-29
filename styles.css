@@ -11,7 +11,7 @@ body {
   height: 500px;
   display: block;
   width: 50vw;
-  overflow: scroll;
+  overflow: hidden;
 }
 
 h1 {

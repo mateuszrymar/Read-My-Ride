@@ -1,7 +1,7 @@
 // HTML Elements
 const readGpxBtn = document.getElementById("read-gpx-btn");
-const rawText = document.getElementById("gpx-raw");
-const stats = document.getElementById("stats");
+const performanceObject = document.getElementById("performance");
+const statisticsObject = document.getElementById("stats");
 
 // Variables
 const gpxFile = "Strava.gpx";
@@ -10,6 +10,7 @@ let parser;
 let trackPointList;
 let trackPointObjects = [];
 let statList = [];
+let performanceList = [];
 let stopTime = 10; // Time interval [s] when we consider user stopped.
 let stopSpeed = 0.3; // Slowest speed [m/s] considered a movement.
 let eleGain = 0;
@@ -23,14 +24,17 @@ readGpxBtn.addEventListener('click', fetchDataFromGpx);
 /* Todo list
 	- Create a function to generate overall statistics:
 		- DONE total distance
-		- elevation gain
-		- elevation loss
+		- DONE elevation gain
+		- DONE elevation loss
 		- steepest gradient
 		- average gradient
 		- max speed
 		- average speed
 		- DONE moving time
 		- total time
+	- Add performance insights
+	- Add drag & drop functionality.
+	- Design a UI in Figma.
 	- Create a function to generate a line chart from elevation data.
 	- Create a function to generate a pie chart of time at gradients from elevation and time data.
 	- Function to create additional power info: takes weights as input, outputs:
@@ -38,10 +42,12 @@ readGpxBtn.addEventListener('click', fetchDataFromGpx);
 		- max power
 		- calories burnt
 	- Save JSON to local storage
+	- Add a progress bar.
+	- Add a comparison functionality.
 */
 
 
-// General functions
+// Utilities section //////////////////////////////
 function secondsToMinutesAndSeconds(sec) {
 	let result;
 	sec = Number(sec);
@@ -73,11 +79,44 @@ function metersToKm(m) {
 	return km;
 }
 
-console.log(metersToKm(15579.870));
 
-console.log(secondsToMinutesAndSeconds(3300));
 
-// Script body
+
+// Performance measurement /////////////////////////////
+
+class PerformanceStat {
+	constructor(name, value) {
+		this.name = name;
+		this.value = value;
+	}
+
+	startTimer() {
+		let start = Date.now();
+		return start;
+	}
+
+	endTimer() {
+		let end = Date.now();
+		return end;
+	}
+
+	evaluateTimer(performanceStat, startTimer, endTimer) {
+		performanceStat.value = endTimer - startTimer;
+	}
+
+	addStat(stat, unit) {
+		performanceList = (`${performanceList}
+			<li>${stat.name}: ${stat.value} ${unit}</li>
+		`);
+	}
+}
+
+let gpxProcessingTime = new PerformanceStat;
+let gpxProcessingStart;
+let gpxProcessingEnd;
+
+
+// Trackpoints section //////////////////////////////
 class TrackPoint {
 	constructor(id, lat, lon, ele, time) {
 		this.id = id;
@@ -159,7 +198,8 @@ function fetchDataFromGpx() {
 }	
 
 function processGpx(content) {
-	console.log('processGPX function started.')
+	console.log('processGPX function started.');
+	gpxProcessingStart = gpxProcessingTime.startTimer();
 	
 	let trackPointTemplate = /(<trkpt)((.|\n)*?)(<\/trkpt>)/g;
 	trackPointList = content.match(trackPointTemplate); // We divided GPX into individual trackpoints.
@@ -211,6 +251,12 @@ function processGpx(content) {
 
 	return trackPointObjects;
 }
+
+
+
+
+
+// Statistics section //////////////////////////////
 
 class Statistic {
 	constructor(name, value) {
@@ -305,13 +351,31 @@ function calculateStats(trackPointObjects) {
 }
 
 function displayAllStats() {
-	// rawText.innerHTML = JSON.stringify(trackPointObjects);
 	console.log(trackPointObjects);
 	calculateStats(trackPointObjects);
-	stats.innerHTML = statList;
-	// stats.innerHTML;
+	statisticsObject.innerHTML = statList;
+	gpxProcessingEnd = gpxProcessingTime.endTimer();
+	displayPerformance();
 }
 
+
+
+
+
+
+// Performance section /////////////////////////////
+
+
+function displayPerformance() {
+	// Calculate statistics here
+	gpxProcessingTime.name = 'GPX processing time';
+	gpxProcessingTime.evaluateTimer(
+		gpxProcessingTime, gpxProcessingStart, gpxProcessingEnd);
+	console.log(gpxProcessingTime, gpxProcessingStart, gpxProcessingEnd);
+	gpxProcessingTime.addStat(gpxProcessingTime, 'ms')
+	performanceObject.innerHTML = performanceList;
+};
+	
 
 
 
