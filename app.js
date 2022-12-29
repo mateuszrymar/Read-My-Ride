@@ -32,7 +32,7 @@ readGpxBtn.addEventListener('click', fetchDataFromGpx);
 		- average speed
 		- DONE moving time
 		- total time
-	- Add performance insights
+	- DONE Add performance insights
 	- Add drag & drop functionality.
 	- Design a UI in Figma.
 	- Create a function to generate a line chart from elevation data.

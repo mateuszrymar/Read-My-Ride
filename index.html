@@ -10,18 +10,45 @@
   <link rel="icon" type="image/x-icon" href="images/favicon.ico">
 </head>
 <body>
-  <h1>Read my ride</h1>
-  <button id="read-gpx-btn">Read GPX File</button>
-	<div id="data-cluster">
-    <div class="data-container">
-      <h3>Statistics:</h3>
-      <ul id="stats"></ul>
+  <header id="page-header">
+    <h1>read my ride</h1>
+    <p id="header-description" class="medium-text">This tool analyzes your rides.</p>
+  </header>
+  <article id="upload-tile">
+    <div>
+      <button id="read-gpx-btn">+</button>
+      <div>
+        <h3>Upload your .gpx file</h3>
+        <p>...or use one of our examples</p>
+      </div>
     </div>
-		<div class="data-container">
+    <footer>
+      <a>
+        <img href="images/mapicon.svg">
+        short.gpx
+      </a>
+      <a>
+        <img href="images/mapicon.svg">
+        med.gpx
+      </a>
+      <a>
+        <img href="images/mapicon.svg">
+        long.gpx
+      </a>
+    </footer>
+  </article>
+	<main id="analysis-tile">
+    <aside  id="left-sidebar" class="data-container">
+      <div id="statistics">
+        <h3>Statistics:</h3>
+        <table id="stats"></table>
+      </div>
+    </aside>
+		<aside class="data-container">
 			<h3>Performance:</h3>
 			<ul id="performance"></ul>
-		</div>
-	</div>
+    </aside>
+	</main>
   <script src="app.js" defer></script>
 </body>
 </html>

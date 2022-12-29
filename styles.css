@@ -1,5 +1,126 @@
-body {
+:root {
+  --grey-10: #EDE8E5;
+  --grey-20: #CAC2BB;
+  --grey-40: #9D958E;
+  --grey-70: #746E68;
+  --grey-90: #1F1E1A;
+  --green-20: #BCD2D1;
+  --green-40: #6EABA7;
+  --green-70: #26847E;
+  --orange-20: #E3CDBF;
+  --orange-40: #D29B7B;
+  --orange-70: #C65716;
+
   font-family: 'Poppins', sans-serif;
+  font-size: 16px; 
+}
+
+.header, h1 {
+  display: flex;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 3rem;
+  line-height: 1;
+  margin: 0;
+  color: var(--grey-40);
+}
+
+#page-header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  width: 88vw;
+  height: 81px;
+  left: 24px;
+  top: 14px;
+}
+
+#header-description {
+  display: flex;
+  margin: 0;
+  position: relative;
+  color: var(--grey-40);
+  bottom: 0;
+}
+
+.xl-text {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 28px;
+  line-height: 42px;
+  display: flex;
+  align-items: center;  
+  color: var(--grey-90);
+}
+
+.large-text{
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 27px;
+  display: flex;
+  align-items: center;  
+  color: var(--grey-90);
+}
+
+
+.medium-underlined-text{
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 18px;
+  display: flex;
+  align-items: center;
+  text-decoration-line: underline;
+  color: var(--grey-90);
+}
+
+.medium-text{
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 18px;
+  display: flex;
+  align-items: center;
+  color: var(--grey-90);
+}
+
+.small-text{
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 8px;
+  line-height: 12px;
+  display: flex;
+  align-items: center;
+  color: var(--grey-90);
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  background-image: url(images/pexels-jan-kopřiva-5756722.jpg);
+  /* background-position: 50% 50%; */
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+#upload-tile{
+  background-color: var(--grey-10);
+  position: absolute;
+  bottom: calc(calc(100vw - 18rem) / 2);
+  left: calc(calc(100vw - 18rem) / 2);
+  width: 16rem;
+  height: auto;
+  border-radius: 2.625rem;
+  padding: 1rem;
 }
 
 #data-cluster {
@@ -14,6 +135,7 @@ body {
   overflow: hidden;
 }
 
-h1 {
-  font-size: 2rem;
+#analysis-tile {
+  display: none;
 }
+
