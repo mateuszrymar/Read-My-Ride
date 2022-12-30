@@ -16,15 +16,14 @@ let stopTime = 10; // Time interval [s] when we consider user stopped.
 let stopSpeed = 0.3; // Slowest speed [m/s] considered a movement.
 let eleGain = 0;
 let eleLoss = 0;
+let event;
 
 
 // Event Listeners
 // readGpxBtn.addEventListener('click', fetchDataFromGpx);
-readGpxBtn.addEventListener('click', uploadFile);
+readGpxBtn.addEventListener('click', uploadClicked);
+uploadInput.addEventListener('change', handleFileSelect, false);
 
-function uploadFile(){
-	uploadInput.click();
-}
 /* Todo list
 	- Create a function to generate overall statistics:
 		- DONE total distance
@@ -36,9 +35,9 @@ function uploadFile(){
 		- average speed
 		- DONE moving time
 		- total time
-	- DONE Add performance insights
-	- Add drag & drop functionality.
-	- Design a UI in Figma.
+	- Display an information to the user when file upload was cancelled.
+	- Display an information to the user uploaded file had a wrong extension.
+	- Check if GPX file is really of an XML / GPX format.
 	- Create a function to generate a line chart from elevation data.
 	- Create a function to generate a pie chart of time at gradients from elevation and time data.
 	- Function to create additional power info: takes weights as input, outputs:
@@ -50,6 +49,9 @@ function uploadFile(){
 	- Add a comparison functionality.
 */
 
+/* Known bugs
+
+*/
 
 // Utilities section //////////////////////////////
 function secondsToMinutesAndSeconds(sec) {
@@ -182,6 +184,21 @@ class TrackPoint {
 	}
 };
 
+function processDataFromUpload(data) {
+	console.log('processDataFromUpload function started.')
+	const processPromise = Promise.resolve(processGpx(data));
+
+	processPromise
+		.then(() => {
+			let dataToSave = JSON.stringify(trackPointObjects);
+			console.log(dataToSave);
+			localStorage.setItem('gpx', dataToSave);
+		})				
+		.then(() => {
+			displayAllStats()
+		})
+}	
+
 function fetchDataFromGpx() {
 	console.log('fetchDataFromGpx function started.')
 	const fetchPromise = fetch(gpxFile);
@@ -256,6 +273,32 @@ function processGpx(content) {
 	return trackPointObjects;
 }
 
+// File Upload
+function uploadClicked(){
+	uploadInput.click();
+}
+
+function handleFileSelect(event) {
+	console.log('handleFileSelect');
+  const inputFile = event.target.files[0].name;
+	const extension = inputFile.split('.')[1];
+	if (extension != 'gpx') {
+		console.log('This tool accepts only .gpx files.');
+		return;
+	}	
+  const reader = new FileReader();
+  reader.onload = handleFileLoad;
+  reader.readAsText(event.target.files[0]);
+}
+
+function handleFileLoad(event) {
+  console.log(event);
+	processDataFromUpload(event.target.result);
+}
+
+
+
+
 
 
 // STATE CHANGE ////////////////////////////////////
@@ -279,7 +322,6 @@ class Statistic {
 			distance = sum + Number(trackPointObjects[i].dist);
 		}
 		distance = distance.toFixed(3);
-		console.log(distance);
 		return distance;
 	}
 
@@ -294,7 +336,6 @@ class Statistic {
 				movingTime = sum;
 			}
 		}
-		console.log(movingTime); // in seconds
 		return movingTime;
 	}
 
@@ -378,7 +419,7 @@ function displayPerformance() {
 	gpxProcessingTime.name = 'GPX processing time';
 	gpxProcessingTime.evaluateTimer(
 		gpxProcessingTime, gpxProcessingStart, gpxProcessingEnd);
-	console.log(gpxProcessingTime, gpxProcessingStart, gpxProcessingEnd);
+	console.log(gpxProcessingTime);
 	gpxProcessingTime.addStat(gpxProcessingTime, 'ms')
 	performanceObject.innerHTML = performanceList;
 };
