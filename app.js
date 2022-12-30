@@ -1,10 +1,11 @@
 // HTML Elements
-const readGpxBtn = document.getElementById("read-gpx-btn");
+const readGpxBtn = document.getElementById("upload-btn");
+const uploadInput = document.getElementById("upload-input");
 const performanceObject = document.getElementById("performance");
 const statisticsObject = document.getElementById("stats");
 
 // Variables
-const gpxFile = "Strava.gpx";
+let gpxFile = "Strava.gpx";
 let gpxText;
 let parser;
 let trackPointList;
@@ -18,9 +19,12 @@ let eleLoss = 0;
 
 
 // Event Listeners
-readGpxBtn.addEventListener('click', fetchDataFromGpx);
+// readGpxBtn.addEventListener('click', fetchDataFromGpx);
+readGpxBtn.addEventListener('click', uploadFile);
 
-
+function uploadFile(){
+	uploadInput.click();
+}
 /* Todo list
 	- Create a function to generate overall statistics:
 		- DONE total distance
@@ -254,7 +258,10 @@ function processGpx(content) {
 
 
 
-
+// STATE CHANGE ////////////////////////////////////
+function displayMapScreen() {
+	
+}
 
 // Statistics section //////////////////////////////
 
