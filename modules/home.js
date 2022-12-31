@@ -7,9 +7,11 @@ import {
 } from './utilities.js';
 
 import { uploadInput } from '../app.js';
-import { gpxFile, gpxText, parser, trackPointObjects, statList, stopTime, stopSpeed, eleGain, eleLoss, } from '../app.js';
+import { gpxFile, gpxText, parser, statList, stopTime, stopSpeed, eleGain, eleLoss, } from '../app.js';
 
 let trackPointList;
+let trackPointObjects = [];
+
 
 let gpxProcessingTime = new PerformanceStat;
 let gpxProcessingStart;
@@ -27,11 +29,18 @@ const HOME = (function () {
 	
 		processPromise
 			.then(() => {
+        localStorage.clear();
+        console.log('local storage cleared');
+      })
+			.then(() => {
 				let dataToSave = JSON.stringify(trackPointObjects);
 				localStorage.setItem('currentGpx', dataToSave);
 			})				
 			.then(() => {
-				// displayAllStats()
+        calculateGpxProcessingTime();
+        console.log(gpxProcessingTime, 'ms');
+        gpxProcessingTime.addStat(gpxProcessingTime, 'ms')
+        // performanceObject.innerHTML = performanceList;
 			})
 	}	
 	
@@ -61,7 +70,8 @@ const HOME = (function () {
 		if (extension != 'gpx') {
 			console.log('This tool accepts only .gpx files.');
 			return;
-		}	
+		}
+    trackPointObjects = [];	
 		const reader = new FileReader();
 		reader.onload = handleFileLoad;
 		reader.readAsText(event.target.files[0]);
@@ -122,9 +132,18 @@ const HOME = (function () {
 			trackPointObjects.push(currentTrackpoint);
 			previousTrackpoint = currentTrackpoint;
 		}
-	
+    
+    gpxProcessingEnd = gpxProcessingTime.endTimer();
+    console.log('processGPX function ended.');
 		return trackPointObjects;
 	}
+
+  function calculateGpxProcessingTime() {
+    gpxProcessingTime.name = 'GPX processing time';
+    gpxProcessingTime.evaluateTimer(
+      gpxProcessingTime, gpxProcessingStart, gpxProcessingEnd);
+  };
+
 
   return {
     uploadClicked,
@@ -133,8 +152,8 @@ const HOME = (function () {
     handleFileSelect,
     handleFileLoad,
     processGpx,
-    gpxProcessingStart,
-    gpxProcessingEnd
+    calculateGpxProcessingTime,
+    gpxProcessingTime,
   }	
 })();
 
