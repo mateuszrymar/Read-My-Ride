@@ -171,6 +171,7 @@ body {
 }
 
 #upload-error {
+  position: relative;
   color: var(--orange-70);
   font-weight: 700;
   z-index: 2;

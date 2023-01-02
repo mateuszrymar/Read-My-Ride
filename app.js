@@ -13,6 +13,7 @@ const DOM = {
 	file_2: document.getElementById("file-2"),
 	file_3: document.getElementById("file-3"),	
 };
+console.log(DOM);
 
 export { DOM };
 
@@ -70,8 +71,14 @@ UTIL.StateManager.createNewState(
 	'home_uploadError', 
 	DOM.uploadError, 
 	'visibility: visible',
-	' ', 
+	'',
 );
+// UTIL.StateManager.createNewState( 
+// 	'home_uploadErrorHint', 
+// 	DOM.uploadErrorHint, 
+// 	'visibility: visible',
+// 	'',
+// );
 console.log(UTIL.storedStates);
 
 
@@ -88,6 +95,10 @@ const validateUpload = () => {
 				// UTIL.StateManager.switchStates( 'home_baseState', 'home_uploadError' );
 				isUploadValid = false;
 				console.log('wrong extension');
+				UTIL.StateManager.setState('home_uploadError');
+				// setTimeout(() => {					
+				// 	UTIL.StateManager.setState('home_uploadErrorHint');
+				// }, 1000);
 
 
 				reject( Error('This tool accepts only .gpx files.') );
@@ -101,7 +112,6 @@ const validateUpload = () => {
 
 validateUpload()
 	.then (() => {
-		UTIL.StateManager.setState('home_uploadError');
 
 	})
 	.then (() => {

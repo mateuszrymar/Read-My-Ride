@@ -152,21 +152,32 @@ const UTIL = (function() {
 			stateToStore.name = stateName;
 			stateToStore.current = true;
 
-			Object.entries(elementsToStore).forEach(entry => {
+			let entry = Object.entries(elementsToStore);
+			let styleTemplate = /(style=")((.|\n)*?)(")/;
+			for ( let i = 0; i < entry.length; i++ ) {
 				let currentElement = new domElement;
-				currentElement.element = entry[1].id; 
-				currentElement.innerHTML = entry[1].innerHTML;
-				currentElement.style = entry[1].style;
 
+				currentElement.id = entry[i][1].id;				
+				currentElement.innerHtml = entry[i][1].innerHTML;
+
+				// console.log(i);
+				let currentOuterHtml = entry[i][1].outerHTML;
+				let currentStyle = currentOuterHtml.match(styleTemplate);
+				if (currentStyle !== null) {
+					currentStyle = currentStyle[2];
+				} else { currentStyle = '' }
+				currentElement.style = currentStyle;
+				
 				elementsArray.push(currentElement);
-			});
+			};
 
 			stateToStore.domElements = elementsArray;
 
 			storedStates.push(stateToStore);
+			console.log(storedStates);
 		}
 
-		function createNewState( stateName, targetElement, style, innerHTML) {
+		function createNewState( stateName, targetElement, style, innerHtml) {
 			let oldCurrentState = checkCurrentState();
 			let newCurrentState;			
 			let stateToCreate = new State;
@@ -176,14 +187,24 @@ const UTIL = (function() {
 			stateToCreate.current = false;
 
 			let nameArr = (oldCurrentState.domElements).map(
-				({ element, innerHTML, style }) => {return element});
-			let targetElementIndex = nameArr.indexOf(targetElement.id)
+				({ id, innerHtml, style }) => {return id});
+
+			// for ( let i=0; i<targetElement.length; i++ ) {
+			// 	console.log(targetElement[i].id);				
+
+			// }
+
+			// targetElement.forEach(i => {
+			// 	// let targetElementIndex = nameArr.indexOf(targetElement[i].id);
+			// 	console.log(targetElement[0].id);				
+			// });
+
+			let targetElementIndex = nameArr.indexOf(targetElement.id);
 			stateToCreate.domElements = oldCurrentState.domElements;
-			console.log(stateToCreate.domElements);
 			if (targetElementIndex !== -1) {
 				let toChange = stateToCreate.domElements[targetElementIndex];
-				stateToCreate.domElements[targetElementIndex].style = style; // TODO FIX THIS BUG!!!
-				stateToCreate.domElements[targetElementIndex].innerHTML = innerHTML;
+				stateToCreate.domElements[targetElementIndex].style = style;
+				stateToCreate.domElements[targetElementIndex].innerHtml = innerHtml;
 			};
 
 			storedStates.push(stateToCreate);
@@ -204,21 +225,27 @@ const UTIL = (function() {
 
 		function setState(newStateName) {
 			let oldState = checkCurrentState();
+			let baseState = storedStates[0];
+			console.log(oldState);
 			let newState;
 			// first we need to check if a State exists with a name === newState
 			if ( findStateIndex(newStateName) !== -1 ) {
 				newState = storedStates[findStateIndex(newStateName)];
 				console.log( oldState, newState );
-				switchStates( oldState, newState );
-				console.log( oldState, newState );
+				switchStates( oldState, baseState );
+				switchStates( baseState, newState );
 			} else throw new Error ('This state has not been specified yet.')
 
 			// now we change all DOM objects.
 			console.log(newState.domElements);
 			newState.domElements.forEach(item => {
-				console.log(item.style);
 				// document.getElementById(item.element).style = item.style;
-				document.getElementById(item.element).innerHTML = item.innerHTML;
+				if ( item.innerHtml !== '' ) {
+					document.getElementById(item.id).innerHTML = item.innerHtml;
+				};
+				if ( item.style !== '' ) {
+					document.getElementById(item.id).style = item.style;
+				};
 			});
 
 		}
