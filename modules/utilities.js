@@ -121,192 +121,194 @@ const UTIL = (function() {
 		}
 	};
 
-	const StateManager = (function() {
-		let StateManager;
-		// (!StateManager) ? console.log('no SM') : console.log('SM');
+	let StateManager;
+	// (!StateManager) ? console.log('no SM') : console.log('SM');
 
-		class State {
-			constructor( name, domElements, current ) {
-				name = this.name;
-				domElements = this.domElements;
-				current = this.current;
+	class State {
+		constructor( name, domElements, current ) {
+			name = this.name;
+			domElements = this.domElements;
+			current = this.current;
+		}
+	}
+
+	function createStateManager() {
+		console.log('state manager created.')
+		return new Object({name: 'stateManager'});
+	}
+
+	function storeDom(stateName, elementsToStore) {
+		let elementsArray = [];
+		let stateToStore = new State;
+		class domElement {
+			constructor( element, innerHtml, style ) {
+				element = this.element;
+				innerHtml = this.innerHtml;
+				style = this.style;
 			}
 		}
 
-		function createStateManager() {
-			console.log('state manager created.')
-			return new Object({name: 'stateManager'});
-		}
+		stateToStore.name = stateName;
+		stateToStore.current = true;
 
-		function storeDom(stateName, elementsToStore) {
-			let elementsArray = [];
-			let stateToStore = new State;
-			class domElement {
-				constructor( element, innerHtml, style ) {
-					element = this.element;
-					innerHtml = this.innerHtml;
-					style = this.style;
-				}
-			}
+		let entry = Object.entries(elementsToStore);
+		let styleTemplate = /(style=")((.|\n)*?)(")/;
+		for ( let i = 0; i < entry.length; i++ ) {
+			let currentElement = new domElement;
 
-			stateToStore.name = stateName;
-			stateToStore.current = true;
+			currentElement.id = entry[i][1].id;				
+			currentElement.innerHtml = entry[i][1].innerHTML;
 
-			let entry = Object.entries(elementsToStore);
-			let styleTemplate = /(style=")((.|\n)*?)(")/;
-			for ( let i = 0; i < entry.length; i++ ) {
-				let currentElement = new domElement;
+			// console.log(i);
+			let currentOuterHtml = entry[i][1].outerHTML;
+			let currentStyle = currentOuterHtml.match(styleTemplate);
+			if (currentStyle !== null) {
+				currentStyle = currentStyle[2];
+			} else { currentStyle = '' }
+			currentElement.style = currentStyle;
+			
+			elementsArray.push(currentElement);
+		};
 
-				currentElement.id = entry[i][1].id;				
-				currentElement.innerHtml = entry[i][1].innerHTML;
+		stateToStore.domElements = elementsArray;
 
-				// console.log(i);
-				let currentOuterHtml = entry[i][1].outerHTML;
-				let currentStyle = currentOuterHtml.match(styleTemplate);
-				if (currentStyle !== null) {
-					currentStyle = currentStyle[2];
-				} else { currentStyle = '' }
-				currentElement.style = currentStyle;
+		storedStates.push(stateToStore);
+		console.log(storedStates);
+	}
+
+	function createNewState( stateName, targetElements, targetStyles, innerHtml) {
+		let oldCurrentState = storedStates[0];
+		console.log(storedStates[0]);
+		console.log(targetStyles);
+		let stateToCreate = new State;
+
+		stateToCreate.name = stateName;
+		stateToCreate.current = false;
+		stateToCreate.domElements = oldCurrentState.domElements;
+
+		let nameArr = (oldCurrentState.domElements).map(
+			({ id, innerHtml, style }) => {return id});
+		
+		// console.log(nameArr);
+		// console.log(oldCurrentState.domElements);
+		// console.log(oldCurrentState.domElements.style);
+
+		// for ( let i=0; i<nameArr.length; i++ ) {
+		// 	console.log(i);
+		// 	let currentDomElement = (oldCurrentState.domElements[i]);
+		// 	let toChange = stateToCreate.domElements[i];
+
+		// }
+		
+		// This loop changes all requested elements:
+		for ( let i=0; i<targetElements.length; i++ ) {
+			console.log(i);				
+			console.log(targetElements[i].id);				
+			let targetElementsIndex = nameArr.indexOf(targetElements[i].id);
+			if (targetElementsIndex !== -1) {
+				let toChange = stateToCreate.domElements[targetElementsIndex];
+				console.log(toChange);
 				
-				elementsArray.push(currentElement);
+				if ( targetStyles[i] !== '' ) {toChange.style = targetStyles[i]};
+				console.log(toChange.style = targetStyles[i])
+				if ( innerHtml[i] !== '' ) {toChange.innerHtml = innerHtml[i]};
 			};
-
-			stateToStore.domElements = elementsArray;
-
-			storedStates.push(stateToStore);
-			console.log(storedStates);
 		}
 
-		function createNewState( stateName, targetElements, targetStyles, innerHtml) {
-			let oldCurrentState = storedStates[0];
-			console.log(storedStates[0]);
-			console.log(targetStyles);
-			let stateToCreate = new State;
+		console.log(stateToCreate);
 
-			stateToCreate.name = stateName;
-			stateToCreate.current = false;
-			stateToCreate.domElements = oldCurrentState.domElements;
+		// targetElement.forEach(i => {
+		// 	// let targetElementIndex = nameArr.indexOf(targetElement[i].id);
+		// 	console.log(targetElement[0].id);				
+		// });
 
-			let nameArr = (oldCurrentState.domElements).map(
-				({ id, innerHtml, style }) => {return id});
-			
-			// console.log(nameArr);
-			// console.log(oldCurrentState.domElements);
-			// console.log(oldCurrentState.domElements.style);
 
-			// for ( let i=0; i<nameArr.length; i++ ) {
-			// 	console.log(i);
-			// 	let currentDomElement = (oldCurrentState.domElements[i]);
-			// 	let toChange = stateToCreate.domElements[i];
+		storedStates.push(stateToCreate);
+	}
 
-			// }
-			
-			// This loop changes all requested elements:
-			for ( let i=0; i<targetElements.length; i++ ) {
-				console.log(i);				
-				console.log(targetElements[i].id);				
-				let targetElementsIndex = nameArr.indexOf(targetElements[i].id);
-				if (targetElementsIndex !== -1) {
-					let toChange = stateToCreate.domElements[targetElementsIndex];
-					console.log(toChange);
-					
-					if ( targetStyles[i] !== '' ) {toChange.style = targetStyles[i]};
-					console.log(toChange.style = targetStyles[i])
-					if ( innerHtml[i] !== '' ) {toChange.innerHtml = innerHtml[i]};
-				};
+
+	function checkCurrentState() {
+		let currentState;
+		for ( let i=0; i< storedStates.length; i++) {
+			let current = (storedStates).map(
+				({ name, current, domElements }) => {return current});	
+			if ( current[i] === true ) {
+				currentState = storedStates[i];
 			}
-
-			console.log(stateToCreate);
-
-			// targetElement.forEach(i => {
-			// 	// let targetElementIndex = nameArr.indexOf(targetElement[i].id);
-			// 	console.log(targetElement[0].id);				
-			// });
-
-
-			storedStates.push(stateToCreate);
 		}
+		return currentState;
+	}
+
+	function setState(newStateName) {
+		let oldState = checkCurrentState();
+		let baseState = storedStates[0];
+		console.log(oldState);
+		let newState;
+		// first we need to check if a State exists with a name === newState
+		if ( findStateIndex(newStateName) !== -1 ) {
+			newState = storedStates[findStateIndex(newStateName)];
+			console.log( oldState, newState );
+			switchStates( oldState, baseState );
+			switchStates( baseState, newState );
+		} else throw new Error ('This state has not been specified yet.')
+
+		// now we change all DOM objects.
+		console.log(newState.domElements);
+		newState.domElements.forEach(item => {
+			// document.getElementById(item.element).style = item.style;
+			if ( item.innerHtml !== '' ) {
+				document.getElementById(item.id).innerHTML = item.innerHtml;
+			};
+			if ( item.style !== '' ) {
+				document.getElementById(item.id).style = item.style;
+			};
+		});
+
+	}
+
+	function findStateIndex(stateName) {
+		let result;
+
+		let statesArr = (storedStates).map(
+			({ name, current, domElements }) => {return name});
+		let targetStateIndex = statesArr.indexOf(stateName);
+		result = targetStateIndex;
+
+		return result;
+	}
+
+	function switchStates( currentState, newState ) {
+		if ( findStateIndex(newState.name) !== -1 ) {
+			currentState.current = false;
+			newState.current = true;
+			currentState = newState;
+		} else throw new Error ('This state has not been specified yet.');
+		
+		return currentState;
+	}
 
 
-		function checkCurrentState() {
-			let currentState;
-			for ( let i=0; i< storedStates.length; i++) {
-				let current = (storedStates).map(
-					({ name, current, domElements }) => {return current});	
-				if ( current[i] === true ) {
-					currentState = storedStates[i];
-				}
-			}
-			return currentState;
-		}
+	// const StateManager = (function() {
 
-		function setState(newStateName) {
-			let oldState = checkCurrentState();
-			let baseState = storedStates[0];
-			console.log(oldState);
-			let newState;
-			// first we need to check if a State exists with a name === newState
-			if ( findStateIndex(newStateName) !== -1 ) {
-				newState = storedStates[findStateIndex(newStateName)];
-				console.log( oldState, newState );
-				switchStates( oldState, baseState );
-				switchStates( baseState, newState );
-			} else throw new Error ('This state has not been specified yet.')
+	// 	return {			
+	// 		getStateManager: function() {
+	// 			if (!StateManager) {
+	// 				StateManager = createStateManager();
+	// 			} else {
+	// 				return StateManager;
+	// 			}
+	// 		},
 
-			// now we change all DOM objects.
-			console.log(newState.domElements);
-			newState.domElements.forEach(item => {
-				// document.getElementById(item.element).style = item.style;
-				if ( item.innerHtml !== '' ) {
-					document.getElementById(item.id).innerHTML = item.innerHtml;
-				};
-				if ( item.style !== '' ) {
-					document.getElementById(item.id).style = item.style;
-				};
-			});
-
-		}
-
-		function findStateIndex(stateName) {
-			let result;
-
-			let statesArr = (storedStates).map(
-				({ name, current, domElements }) => {return name});
-			let targetStateIndex = statesArr.indexOf(stateName);
-			result = targetStateIndex;
-
-			return result;
-		}
-
-		function switchStates( currentState, newState ) {
-			if ( findStateIndex(newState.name) !== -1 ) {
-				currentState.current = false;
-				newState.current = true;
-				currentState = newState;
-			} else throw new Error ('This state has not been specified yet.');
-			
-			return currentState;
-		}
-
-		return {			
-			getStateManager: function() {
-				if (!StateManager) {
-					StateManager = createStateManager();
-				} else {
-					return StateManager;
-				}
-			},
-
-			storeDom,
-			createNewState,
-			setState,
-			findStateIndex
+	// 		storeDom,
+	// 		createNewState,
+	// 		setState,
+	// 		findStateIndex
 
 
-			// changeDomElement(newStateName, elementToChange),
+	// 		// changeDomElement(newStateName, elementToChange),
 	
-		}
-	})();
+	// 	}
+	// })();
 	
 	return { 
 		secondsToMinutesAndSeconds, 
@@ -316,6 +318,8 @@ const UTIL = (function() {
 		TrackPoint,
 		StateManager,
 		storedStates,
+		storeDom,
+		createNewState,
 	};
 })();
 

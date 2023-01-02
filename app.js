@@ -63,23 +63,23 @@ import { HOME } from './modules/home.js'
 /* Known bugs
 
 */
-UTIL.StateManager.getStateManager(); // Initialization.
-UTIL.StateManager.storeDom( 'home_baseState', DOM );
+// UTIL.StateManager.getStateManager(); // Initialization.
+UTIL.storeDom( 'home_baseState', DOM );
 HOME.init();
 console.log(UTIL.storedStates);
-UTIL.StateManager.createNewState( 
+UTIL.createNewState( 
 	'home_uploadError', 
 	[ DOM.uploadError, DOM.uploadErrorHint ], 
 	[ 'visibility: visible', 'visibility: hidden' ],
 	[ '', '' ],
 );
-UTIL.StateManager.createNewState( 
+UTIL.createNewState( 
 	'home_uploadErrorHint', 
 	[ DOM.uploadError, DOM.uploadErrorHint ], 
 	[ 'visibility: hidden', 'visibility: visible' ],
 	[ '', '' ],
 );
-UTIL.StateManager.createNewState( 
+UTIL.createNewState( 
 	'home_readGpxBtn', 
 	[ DOM.uploadError, DOM.uploadErrorHint, DOM.readGpxBtn ], 
 	[ 'visibility: visible', 'visibility: visible', 'color: red' ],
@@ -102,7 +102,7 @@ const validateUpload = () => {
 				// UTIL.StateManager.switchStates( 'home_baseState', 'home_uploadError' );
 				isUploadValid = false;
 				console.log('wrong extension');
-				UTIL.StateManager.setState('home_uploadError');
+				UTIL.setState('home_uploadError');
 				// setTimeout(() => {					
 				// 	UTIL.StateManager.setState('home_uploadErrorHint');
 				// }, 1000);
