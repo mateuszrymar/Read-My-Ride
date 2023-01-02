@@ -1,10 +1,4 @@
-import { 
-	secondsToMinutesAndSeconds, 
-  metersToKm, 
-  performanceList,
-  PerformanceStat,
-  TrackPoint, 
-} from './utilities.js';
+import { UTIL } from './utilities.js';
 
 import { uploadInput } from '../app.js';
 import { gpxFile, gpxText, parser, trackPointObjects, statList, stopTime, stopSpeed, eleGain, eleLoss, } from '../app.js';

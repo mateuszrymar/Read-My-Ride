@@ -150,11 +150,13 @@ body {
   display: grid;
   grid-template-areas: 
     "upload-btn upload-text"
-    "upload-btn upload-undertext";
+    "upload-btn upload-undertext"
+    "empty      upload-error"
+    "empty      upload-error-hint";
   grid-template-columns: 2.5rem auto;
-  grid-template-rows: 1.5rem 1rem;
+  grid-template-rows: 1.5rem 1rem 2.625rem 1.375rem;
   gap: 0 1rem;
-  margin: 3rem auto 4rem auto;
+  margin: 3rem auto 0 auto;
 }
 
 #upload-btn{
@@ -166,6 +168,23 @@ body {
   font-size: 2.25rem;
   font-weight: 300;
   color: var(--grey-10);
+}
+
+#upload-error {
+  color: var(--orange-70);
+  font-weight: 700;
+  z-index: 2;
+}
+
+#upload-error-hint {
+  position: relative;
+  bottom: 0;
+  display: inline-block;
+  background-color: var(--grey-10);
+  color: var(--green-70);
+  font-weight: 700;
+  margin: 0;
+  transform: translateY(0.25rem);
 }
 
 article > footer{

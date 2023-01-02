@@ -1,23 +1,21 @@
-import { 
-	secondsToMinutesAndSeconds, 
-  metersToKm, 
-  performanceList,
-  PerformanceStat,
-  TrackPoint, 
-} from './modules/utilities.js';
-
-import { HOME } from './modules/home.js'
 
 // HTML Elements
-const readGpxBtn = document.getElementById("upload-btn");
-const uploadInput = document.getElementById("upload-input");
-const performanceObject = document.getElementById("performance");
-const statisticsObject = document.getElementById("stats");
+const DOM = {
+	readGpxBtn: document.getElementById("upload-btn"),
+	uploadInput: document.getElementById("upload-input"),
+	performanceObject: document.getElementById("performance"),
+	statisticsObject: document.getElementById("stats"),
+	uploadText: document.getElementById("upload-text"),
+	uploadUndertext: document.getElementById("upload-undertext"),
+	file_1: document.getElementById("file-1"),
+	file_2: document.getElementById("file-2"),
+	file_3: document.getElementById("file-3"),	
+};
 
-export { readGpxBtn, uploadInput, performanceObject, statisticsObject };
+export { DOM };
 
 // Variables
-let gpxFile = "Strava.gpx";
+let gpxFile = "";
 let gpxText;
 let parser;
 let statList = [];
@@ -26,13 +24,10 @@ let stopSpeed = 0.3; // Slowest speed [m/s] considered a movement.
 let eleGain = 0;
 let eleLoss = 0;
 
-
 export { gpxFile, gpxText, parser, statList, stopTime, stopSpeed, eleGain, eleLoss, };
 
-(function init() {
-	readGpxBtn.addEventListener('click', HOME.uploadClicked);
-	uploadInput.addEventListener('change', HOME.handleFileSelect, false);
-}());
+import { UTIL } from './modules/utilities.js';
+import { HOME } from './modules/home.js'
 
 /* Todo list
 	- Create a function to generate overall statistics:
@@ -64,30 +59,33 @@ export { gpxFile, gpxText, parser, statList, stopTime, stopSpeed, eleGain, eleLo
 /* Known bugs
 
 */
+UTIL.StateManager.getStateManager();
+UTIL.StateManager.getStateManager();
+UTIL.StateManager.getStateManager();
+HOME.init();
 
-// Trackpoints section //////////////////////////////
+/*
+// create a stateManager utility, store homeBaseState properties (none).
+
+if we get a valid upload, or one of the examples was clicked,
+	 process data and switch to INFO screen.
+else if undertext is clicked, change state to selectExample.
+else if we get an invalid input extension, change state to errorInvalid.
+else if upload was cancelled, change state to errorCancelled.
+
+handleSwitch: change state to infoBaseState.
+if weightInfo was filled, process data and change state to infoWeightSubmitted (?).
+if anotherFile button was clicked, use stateManager to restore all variables to default
+	and switch to HOME screen.
+
+*/
 
 
 
-// Statistics section //////////////////////////////
 
 
 
-
-
-
-
-
-// Performance section /////////////////////////////
 
 function displayPerformance() {
 	// Calculate statistics here
 };
-	
-
-
-
-// function extractTrackPoints(stringToProcess, stringStart, stringFinish) {
-// 	return stringToProcess.match()
-// }
-
