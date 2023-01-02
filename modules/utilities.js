@@ -166,51 +166,81 @@ const UTIL = (function() {
 			storedStates.push(stateToStore);
 		}
 
-		function createNewState( stateName, targetElement, property, value) {
+		function createNewState( stateName, targetElement, style, innerHTML) {
 			let oldCurrentState = checkCurrentState();
 			let newCurrentState;			
 			let stateToCreate = new State;
 
-			console.log( 'old state: ', oldCurrentState );
+			stateToCreate.name = stateName;
+
+			stateToCreate.current = false;
 
 			let nameArr = (oldCurrentState.domElements).map(
 				({ element, innerHTML, style }) => {return element});
 			let targetElementIndex = nameArr.indexOf(targetElement.id)
-			console.log(targetElementIndex);
-			console.log(oldCurrentState.domElements);
+			stateToCreate.domElements = oldCurrentState.domElements;
+			console.log(stateToCreate.domElements);
 			if (targetElementIndex !== -1) {
-				let string = `${property}`
-				console.log(oldCurrentState.domElements[targetElementIndex].string)
+				let toChange = stateToCreate.domElements[targetElementIndex];
+				stateToCreate.domElements[targetElementIndex].style = style; // TODO FIX THIS BUG!!!
+				stateToCreate.domElements[targetElementIndex].innerHTML = innerHTML;
 			};
 
-
-
-			// console.log(oldCurrentState.domElements.keys(oldCurrentState.domElements));
-			// console.log(targetElement.id);
-			// console.log(elementToModify);
-
-			stateToCreate.name = stateName;
-			newCurrentState = switchStates( oldCurrentState, stateToCreate );
-			
-			console.log(newCurrentState);
-			
-
+			storedStates.push(stateToCreate);
 		}
+
 
 		function checkCurrentState() {
 			let currentState;
 			for ( let i=0; i< storedStates.length; i++) {
-				if ( UTIL.storedStates[0].current === true ) {
-					currentState = UTIL.storedStates[i];
+				let current = (storedStates).map(
+					({ name, current, domElements }) => {return current});	
+				if ( current[i] === true ) {
+					currentState = storedStates[i];
 				}
 			}
 			return currentState;
 		}
 
+		function setState(newStateName) {
+			let oldState = checkCurrentState();
+			let newState;
+			// first we need to check if a State exists with a name === newState
+			if ( findStateIndex(newStateName) !== -1 ) {
+				newState = storedStates[findStateIndex(newStateName)];
+				console.log( oldState, newState );
+				switchStates( oldState, newState );
+				console.log( oldState, newState );
+			} else throw new Error ('This state has not been specified yet.')
+
+			// now we change all DOM objects.
+			console.log(newState.domElements);
+			newState.domElements.forEach(item => {
+				console.log(item.style);
+				// document.getElementById(item.element).style = item.style;
+				document.getElementById(item.element).innerHTML = item.innerHTML;
+			});
+
+		}
+
+		function findStateIndex(stateName) {
+			let result;
+
+			let statesArr = (storedStates).map(
+				({ name, current, domElements }) => {return name});
+			let targetStateIndex = statesArr.indexOf(stateName);
+			result = targetStateIndex;
+
+			return result;
+		}
+
 		function switchStates( currentState, newState ) {
-			currentState.current = false;
-			newState.current = true;
-			currentState = newState;
+			if ( findStateIndex(newState.name) !== -1 ) {
+				currentState.current = false;
+				newState.current = true;
+				currentState = newState;
+			} else throw new Error ('This state has not been specified yet.');
+			
 			return currentState;
 		}
 
@@ -224,7 +254,9 @@ const UTIL = (function() {
 			},
 
 			storeDom,
-			createNewState
+			createNewState,
+			setState,
+			findStateIndex
 
 
 			// changeDomElement(newStateName, elementToChange),

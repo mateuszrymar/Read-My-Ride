@@ -66,17 +66,16 @@ UTIL.StateManager.getStateManager(); // Initialization.
 UTIL.StateManager.storeDom( 'home_baseState', DOM );
 HOME.init();
 console.log(UTIL.storedStates);
-console.log(UTIL.storedStates[0].current);
-console.log(UTIL.storedStates.length);
 UTIL.StateManager.createNewState( 
-	'uploadError', 
+	'home_uploadError', 
 	DOM.uploadError, 
-	'style', 
-	'visibility: visible'
+	'visibility: visible',
+	' ', 
 );
+console.log(UTIL.storedStates);
 
 
-const validUpload = () => {
+const validateUpload = () => {
 	return new Promise((resolve, reject) => {
 		// do stuff with params here
 		DOM.uploadInput.addEventListener('change', validateUpload, false);
@@ -86,9 +85,11 @@ const validUpload = () => {
 			const inputFile = event.target.files[0].name;
 			const extension = inputFile.split('.')[1];
 			if (extension != 'gpx') {
-				console.log('wrong extension');
+				// UTIL.StateManager.switchStates( 'home_baseState', 'home_uploadError' );
 				isUploadValid = false;
-				UTIL.StateManager
+				console.log('wrong extension');
+
+
 				reject( Error('This tool accepts only .gpx files.') );
 			} else {
 				isUploadValid = true;
@@ -98,8 +99,11 @@ const validUpload = () => {
 	}, isUploadValid)
 }
 
-validUpload()
-	.then (() => {UTIL.StateManager.createNewState()})
+validateUpload()
+	.then (() => {
+		UTIL.StateManager.setState('home_uploadError');
+
+	})
 	.then (() => {
 		console.log(isUploadValid);
 		// console.log(Boolean(validUpload));
