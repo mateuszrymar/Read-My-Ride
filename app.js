@@ -69,17 +69,24 @@ HOME.init();
 console.log(UTIL.storedStates);
 UTIL.StateManager.createNewState( 
 	'home_uploadError', 
-	DOM.uploadError, 
-	'visibility: visible',
-	'',
+	[ DOM.uploadError, DOM.uploadErrorHint ], 
+	[ 'visibility: visible', 'visibility: hidden' ],
+	[ '', '' ],
 );
-// UTIL.StateManager.createNewState( 
-// 	'home_uploadErrorHint', 
-// 	DOM.uploadErrorHint, 
-// 	'visibility: visible',
-// 	'',
-// );
-console.log(UTIL.storedStates);
+UTIL.StateManager.createNewState( 
+	'home_uploadErrorHint', 
+	[ DOM.uploadError, DOM.uploadErrorHint ], 
+	[ 'visibility: hidden', 'visibility: visible' ],
+	[ '', '' ],
+);
+UTIL.StateManager.createNewState( 
+	'home_readGpxBtn', 
+	[ DOM.uploadError, DOM.uploadErrorHint, DOM.readGpxBtn ], 
+	[ 'visibility: visible', 'visibility: visible', 'color: red' ],
+	[ '', '', '' ],
+);
+console.log(UTIL.storedStates[0].domElements === UTIL.storedStates[3].domElements);
+console.log(UTIL.storedStates[0] === UTIL.storedStates[1]);
 
 
 const validateUpload = () => {

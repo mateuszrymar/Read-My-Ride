@@ -177,35 +177,52 @@ const UTIL = (function() {
 			console.log(storedStates);
 		}
 
-		function createNewState( stateName, targetElement, style, innerHtml) {
-			let oldCurrentState = checkCurrentState();
-			let newCurrentState;			
+		function createNewState( stateName, targetElements, targetStyles, innerHtml) {
+			let oldCurrentState = storedStates[0];
+			console.log(storedStates[0]);
+			console.log(targetStyles);
 			let stateToCreate = new State;
 
 			stateToCreate.name = stateName;
-
 			stateToCreate.current = false;
+			stateToCreate.domElements = oldCurrentState.domElements;
 
 			let nameArr = (oldCurrentState.domElements).map(
 				({ id, innerHtml, style }) => {return id});
+			
+			// console.log(nameArr);
+			// console.log(oldCurrentState.domElements);
+			// console.log(oldCurrentState.domElements.style);
 
-			// for ( let i=0; i<targetElement.length; i++ ) {
-			// 	console.log(targetElement[i].id);				
+			// for ( let i=0; i<nameArr.length; i++ ) {
+			// 	console.log(i);
+			// 	let currentDomElement = (oldCurrentState.domElements[i]);
+			// 	let toChange = stateToCreate.domElements[i];
 
 			// }
+			
+			// This loop changes all requested elements:
+			for ( let i=0; i<targetElements.length; i++ ) {
+				console.log(i);				
+				console.log(targetElements[i].id);				
+				let targetElementsIndex = nameArr.indexOf(targetElements[i].id);
+				if (targetElementsIndex !== -1) {
+					let toChange = stateToCreate.domElements[targetElementsIndex];
+					console.log(toChange);
+					
+					if ( targetStyles[i] !== '' ) {toChange.style = targetStyles[i]};
+					console.log(toChange.style = targetStyles[i])
+					if ( innerHtml[i] !== '' ) {toChange.innerHtml = innerHtml[i]};
+				};
+			}
+
+			console.log(stateToCreate);
 
 			// targetElement.forEach(i => {
 			// 	// let targetElementIndex = nameArr.indexOf(targetElement[i].id);
 			// 	console.log(targetElement[0].id);				
 			// });
 
-			let targetElementIndex = nameArr.indexOf(targetElement.id);
-			stateToCreate.domElements = oldCurrentState.domElements;
-			if (targetElementIndex !== -1) {
-				let toChange = stateToCreate.domElements[targetElementIndex];
-				stateToCreate.domElements[targetElementIndex].style = style;
-				stateToCreate.domElements[targetElementIndex].innerHtml = innerHtml;
-			};
 
 			storedStates.push(stateToCreate);
 		}
