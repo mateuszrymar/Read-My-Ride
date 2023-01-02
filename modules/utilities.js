@@ -177,17 +177,6 @@ const UTIL = (function() {
 	}
 
 	function createNewState( stateName, targetElements, targetStyles, innerHtml) {
-		let oldCurrentState = storedStates[0];
-		console.log(storedStates[0]);
-		console.log(targetStyles);
-		let stateToCreate = new State;
-
-		stateToCreate.name = stateName;
-		stateToCreate.current = false;
-		stateToCreate.domElements = oldCurrentState.domElements;
-
-		let nameArr = (oldCurrentState.domElements).map(
-			({ id, innerHtml, style }) => {return id});
 		
 		// console.log(nameArr);
 		// console.log(oldCurrentState.domElements);
@@ -199,31 +188,49 @@ const UTIL = (function() {
 		// 	let toChange = stateToCreate.domElements[i];
 
 		// }
+		let pushyPush = []
+		let stateToCreate = new State;
+		let oldCurrentState = storedStates[0];
+		// console.log(oldCurrentState);
+
+		stateToCreate.name = stateName;
+		stateToCreate.current = false;
 		
 		// This loop changes all requested elements:
+		// THIS LOOP IS PROBABLY WRONG!!!
 		for ( let i=0; i<targetElements.length; i++ ) {
+			
+			stateToCreate.domElements = oldCurrentState.domElements;
+			let nameArr = (oldCurrentState.domElements).map(
+				({ id, innerHtml, style }) => {return id});
+	
 			console.log(i);				
-			console.log(targetElements[i].id);				
+			console.log(i === (targetElements.length - 1));				
+			// console.log(targetElements.length);				
+			// console.log(targetElements[i].id);				
 			let targetElementsIndex = nameArr.indexOf(targetElements[i].id);
 			if (targetElementsIndex !== -1) {
 				let toChange = stateToCreate.domElements[targetElementsIndex];
-				console.log(toChange);
+				// console.log(toChange);
 				
 				if ( targetStyles[i] !== '' ) {toChange.style = targetStyles[i]};
-				console.log(toChange.style = targetStyles[i])
+				// console.log(toChange.style = targetStyles[i])
 				if ( innerHtml[i] !== '' ) {toChange.innerHtml = innerHtml[i]};
 			};
-		}
+			
+			// storedStates.push(stateToCreate);
+			// pushyPush.push(stateToCreate);
+			console.log(stateToCreate);				
+			
+			if (i = (targetElements.length-1) ) return stateToCreate;
 
-		console.log(stateToCreate);
+		} 
+		console.log('works');				
+		console.log(pushyPush);				
 
-		// targetElement.forEach(i => {
-		// 	// let targetElementIndex = nameArr.indexOf(targetElement[i].id);
-		// 	console.log(targetElement[0].id);				
-		// });
+		console.log(storedStates); // stateToCreate IS INACCESSIBLE!!! THAT MAY BE THE PROBLEM.
 
-
-		storedStates.push(stateToCreate);
+		return storedStates.push(stateToCreate);
 	}
 
 

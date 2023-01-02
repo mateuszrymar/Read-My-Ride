@@ -85,8 +85,9 @@ UTIL.createNewState(
 	[ 'visibility: visible', 'visibility: visible', 'color: red' ],
 	[ '', '', '' ],
 );
-console.log(UTIL.storedStates[0].domElements === UTIL.storedStates[3].domElements);
-console.log(UTIL.storedStates[0] === UTIL.storedStates[1]);
+console.log(UTIL.storedStates)
+// console.log(UTIL.storedStates[0].domElements === UTIL.storedStates[2].domElements);
+// console.log(UTIL.storedStates[0] === UTIL.storedStates[1]);
 
 
 const validateUpload = () => {
