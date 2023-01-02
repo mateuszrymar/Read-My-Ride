@@ -7,6 +7,8 @@ const DOM = {
 	statisticsObject: document.getElementById("stats"),
 	uploadText: document.getElementById("upload-text"),
 	uploadUndertext: document.getElementById("upload-undertext"),
+	uploadError: document.getElementById("upload-error"),
+	uploadErrorHint: document.getElementById("upload-error-hint"),
 	file_1: document.getElementById("file-1"),
 	file_2: document.getElementById("file-2"),
 	file_3: document.getElementById("file-3"),	
@@ -23,6 +25,7 @@ let stopTime = 10; // Time interval [s] when we consider user stopped.
 let stopSpeed = 0.3; // Slowest speed [m/s] considered a movement.
 let eleGain = 0;
 let eleLoss = 0;
+let isUploadValid = false;
 
 export { gpxFile, gpxText, parser, statList, stopTime, stopSpeed, eleGain, eleLoss, };
 
@@ -59,13 +62,58 @@ import { HOME } from './modules/home.js'
 /* Known bugs
 
 */
-UTIL.StateManager.getStateManager();
-UTIL.StateManager.getStateManager();
-UTIL.StateManager.getStateManager();
+UTIL.StateManager.getStateManager(); // Initialization.
+UTIL.StateManager.storeDom( 'home_baseState', DOM );
 HOME.init();
+console.log(UTIL.storedStates);
+console.log(UTIL.storedStates[0].current);
+console.log(UTIL.storedStates.length);
+UTIL.StateManager.createNewState( 
+	'uploadError', 
+	DOM.uploadError, 
+	'style', 
+	'visibility: visible'
+);
+
+
+const validUpload = () => {
+	return new Promise((resolve, reject) => {
+		// do stuff with params here
+		DOM.uploadInput.addEventListener('change', validateUpload, false);
+
+		function validateUpload(event) {
+			console.log('Upload is being validated.');
+			const inputFile = event.target.files[0].name;
+			const extension = inputFile.split('.')[1];
+			if (extension != 'gpx') {
+				console.log('wrong extension');
+				isUploadValid = false;
+				UTIL.StateManager
+				reject( Error('This tool accepts only .gpx files.') );
+			} else {
+				isUploadValid = true;
+				resolve('File is valid.');
+			}
+		}
+	}, isUploadValid)
+}
+
+validUpload()
+	.then (() => {UTIL.StateManager.createNewState()})
+	.then (() => {
+		console.log(isUploadValid);
+		// console.log(Boolean(validUpload));
+		// isUploadValid = true;
+		// if ((isUploadValid === true) || (HOME.exampleClicked === true)) {
+		// 	console.log('valid input');
+		// 	// HOME.processGpx();
+		// 	// switchScreen(infoScreen);
+		// }
+		
+	})
 
 /*
-// create a stateManager utility, store homeBaseState properties (none).
+// create a stateManager utility, store homeBaseState properties (mostly none).
 
 if we get a valid upload, or one of the examples was clicked,
 	 process data and switch to INFO screen.

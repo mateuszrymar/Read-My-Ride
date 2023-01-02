@@ -5,7 +5,6 @@ import { gpxFile, } from '../app.js';
 
 let trackPointList;
 let trackPointObjects = [];
-let maxFileSize = 5000000;
 
 let gpxProcessingTime = new UTIL.PerformanceStat;
 let gpxProcessingStart;
@@ -14,12 +13,13 @@ let gpxProcessingEnd;
 const HOME = (function () {
 
 	function init() {
-		[ DOM.readGpxBtn, /*DOM.uploadText */].forEach(function(element) {
+		[ DOM.readGpxBtn, DOM.uploadText ].forEach(function(element) {
 			element.addEventListener('click', uploadClicked);
 		});
 		DOM.uploadUndertext.addEventListener('click', undertextClicked)
-		DOM.uploadInput.addEventListener('change', handleFileSelect, false);
 	};
+
+	function doNothing() {console.log('nothing')};
 
 	function uploadClicked(){
 		DOM.uploadInput.click();
@@ -27,7 +27,25 @@ const HOME = (function () {
 
   function undertextClicked() {
     console.log('TODO: undertext clicked');
-  }  
+  }
+
+
+	function handleFileSelect(event) {
+		console.log('handleFileSelect');
+		const inputFile = event.target.files[0].name;
+    console.log('File size: ', event.target.files[0].size);
+		const extension = inputFile.split('.')[1];
+		if (extension != 'gpx') {
+			console.log('This tool accepts only .gpx files.');
+			return;
+		}
+		
+    trackPointObjects = [];	
+		const reader = new FileReader();
+		reader.onload = handleFileLoad;
+		reader.readAsText(event.target.files[0]);
+		checkFileSize(event.target.files[0]);
+	}
 
 	function processDataFromUpload(data) {
 		console.log('processDataFromUpload function started.')
@@ -77,29 +95,10 @@ const HOME = (function () {
     }
 		for ( let i = 0; i < noOfOptimizations; i++ ) {
 			console.log('optimization step', i);
-
 			// this function needs to run async
 		}
 	}
 
-	function handleFileSelect(event) {
-		console.log('handleFileSelect');
-		const inputFile = event.target.files[0].name;
-    console.log(event.target.files[0].size);
-		const extension = inputFile.split('.')[1];
-		if (extension != 'gpx') {
-			console.log('This tool accepts only .gpx files.');
-			return;
-		}
-
-		
-    trackPointObjects = [];	
-		const reader = new FileReader();
-		reader.onload = handleFileLoad;
-		reader.readAsText(event.target.files[0]);
-		checkFileSize(event.target.files[0]);
-	}
-	
 	function handleFileLoad(event) {
 		processDataFromUpload(event.target.result);
 	}	
@@ -118,7 +117,7 @@ const HOME = (function () {
 		let previousTrackpoint;
 	
 		for ( let i=0; i<trackPointList.length; i++ ) {
-			let currentTrackpoint = new UTIL.TrackPoint;
+			let currentTrackpoint = new TrackPoint;
 			let currentTrackpointRaw = trackPointList[i];
 	
 			currentTrackpoint.id = i;

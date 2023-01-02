@@ -1,5 +1,6 @@
 const UTIL = (function() {
 	let performanceList = [];
+	let storedStates = [];
 
 	function secondsToMinutesAndSeconds(sec) {
 		let result;
@@ -122,25 +123,112 @@ const UTIL = (function() {
 
 	const StateManager = (function() {
 		let StateManager;
-		(!StateManager) ? console.log('no SM') : console.log('SM');
+		// (!StateManager) ? console.log('no SM') : console.log('SM');
+
+		class State {
+			constructor( name, domElements, current ) {
+				name = this.name;
+				domElements = this.domElements;
+				current = this.current;
+			}
+		}
 
 		function createStateManager() {
 			console.log('state manager created.')
 			return new Object({name: 'stateManager'});
 		}
 
-		function storeState(stateName, objectToChange) {}
+		function storeDom(stateName, elementsToStore) {
+			let elementsArray = [];
+			let stateToStore = new State;
+			class domElement {
+				constructor( element, innerHtml, style ) {
+					element = this.element;
+					innerHtml = this.innerHtml;
+					style = this.style;
+				}
+			}
+
+			stateToStore.name = stateName;
+			stateToStore.current = true;
+
+			Object.entries(elementsToStore).forEach(entry => {
+				let currentElement = new domElement;
+				currentElement.element = entry[1].id; 
+				currentElement.innerHTML = entry[1].innerHTML;
+				currentElement.style = entry[1].style;
+
+				elementsArray.push(currentElement);
+			});
+
+			stateToStore.domElements = elementsArray;
+
+			storedStates.push(stateToStore);
+		}
+
+		function createNewState( stateName, targetElement, property, value) {
+			let oldCurrentState = checkCurrentState();
+			let newCurrentState;			
+			let stateToCreate = new State;
+
+			console.log( 'old state: ', oldCurrentState );
+
+			let nameArr = (oldCurrentState.domElements).map(
+				({ element, innerHTML, style }) => {return element});
+			let targetElementIndex = nameArr.indexOf(targetElement.id)
+			console.log(targetElementIndex);
+			console.log(oldCurrentState.domElements);
+			if (targetElementIndex !== -1) {
+				let string = `${property}`
+				console.log(oldCurrentState.domElements[targetElementIndex].string)
+			};
+
+
+
+			// console.log(oldCurrentState.domElements.keys(oldCurrentState.domElements));
+			// console.log(targetElement.id);
+			// console.log(elementToModify);
+
+			stateToCreate.name = stateName;
+			newCurrentState = switchStates( oldCurrentState, stateToCreate );
+			
+			console.log(newCurrentState);
+			
+
+		}
+
+		function checkCurrentState() {
+			let currentState;
+			for ( let i=0; i< storedStates.length; i++) {
+				if ( UTIL.storedStates[0].current === true ) {
+					currentState = UTIL.storedStates[i];
+				}
+			}
+			return currentState;
+		}
+
+		function switchStates( currentState, newState ) {
+			currentState.current = false;
+			newState.current = true;
+			currentState = newState;
+			return currentState;
+		}
 
 		return {			
 			getStateManager: function() {
 				if (!StateManager) {
 					StateManager = createStateManager();
-					console.log(StateManager)
-					console.log('getSM accessed.')
 				} else {
 					return StateManager;
 				}
-			}
+			},
+
+			storeDom,
+			createNewState
+
+
+			// changeDomElement(newStateName, elementToChange),
+	
 		}
 	})();
 	
@@ -150,7 +238,8 @@ const UTIL = (function() {
 		performanceList,
 		PerformanceStat,
 		TrackPoint,
-		StateManager
+		StateManager,
+		storedStates,
 	};
 })();
 
