@@ -66,7 +66,7 @@ import { HOME } from './modules/home.js'
 
 */
 // UTIL.StateManager.getStateManager(); // Initialization.
-let baseState = UTIL.storeDom( 'home_baseState', DOM );
+const baseState = UTIL.storeDom( 'home_baseState', DOM );
 storedStates.push(baseState);
 console.log(storedStates);
 HOME.init();
@@ -78,7 +78,7 @@ HOME.init();
 
 // storedStates.push( resultA, resultB, resultC );
 
-let uploadErrorState = UTIL.createNewState( 
+const uploadErrorState = UTIL.createNewState( 
 	'home_uploadError', 
 	[ DOM.uploadError, DOM.uploadErrorHint ], 
 	[ 'visibility: visible', 'visibility: hidden' ],
@@ -86,7 +86,7 @@ let uploadErrorState = UTIL.createNewState(
 );
 storedStates.push(uploadErrorState);
 
-let uploadErrorHint = UTIL.createNewState( 
+const uploadErrorHint = UTIL.createNewState( 
 	'home_uploadErrorHint', 
 	[ DOM.uploadError, DOM.uploadErrorHint ], 
 	[ 'visibility: hidden', 'visibility: visible' ],
@@ -94,7 +94,7 @@ let uploadErrorHint = UTIL.createNewState(
 );
 storedStates.push(uploadErrorHint);
 
-let readGpxState = UTIL.createNewState( 
+const readGpxState = UTIL.createNewState( 
 	'home_readGpxBtn', 
 	[ DOM.uploadError, DOM.uploadErrorHint, DOM.readGpxBtn ], 
 	[ 'visibility: visible', 'visibility: visible', 'color: red' ],

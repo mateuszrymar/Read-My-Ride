@@ -141,16 +141,24 @@ const UTIL = (function() {
 		return new Object({name: 'stateManager'});
 	}
 
+	class domElement {
+		constructor( element, innerHtml, style ) {
+			element = this.element;
+			innerHtml = this.innerHtml;
+			style = this.style;
+		}
+	}
+
 	function storeDom(stateName, elementsToStore) {
 		let elementsArray = [];
 		let stateToStore = new State;
-		class domElement {
-			constructor( element, innerHtml, style ) {
-				element = this.element;
-				innerHtml = this.innerHtml;
-				style = this.style;
-			}
-		}
+		// class domElement {
+		// 	constructor( element, innerHtml, style ) {
+		// 		element = this.element;
+		// 		innerHtml = this.innerHtml;
+		// 		style = this.style;
+		// 	}
+		// }
 
 		stateToStore.name = stateName;
 		stateToStore.current = true;
@@ -199,8 +207,6 @@ const UTIL = (function() {
 
 	function createNewState( newStateName, newElements, newStyles, newInnerHtml ) {
 
-		let result;
-		let arrayToSave = [];
 		let baseState = storedStates[0];
 		let baseIds = (baseState.domElements).map(
 			({ id, innerHtml, style }) => {return id});
@@ -211,44 +217,39 @@ const UTIL = (function() {
 			let currentId = newElements[i].id;
 			newElementsIds.push(currentId);
 		}		
+		let newEntries = []
 		
 		// // THIS LOOP IS PROBABLY WRONG!!!
+
 		for ( let i=0; i<baseState.domElements.length; i++ ) {
-			// stateToCreate.domElements = baseState.domElements;
-			// let newEntry;
-			let newEntries = []
 			let currentEntryId = (baseIds[i]);
-			let checkIfNew = newElementsIds.indexOf(currentEntryId);
+			let indexOfNewElement = newElementsIds.indexOf(currentEntryId);
 			
-			if (checkIfNew !== -1) {
-				console.log('this is being changed:');
-				let newEntry = baseState.domElements[i];				
-				console.log(baseState.domElements[i]);
-				console.log(newEntry.style);
-				// THE BUG IS IN THESE LINES:
-				
-				// if ( newStyles[i] !== '' ) {newEntry.style = newStyles[i]};
-				// if ( newInnerHtml[i] !== '' ) {newEntry.innerHtml = newInnerHtml[i]};
+			// THE BUG WAS IN THESE CONDITIONAL STATEMENTS:
+			if (indexOfNewElement !== -1) {
+				let newEntry = new domElement;
+				newEntry.id = `${baseState.domElements[i].id}`;				
+				if ( newStyles[indexOfNewElement] !== '' ) { 
+					newEntry.innerHtml = `${newInnerHtml[indexOfNewElement]}` };
+				if ( newStyles[indexOfNewElement] !== '' ) { 
+					newEntry.style = `${newStyles[indexOfNewElement]}` };
+					
 				newEntries.push(newEntry);
 			} else {
-				let newEntry = baseState.domElements[i];		
+				let newEntry = new domElement;
+				newEntry.id = `${baseState.domElements[i].id}`;
+				newEntry.innerHtml = `${baseState.domElements[i].innerHtml}`;
+				newEntry.style = `${baseState.domElements[i].style}`;
 				newEntries.push(newEntry);
 			}			
-			
-			console.log(newEntries);
-			arrayToSave.push(newEntries);
 		} 
-		console.log('works');
-		console.log(arrayToSave);
 		
 		let stateToCreate = new State;
 		stateToCreate.name = newStateName;
 		stateToCreate.current = false;
+		stateToCreate.domElements = newEntries;
 
-		console.log(stateToCreate);				
-
-
-		return result;
+		return stateToCreate;
 	}
 
 
