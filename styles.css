@@ -59,10 +59,10 @@ body {
 #page-header {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  /* justify-content: center; */
   position: relative;
-  width: 88vw;
-  height: 81px;
+  width: 92vw;
+  height: 8rem;
   left: 24px;
   top: 14px;
 }
@@ -70,9 +70,14 @@ body {
 #header-description {
   display: flex;
   margin: 0;
+  margin-bottom: 3rem;
   position: relative;
   color: var(--grey-40);
   bottom: 0;
+}
+
+#info{
+  overflow:scroll
 }
 
 .xl-text {
@@ -86,13 +91,12 @@ body {
   color: var(--grey-90);
 }
 
-.large-text{
+.large-text, b {
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 500;
   font-size: 18px;
   line-height: 27px;
-  display: flex;
   align-items: center;  
   color: var(--grey-90);
   margin: 0;
@@ -134,16 +138,24 @@ body {
   color: var(--grey-90);
 }
 
-
-#upload-tile{
+.tile{
   background-color: var(--grey-10);
   position: relative;
-  margin: 2rem;
+  margin: 0.25rem 2rem;
+  border-radius: 1.75rem;
+  padding: 1rem;
+  width: 19.5rem;
+}
+
+#upload-tile{
   bottom: calc(calc(100vw - 22.5625rem) / 2);
   width: 16.5625rem;
   height: auto;
   border-radius: 2.625rem;
-  padding: 1rem;
+}
+
+#load-another{
+  background-color: var(--grey-40);
 }
 
 #upload-group{
@@ -159,7 +171,25 @@ body {
   margin: 3rem auto 0 auto;
 }
 
-#upload-btn{
+#go-back-group{
+  display: grid;
+  grid-template-areas: 
+    "go-back-btn go-back-text";
+  grid-template-columns: 2.5rem auto;
+  grid-template-rows: 2.5rem;
+  gap: 0 1rem;
+  margin: 0 auto;
+}
+
+.map{
+  background-image: url(./images/map.png);
+  background-size: cover;
+  width: 18.5rem;
+  height: 19.5rem;
+  border: 0.5rem solid var(--grey-10);
+}
+
+.button{
   height: 2.5rem;
   width: 2.5rem;
   border: 0px;
@@ -168,6 +198,15 @@ body {
   font-size: 2.25rem;
   font-weight: 300;
   color: var(--grey-10);
+}
+
+#go-back-btn{
+  background-color: var(--grey-20);
+  color: var(--grey-40);
+}
+
+#go-back-text{
+  color: var(--grey-70);  
 }
 
 #upload-error {
@@ -225,12 +264,6 @@ article > footer{
   gap: 1em;
 }
 
-.data-container {
-  height: 500px;
-  display: block;
-  width: 50vw;
-  overflow: hidden;
-}
 
 #analysis-tile {
   display: none;

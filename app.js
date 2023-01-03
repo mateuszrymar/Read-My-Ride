@@ -1,6 +1,8 @@
 
 // HTML Elements
 const DOM = {
+	uploadTile: document.getElementById("upload-tile"),
+
 	readGpxBtn: document.getElementById("upload-btn"),
 	uploadInput: document.getElementById("upload-input"),
 	performanceObject: document.getElementById("performance"),
@@ -78,6 +80,12 @@ UTIL.StateManager.createNewState(
 	[ 'background-color: var(--grey-40)', 'visibility: hidden', 'visibility: visible', 'background-color: var(--green-70)', 'background-color: var(--green-70)', 'background-color: var(--green-70)' ],
 	[ '', '', '', '', '', '' ],
 );
+UTIL.StateManager.createNewState( 
+	'info_baseState', 
+	[ DOM.uploadTile ], 
+	[ 'display:none' ],
+	[ '' ],
+);
 console.log(UTIL.storedStates);
 
 const validateUpload = () => {
@@ -153,13 +161,11 @@ validateUpload()
 	})
 	.then (() => {
 		INFO.calculateStats(HOME.trackPointObjects)
-		// console.log(HOME.trackPointObjects)
-		// Switch to INFO screen.		
 	})
 	.then (() => {
-    console.log(INFO.statList);
-		// console.log(HOME.trackPointObjects)
-		// Switch to INFO screen.		
+		UTIL.StateManager.setState('info_baseState');
+		// Switch to INFO screen.
+
 	})
 
 /*
