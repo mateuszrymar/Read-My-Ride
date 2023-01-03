@@ -119,7 +119,7 @@ const UTIL = (function() {
 	
 			return eleDiff;
 		}
-	};
+	}
 
 	const StateManager = (function() {
 		let StateManager;
@@ -133,6 +133,14 @@ const UTIL = (function() {
 			}
 		}
 
+		class domElement {
+			constructor( element, innerHtml, style ) {
+				element = this.element;
+				innerHtml = this.innerHtml;
+				style = this.style;
+			}
+		}
+
 		function createStateManager() {
 			console.log('state manager created.')
 			return new Object({name: 'stateManager'});
@@ -141,13 +149,7 @@ const UTIL = (function() {
 		function storeDom(stateName, elementsToStore) {
 			let elementsArray = [];
 			let stateToStore = new State;
-			class domElement {
-				constructor( element, innerHtml, style ) {
-					element = this.element;
-					innerHtml = this.innerHtml;
-					style = this.style;
-				}
-			}
+			
 
 			stateToStore.name = stateName;
 			stateToStore.current = true;
@@ -177,56 +179,52 @@ const UTIL = (function() {
 			console.log(storedStates);
 		}
 
-		function createNewState( stateName, targetElements, targetStyles, innerHtml) {
-			let oldCurrentState = storedStates[0];
-			console.log(storedStates[0]);
-			console.log(targetStyles);
-			let stateToCreate = new State;
+		function createNewState( newStateName, newElements, newStyles, newInnerHtml ) {
 
-			stateToCreate.name = stateName;
-			stateToCreate.current = false;
-			stateToCreate.domElements = oldCurrentState.domElements;
-
-			let nameArr = (oldCurrentState.domElements).map(
+			let baseState = storedStates[0];
+			let baseIds = (baseState.domElements).map(
 				({ id, innerHtml, style }) => {return id});
+			console.log(baseState);
+	
+			let newElementsIds = [];
+			for ( let i=0; i<newElements.length; i++) {
+				let currentId = newElements[i].id;
+				newElementsIds.push(currentId);
+			}		
+			let newEntries = []
 			
-			// console.log(nameArr);
-			// console.log(oldCurrentState.domElements);
-			// console.log(oldCurrentState.domElements.style);
-
-			// for ( let i=0; i<nameArr.length; i++ ) {
-			// 	console.log(i);
-			// 	let currentDomElement = (oldCurrentState.domElements[i]);
-			// 	let toChange = stateToCreate.domElements[i];
-
-			// }
+			// // THIS LOOP IS PROBABLY WRONG!!!
+	
+			for ( let i=0; i<baseState.domElements.length; i++ ) {
+				let currentEntryId = (baseIds[i]);
+				let indexOfNewElement = newElementsIds.indexOf(currentEntryId);
+				
+				// THE BUG WAS IN THESE CONDITIONAL STATEMENTS:
+				if (indexOfNewElement !== -1) {
+					let newEntry = new domElement;
+					newEntry.id = `${baseState.domElements[i].id}`;				
+					if ( newStyles[indexOfNewElement] !== '' ) { 
+						newEntry.innerHtml = `${newInnerHtml[indexOfNewElement]}` };
+					if ( newStyles[indexOfNewElement] !== '' ) { 
+						newEntry.style = `${newStyles[indexOfNewElement]}` };
+						
+					newEntries.push(newEntry);
+				} else {
+					let newEntry = new domElement;
+					newEntry.id = `${baseState.domElements[i].id}`;
+					newEntry.innerHtml = `${baseState.domElements[i].innerHtml}`;
+					newEntry.style = `${baseState.domElements[i].style}`;
+					newEntries.push(newEntry);
+				}			
+			} 
 			
-			// This loop changes all requested elements:
-			for ( let i=0; i<targetElements.length; i++ ) {
-				console.log(i);				
-				console.log(targetElements[i].id);				
-				let targetElementsIndex = nameArr.indexOf(targetElements[i].id);
-				if (targetElementsIndex !== -1) {
-					let toChange = stateToCreate.domElements[targetElementsIndex];
-					console.log(toChange);
-					
-					if ( targetStyles[i] !== '' ) {toChange.style = targetStyles[i]};
-					console.log(toChange.style = targetStyles[i])
-					if ( innerHtml[i] !== '' ) {toChange.innerHtml = innerHtml[i]};
-				};
-			}
-
-			console.log(stateToCreate);
-
-			// targetElement.forEach(i => {
-			// 	// let targetElementIndex = nameArr.indexOf(targetElement[i].id);
-			// 	console.log(targetElement[0].id);				
-			// });
-
-
-			storedStates.push(stateToCreate);
-		}
-
+			let stateToCreate = new State;
+			stateToCreate.name = newStateName;
+			stateToCreate.current = false;
+			stateToCreate.domElements = newEntries;
+	
+			return storedStates.push(stateToCreate);
+		}	
 
 		function checkCurrentState() {
 			let currentState;

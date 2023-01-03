@@ -75,38 +75,30 @@ UTIL.StateManager.createNewState(
 );
 UTIL.StateManager.createNewState( 
 	'home_uploadErrorHint', 
-	[ DOM.uploadError, DOM.uploadErrorHint ], 
-	[ 'visibility: hidden', 'visibility: visible' ],
-	[ '', '' ],
+	[ DOM.readGpxBtn, DOM.uploadError, DOM.uploadErrorHint, DOM.file_1, DOM.file_2, DOM.file_3, ], 
+	[ 'background-color: var(--grey-40)', 'visibility: hidden', 'visibility: visible', 'background-color: var(--green-70)', 'background-color: var(--green-70)', 'background-color: var(--green-70)' ],
+	[ '', '', '', '', '', '' ],
 );
-UTIL.StateManager.createNewState( 
-	'home_readGpxBtn', 
-	[ DOM.uploadError, DOM.uploadErrorHint, DOM.readGpxBtn ], 
-	[ 'visibility: visible', 'visibility: visible', 'color: red' ],
-	[ '', '', '' ],
-);
-console.log(UTIL.storedStates[0].domElements === UTIL.storedStates[3].domElements);
-console.log(UTIL.storedStates[0] === UTIL.storedStates[1]);
-
+console.log(UTIL.storedStates);
 
 const validateUpload = () => {
 	return new Promise((resolve, reject) => {
-		// do stuff with params here
+
 		DOM.uploadInput.addEventListener('change', validateUpload, false);
 
 		function validateUpload(event) {
+
 			console.log('Upload is being validated.');
 			const inputFile = event.target.files[0].name;
 			const extension = inputFile.split('.')[1];
-			if (extension != 'gpx') {
-				// UTIL.StateManager.switchStates( 'home_baseState', 'home_uploadError' );
-				isUploadValid = false;
-				console.log('wrong extension');
-				UTIL.StateManager.setState('home_uploadError');
-				// setTimeout(() => {					
-				// 	UTIL.StateManager.setState('home_uploadErrorHint');
-				// }, 1000);
 
+			if (extension != 'gpx') {
+				isUploadValid = false;
+				UTIL.StateManager.setState('home_uploadError');
+
+				setTimeout(() => {					
+					UTIL.StateManager.setState('home_uploadErrorHint');
+				}, 1600);
 
 				reject( Error('This tool accepts only .gpx files.') );
 			} else {
