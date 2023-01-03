@@ -1,6 +1,7 @@
+import { storedStates } from '../app.js';
+
 const UTIL = (function() {
 	let performanceList = [];
-	let storedStates = [];
 
 	function secondsToMinutesAndSeconds(sec) {
 		let result;
@@ -121,6 +122,9 @@ const UTIL = (function() {
 		}
 	};
 
+
+	
+
 	let StateManager;
 	// (!StateManager) ? console.log('no SM') : console.log('SM');
 
@@ -172,65 +176,79 @@ const UTIL = (function() {
 
 		stateToStore.domElements = elementsArray;
 
-		storedStates.push(stateToStore);
-		console.log(storedStates);
+		return(stateToStore);
 	}
 
-	function createNewState( stateName, targetElements, targetStyles, innerHtml) {
+	let testArray = []
+
+	function createNewTest(letter) {
+		let result;
+		let arrayToSave = [];
+		console.log(letter);
+
+		for ( let i=0; i<10; i++ ) {
+			arrayToSave.push(`${letter}-${i}`);
+			// console.log(`${letter}-${i}`);
+		}
 		
-		// console.log(nameArr);
-		// console.log(oldCurrentState.domElements);
-		// console.log(oldCurrentState.domElements.style);
+		result = arrayToSave;
+		console.log(result);
 
-		// for ( let i=0; i<nameArr.length; i++ ) {
-		// 	console.log(i);
-		// 	let currentDomElement = (oldCurrentState.domElements[i]);
-		// 	let toChange = stateToCreate.domElements[i];
+		return result;
+	}
 
-		// }
-		let pushyPush = []
-		let stateToCreate = new State;
-		let oldCurrentState = storedStates[0];
-		// console.log(oldCurrentState);
+	function createNewState( newStateName, newElements, newStyles, newInnerHtml ) {
 
-		stateToCreate.name = stateName;
-		stateToCreate.current = false;
+		let result;
+		let arrayToSave = [];
+		let baseState = storedStates[0];
+		let baseIds = (baseState.domElements).map(
+			({ id, innerHtml, style }) => {return id});
+		console.log(baseState);
+
+		let newElementsIds = [];
+		for ( let i=0; i<newElements.length; i++) {
+			let currentId = newElements[i].id;
+			newElementsIds.push(currentId);
+		}		
 		
-		// This loop changes all requested elements:
-		// THIS LOOP IS PROBABLY WRONG!!!
-		for ( let i=0; i<targetElements.length; i++ ) {
+		// // THIS LOOP IS PROBABLY WRONG!!!
+		for ( let i=0; i<baseState.domElements.length; i++ ) {
+			// stateToCreate.domElements = baseState.domElements;
+			// let newEntry;
+			let newEntries = []
+			let currentEntryId = (baseIds[i]);
+			let checkIfNew = newElementsIds.indexOf(currentEntryId);
 			
-			stateToCreate.domElements = oldCurrentState.domElements;
-			let nameArr = (oldCurrentState.domElements).map(
-				({ id, innerHtml, style }) => {return id});
-	
-			console.log(i);				
-			console.log(i === (targetElements.length - 1));				
-			// console.log(targetElements.length);				
-			// console.log(targetElements[i].id);				
-			let targetElementsIndex = nameArr.indexOf(targetElements[i].id);
-			if (targetElementsIndex !== -1) {
-				let toChange = stateToCreate.domElements[targetElementsIndex];
-				// console.log(toChange);
+			if (checkIfNew !== -1) {
+				console.log('this is being changed:');
+				let newEntry = baseState.domElements[i];				
+				console.log(baseState.domElements[i]);
+				console.log(newEntry.style);
+				// THE BUG IS IN THESE LINES:
 				
-				if ( targetStyles[i] !== '' ) {toChange.style = targetStyles[i]};
-				// console.log(toChange.style = targetStyles[i])
-				if ( innerHtml[i] !== '' ) {toChange.innerHtml = innerHtml[i]};
-			};
+				// if ( newStyles[i] !== '' ) {newEntry.style = newStyles[i]};
+				// if ( newInnerHtml[i] !== '' ) {newEntry.innerHtml = newInnerHtml[i]};
+				newEntries.push(newEntry);
+			} else {
+				let newEntry = baseState.domElements[i];		
+				newEntries.push(newEntry);
+			}			
 			
-			// storedStates.push(stateToCreate);
-			// pushyPush.push(stateToCreate);
-			console.log(stateToCreate);				
-			
-			if (i = (targetElements.length-1) ) return stateToCreate;
-
+			console.log(newEntries);
+			arrayToSave.push(newEntries);
 		} 
-		console.log('works');				
-		console.log(pushyPush);				
+		console.log('works');
+		console.log(arrayToSave);
+		
+		let stateToCreate = new State;
+		stateToCreate.name = newStateName;
+		stateToCreate.current = false;
 
-		console.log(storedStates); // stateToCreate IS INACCESSIBLE!!! THAT MAY BE THE PROBLEM.
+		console.log(stateToCreate);				
 
-		return storedStates.push(stateToCreate);
+
+		return result;
 	}
 
 
@@ -324,9 +342,10 @@ const UTIL = (function() {
 		PerformanceStat,
 		TrackPoint,
 		StateManager,
-		storedStates,
+		// storedStates,
 		storeDom,
 		createNewState,
+		createNewTest,
 	};
 })();
 

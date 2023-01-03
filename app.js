@@ -27,8 +27,10 @@ let stopSpeed = 0.3; // Slowest speed [m/s] considered a movement.
 let eleGain = 0;
 let eleLoss = 0;
 let isUploadValid = false;
+let storedStates = [];
 
-export { gpxFile, gpxText, parser, statList, stopTime, stopSpeed, eleGain, eleLoss, };
+
+export { gpxFile, gpxText, parser, statList, stopTime, stopSpeed, eleGain, eleLoss, storedStates };
 
 import { UTIL } from './modules/utilities.js';
 import { HOME } from './modules/home.js'
@@ -64,28 +66,43 @@ import { HOME } from './modules/home.js'
 
 */
 // UTIL.StateManager.getStateManager(); // Initialization.
-UTIL.storeDom( 'home_baseState', DOM );
+let baseState = UTIL.storeDom( 'home_baseState', DOM );
+storedStates.push(baseState);
+console.log(storedStates);
 HOME.init();
-console.log(UTIL.storedStates);
-UTIL.createNewState( 
+
+
+// let resultA = UTIL.createNewTest('a');
+// let resultB = UTIL.createNewTest('b');
+// let resultC = UTIL.createNewTest('c');
+
+// storedStates.push( resultA, resultB, resultC );
+
+let uploadErrorState = UTIL.createNewState( 
 	'home_uploadError', 
 	[ DOM.uploadError, DOM.uploadErrorHint ], 
 	[ 'visibility: visible', 'visibility: hidden' ],
 	[ '', '' ],
 );
-UTIL.createNewState( 
+storedStates.push(uploadErrorState);
+
+let uploadErrorHint = UTIL.createNewState( 
 	'home_uploadErrorHint', 
 	[ DOM.uploadError, DOM.uploadErrorHint ], 
 	[ 'visibility: hidden', 'visibility: visible' ],
 	[ '', '' ],
 );
-UTIL.createNewState( 
+storedStates.push(uploadErrorHint);
+
+let readGpxState = UTIL.createNewState( 
 	'home_readGpxBtn', 
 	[ DOM.uploadError, DOM.uploadErrorHint, DOM.readGpxBtn ], 
 	[ 'visibility: visible', 'visibility: visible', 'color: red' ],
 	[ '', '', '' ],
 );
-console.log(UTIL.storedStates)
+storedStates.push(readGpxState);
+
+console.log(storedStates);
 // console.log(UTIL.storedStates[0].domElements === UTIL.storedStates[2].domElements);
 // console.log(UTIL.storedStates[0] === UTIL.storedStates[1]);
 
