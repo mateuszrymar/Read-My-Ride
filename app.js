@@ -13,25 +13,24 @@ const DOM = {
 	file_2: document.getElementById("file-2"),
 	file_3: document.getElementById("file-3"),	
 };
-console.log(DOM);
-
 export { DOM };
 
 // Variables
-let gpxFile = "";
+let gpxFile;
+let gpxFileContent;
 let gpxText;
 let parser;
-let statList = [];
 let stopTime = 10; // Time interval [s] when we consider user stopped.
 let stopSpeed = 0.3; // Slowest speed [m/s] considered a movement.
-let eleGain = 0;
-let eleLoss = 0;
 let isUploadValid = false;
+export { gpxFile, gpxText, parser, stopTime, stopSpeed, };
 
-export { gpxFile, gpxText, parser, statList, stopTime, stopSpeed, eleGain, eleLoss, };
+// Files
+// const fileShort = File ;
 
 import { UTIL } from './modules/utilities.js';
 import { HOME } from './modules/home.js'
+import { INFO } from './modules/info.js';
 
 /* Todo list
 	- Create a function to generate overall statistics:
@@ -84,45 +83,83 @@ console.log(UTIL.storedStates);
 const validateUpload = () => {
 	return new Promise((resolve, reject) => {
 
-		DOM.uploadInput.addEventListener('change', validateUpload, false);
+		DOM.uploadInput.addEventListener('change', checkUpload, false);
+		DOM.uploadUndertext.addEventListener('click', displayHint, false);
+		DOM.file_1.addEventListener('click', loadFile, false);
+		DOM.file_2.addEventListener('click', loadFile, false);
+		DOM.file_3.addEventListener('click', loadFile, false);
 
-		function validateUpload(event) {
+		function checkUpload(event) {
 
 			console.log('Upload is being validated.');
-			const inputFile = event.target.files[0].name;
-			const extension = inputFile.split('.')[1];
+			
+			gpxFile = event.target.files[0];
 
+			const extension = gpxFile.name.split('.')[1];
+			
 			if (extension != 'gpx') {
+
+				// On wrong extension do that:
 				isUploadValid = false;
 				UTIL.StateManager.setState('home_uploadError');
 
 				setTimeout(() => {					
-					UTIL.StateManager.setState('home_uploadErrorHint');
+					displayHint();
 				}, 1600);
 
-				reject( Error('This tool accepts only .gpx files.') );
+				reject( Error('This tool accepts only .gpx files.' ));
+
 			} else {
 				isUploadValid = true;
-				resolve('File is valid.');
+				console.log('File is valid.');
+				const reader = new FileReader();
+				console.log(gpxFile);
+
+				if (gpxFile) {
+					reader.readAsText(gpxFile);
+				}
+
+				reader.addEventListener("load", () => {
+					// this will then display a text file
+					// console.log(reader.result);
+					gpxFileContent = reader.result;
+					resolve( 'File is valid.' );
+				}, false);
+
 			}
 		}
+
+		function displayHint() { UTIL.StateManager.setState('home_uploadErrorHint') }
+
+		function loadFile(event) {
+			event.preventDefault();
+			console.log(event.target.href);
+			fetch(event.target.href)
+				.then(res => res.text())
+				.then(text => {
+					console.log('blob read.');
+					gpxFileContent = text;
+					resolve( 'File is valid.' )
+				})
+		}
+
 	}, isUploadValid)
 }
 
-validateUpload()
+validateUpload()	
 	.then (() => {
-
+		HOME.processGpx(gpxFileContent);
+		// And optionally, display a loading screen in the meantime.
 	})
 	.then (() => {
-		console.log(isUploadValid);
-		// console.log(Boolean(validUpload));
-		// isUploadValid = true;
-		// if ((isUploadValid === true) || (HOME.exampleClicked === true)) {
-		// 	console.log('valid input');
-		// 	// HOME.processGpx();
-		// 	// switchScreen(infoScreen);
-		// }
-		
+		INFO.calculateStats(HOME.trackPointObjects)
+		// console.log(HOME.trackPointObjects)
+		// Switch to INFO screen.		
+	})
+	.then (() => {
+    console.log(INFO.statList);
+		// console.log(HOME.trackPointObjects)
+		// Switch to INFO screen.		
 	})
 
 /*

@@ -5,10 +5,11 @@ import { gpxFile, } from '../app.js';
 
 let trackPointList;
 let trackPointObjects = [];
-
 let gpxProcessingTime = new UTIL.PerformanceStat;
 let gpxProcessingStart;
 let gpxProcessingEnd;
+
+export {trackPointObjects} 
 
 const HOME = (function () {
 
@@ -28,7 +29,6 @@ const HOME = (function () {
   function undertextClicked() {
     console.log('TODO: undertext clicked');
   }
-
 
 	function handleFileSelect(event) {
 		console.log('handleFileSelect');
@@ -117,7 +117,7 @@ const HOME = (function () {
 		let previousTrackpoint;
 	
 		for ( let i=0; i<trackPointList.length; i++ ) {
-			let currentTrackpoint = new TrackPoint;
+			let currentTrackpoint = new UTIL.TrackPoint;
 			let currentTrackpointRaw = trackPointList[i];
 	
 			currentTrackpoint.id = i;
@@ -178,6 +178,7 @@ const HOME = (function () {
     processGpx,
     calculateGpxProcessingTime,
     gpxProcessingTime,
+		trackPointObjects
   }	
 })();
 

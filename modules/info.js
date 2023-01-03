@@ -1,9 +1,14 @@
 import { UTIL } from './utilities.js';
 
-import { uploadInput } from '../app.js';
-import { gpxFile, gpxText, parser, trackPointObjects, statList, stopTime, stopSpeed, eleGain, eleLoss, } from '../app.js';
+import { trackPointObjects } from './home.js';
+import { gpxFile, gpxText, parser,  stopTime, stopSpeed,  } from '../app.js';
 
 const INFO = (function () {
+  let statList = [];
+  let eleGain = 0;
+  let eleLoss = 0;
+
+
   class Statistic {
     constructor(name, value) {
       this.name = name;
@@ -67,14 +72,14 @@ const INFO = (function () {
     // Total distance
       let totalDistance = new Statistic;
       totalDistance.name = 'Distance';
-      totalDistance.value = metersToKm(
+      totalDistance.value = UTIL.metersToKm(
         totalDistance.calcDist(trackPointObjects));
       totalDistance.addStat(totalDistance, 'km');
 
     // Moving time
       let movingTime = new Statistic;
       movingTime.name = 'Moving time';
-      movingTime.value = secondsToMinutesAndSeconds(
+      movingTime.value = UTIL.secondsToMinutesAndSeconds(
         movingTime.calcMovingTime(trackPointObjects));		
       movingTime.addStat(movingTime, '');
 
@@ -91,14 +96,21 @@ const INFO = (function () {
       elevationLoss.addStat(elevationLoss, 'm');
 
     console.log('stat calculation ended.')
+    console.log(statList);
 
   }
 
   function displayAllStats() {
     console.log(trackPointObjects);
     calculateStats(trackPointObjects);
+    console.log(statList);
     statisticsObject.innerHTML = statList;
     // displayPerformance();
+  }
+
+  return {
+    calculateStats,
+    statList
   }
 })();
 
