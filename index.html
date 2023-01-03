@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+  
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,52 +12,55 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="icon" type="image/x-icon" href="images/favicon.ico">
 </head>
+
 <body>
-  <div id="background-img"></div>
-  <div id="page-container">
-    <header id="page-header">
-      <h1>read my ride</h1>
-      <p id="header-description" class="medium-text">This tool analyzes your rides.</p>
+  <div class="page__background"></div>
+  <div class="page__container">
+    <header class="header">
+      <h1 class="header__text">read my ride</h1>
+      <p class="header__description medium-text">This tool analyzes your rides.</p>
     </header>
-    <article id="upload-tile" class="tile" style=" display:none ">
-      <div id="upload-group">
-        <input id="upload-input" type="file" name="file" style="display: none;"/>
-        <button id="upload-btn" class="button">+</button>
+    <article class="upload card" style=" display:none ">
+      <div class="upload__group">
+        <input class="upload__input" type="file" name="file" style="display: none;"/>
+        <button class="upload__btn   button">+</button>
         <div>
-          <h3 id="upload-text" class="large-text">Upload your .gpx file</h3>
-          <p id="upload-undertext" class="medium-underlined-text">...or use one of our examples</p>
-          <p id="upload-error" class="medium-text" style = "visibility: hidden">Invalid .gpx file.</p>
-          <p id="upload-error-hint" class="medium-text" style = "visibility: hidden">You can use one of ours:</p>
+          <h3 class="upload__text  large-text">Upload your .gpx file</h3>
+          <p class="upload__undertext  medium-underlined-text">...or use one of our examples</p>
+          <p class="upload__error  medium-text" style = "visibility: hidden">Invalid .gpx file.</p>
+          <p class="upload__error-hint   medium-text" style = "visibility: hidden">You can use one of ours:</p>
         </div>
       </div>
-      <footer>
-        <a href="gpx_examples/short.gpx" class="gpx-tile small-text" id="file-1">
-          <img class="gpx-icon" src="images/mapicon.svg">
+      <footer class="example-files">
+        <a href="gpx_examples/short.gpx" class="example-files__tile small-text">
+          <img class="gpx-thumbnail" src="images/mapicon.svg">
           short.gpx
         </a>
-        <a href="gpx_examples/medium.gpx" class="gpx-tile small-text" id="file-2">
-          <img class="gpx-icon" src="images/mapicon.svg">
+        <a href="gpx_examples/medium.gpx" class="example-files__tile small-text">
+          <img class="gpx-thumbnail" src="images/mapicon.svg">
           med.gpx
         </a>
-        <a href="gpx_examples/long.gpx" class="gpx-tile small-text" id="file-3">
-          <img class="gpx-icon" src="images/mapicon.svg">
+        <a href="gpx_examples/long.gpx" class="example-files__tile small-text">
+          <img class="gpx-thumbnail" src="images/mapicon.svg">
           long.gpx
         </a>
       </footer>
     </article>
-    <main id="info" style="  ">
-      <article id="load-another" class="tile">
-        <div id="go-back-group">
-          <a id="go-back-link">
-            <button id="go-back-btn" class="button">+</button>
+    <main class="info" style="  ">
+      <article class="info__load-another-card  card  card--dark">
+        <div class="info__go-back-group">
+          <a class="info__go-back-link">
+            <button class="info__go-back-btn  button  button--dark">+</button>
           </a>
-          <h3 id="go-back-text" class="large-text">Load another ride</h3>
+          <h3 class="info__go-back-text  large-text">Load another ride</h3>
         </div>  
       </article>
       <main>
-        <article class="map tile"></article>
-        <aside id="left-sidebar" class="data-container">
-          <div class="tile" id="statistics">
+        <article class="map card"></article>
+
+        <aside class="stats-panel  card">
+
+          <div class="statistics">
             <h3 class="xl-text">Statistics</h3>
             <table class="medium-text" id="table--stats">
               <tr>
@@ -96,17 +100,59 @@
                 <td><b>6</b> %</td>
               </tr>
             </table>
+            <br>
           </div>
-          <div class="tile power-info">
-            <h3 class="large-text">Power info</h3>
-            <table id="table--power">
+
+          <div class="power">
+            <h3 class="power__header large-text">Power info</h3>
+            <div class="power__input-box  card  card--inner">
+              <div class="power__your-weight">
+                <a class="power__type-weight-link">
+                  <button class="power__type-weight-btn  button">+</button>
+                </a>
+                <span class="power__type-weight-text  large-text--hint">Type in your weight</span>
+              </div>  
+              <div class="power__bike-weight">
+                <a class="power__type-weight-link">
+                  <button class="power__type-weight-btn  button">+</button>
+                </a>
+                <span class="power__type-weight-text  large-text--hint">Type in your bike weight</span>
+              </div>
+            </div>
+            <table class="table--power  medium-text">
+              <tr>
+                <td>Avg. power:</td>
+                <td><b>155</b> W</td>
+              </tr>
+              <tr>
+                <td>Max power:</td>
+                <td><b>465</b> W</td>
+              </tr>
+              <tr>
+                <td>Energy burnt:</td>
+                <td><b>865</b> kCal</td>
+              </tr>
             </table>
           </div>
         </aside>
-        <aside class="data-container">
-          <h3>Performance:</h3>
-          <ul id="performance"></ul>
+
+        <aside class="graph-panel  card">
+          <article class="graph__elevation  card  card--inner">
+            <h3 class="large-text  large-text--lighter">Elevation</h3>
+          </article>
+          <article class="graph__speed  card  card--inner">
+            <h3 class="large-text  large-text--lighter">Speed</h3>
+          </article>
+          <article class="graph__gradients  card  card--inner">
+            <h3 class="large-text  large-text--lighter">Gradients</h3>
+          </article>
         </aside>
+
+        <footer class="footer">
+          <a href="" class="footer__photo-credit  medium-underlined-text"><p>photo: Jan Kopřiva</p></a>
+          <a href="" class="footer__webdesign-credit  medium-underlined-text"><p>webdesign: Mateusz Rymar</p></a>
+        </footer>
+
       </main>
     </main>
   
