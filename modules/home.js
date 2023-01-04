@@ -87,16 +87,29 @@ const HOME = (function () {
 			});
 	}	
 
-	function checkFileSize(file) {
-		let noOfOptimizations = Math.floor(file.size/maxFileSize);
-		console.log(noOfOptimizations);
-		if ( file.size > maxFileSize ) {
-      console.log("File's too big, we'll optimize it.");
-    }
-		for ( let i = 0; i < noOfOptimizations; i++ ) {
-			console.log('optimization step', i);
-			// this function needs to run async
+	function checkFileSize(fileSize) {
+		let noOfOptimizations = Math.floor(fileSize/maxFileSize);
+		if ( fileSize > maxFileSize ) {
+      console.log(`File's too big, we need to take 1 in every ${Math.pow( 2, noOfOptimizations )} points.`);
+    } else {
+      console.log("File size ok, no need to optimize it.");			
 		}
+		return noOfOptimizations;
+	}
+
+	function optimizeFile(contentArray, noOfOptimizations) {
+		let optimized = [];
+		console.log(contentArray);
+
+		for ( let i=0; i<contentArray.length; i++) {
+			let currentEntry = contentArray[i];
+
+			optimized.push(currentEntry);
+
+			i = i + Math.pow( 2, noOfOptimizations );
+		}
+
+		console.log(optimized);
 	}
 
 	function handleFileLoad(event) {
@@ -178,6 +191,7 @@ const HOME = (function () {
     processGpx,
     calculateGpxProcessingTime,
 		checkFileSize,
+		optimizeFile,
     gpxProcessingTime,
 		trackPointObjects
   }	

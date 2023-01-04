@@ -21,6 +21,7 @@ export { DOM };
 // Variables
 let gpxFile;
 let gpxFileContent;
+let gpxFileSize;
 let gpxText;
 let parser;
 let stopTime = 10; // Time interval [s] when we consider user stopped.
@@ -121,7 +122,7 @@ const validateUpload = () => {
 				isUploadValid = true;
 				console.log('File is valid.');
 				const reader = new FileReader();
-				console.log(gpxFile);
+				gpxFileSize = gpxFile.size;
 
 				if (gpxFile) {
 					reader.readAsText(gpxFile);
@@ -133,22 +134,24 @@ const validateUpload = () => {
 					gpxFileContent = reader.result;
 					resolve( 'File is valid.' );
 				}, false);
-
 			}
 		}
 
 		function displayHint() { UTIL.StateManager.setState('home_uploadErrorHint') }
 
 		function loadFile(event) {
-			console.log(event);
 			event.preventDefault();
-			console.log(event.target.href);
 			gpxFile = (event.target.href);
 			fetch(event.target.href)
-				.then(res => res.text())
+				.then(res => res.blob())
+				.then(blob => {
+					// here we can check file size:
+					gpxFileSize = blob.size;
+					return blob
+				})
+				.then(blob => blob.text())
 				.then(text => {
 					console.log('blob read.');
-					console.log(text);
 					gpxFileContent = text;
 					resolve( 'File is valid.' )
 				})
@@ -158,33 +161,34 @@ const validateUpload = () => {
 }
 
 validateUpload()
+	.then (() => {
+		HOME.processGpx(gpxFileContent);
+		localStorage.clear();
+		// And optionally, display a loading screen in the meantime.
+	})
 	.then(() => {
 		//here we'll check the file size.
-		console.log(gpxFile);
-		HOME.checkFileSize(gpxFile);
+		console.log(gpxFileSize);
+		let numberOfOptimizations = HOME.checkFileSize(gpxFileSize);
+		// console.log(HOME.trackPointObjects)
+		if ( numberOfOptimizations > 0 ) {
+			HOME.optimizeFile( HOME.trackPointObjects, numberOfOptimizations );
+		}
 	})
-// 	.then (() => {
-// 		HOME.processGpx(gpxFileContent);
-// 		localStorage.clear();
-// 		// And optionally, display a loading screen in the meantime.
-// 	})
-// 	.then (() => {
-// 		let dataToSave = JSON.stringify(HOME.trackPointObjects);
-// 		localStorage.setItem('currentGpx', dataToSave);
+	.then (() => {
+		let dataToSave = JSON.stringify(HOME.trackPointObjects);
+		localStorage.setItem('currentGpx', dataToSave);
 
-// 		INFO.createPolyline(HOME.trackPointObjects);
+		INFO.createPolyline(HOME.trackPointObjects);
 
-// 		INFO.calculateStats(HOME.trackPointObjects)
-// 	})
-// 	.then (() => {
-// 		UTIL.StateManager.setState('info_baseState');
-// 	})
-// 	.then (() => {
-// 		INFO.setupMap();
-// 	})
-// 	.then(() => {
-		
-// 	})
+		INFO.calculateStats(HOME.trackPointObjects)
+	})
+	.then (() => {
+		UTIL.StateManager.setState('info_baseState');
+	})
+	.then (() => {
+		INFO.setupMap();
+	})
 // 	.then(() => {
 
 // })

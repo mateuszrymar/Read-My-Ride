@@ -176,7 +176,6 @@ const UTIL = (function() {
 			stateToStore.domElements = elementsArray;
 
 			storedStates.push(stateToStore);
-			console.log(storedStates);
 		}
 
 		function createNewState( newStateName, newElements, newStyles, newInnerHtml ) {
@@ -184,7 +183,6 @@ const UTIL = (function() {
 			let baseState = storedStates[0];
 			let baseIds = (baseState.domElements).map(
 				({ id, innerHtml, style }) => {return id});
-			console.log(baseState);
 	
 			let newElementsIds = [];
 			for ( let i=0; i<newElements.length; i++) {
@@ -241,12 +239,10 @@ const UTIL = (function() {
 		function setState(newStateName) {
 			let oldState = checkCurrentState();
 			let baseState = storedStates[0];
-			console.log(oldState);
 			let newState;
 			// first we need to check if a State exists with a name === newState
 			if ( findStateIndex(newStateName) !== -1 ) {
 				newState = storedStates[findStateIndex(newStateName)];
-				console.log( oldState, newState );
 				switchStates( oldState, baseState );
 				switchStates( baseState, newState );
 			} else throw new Error ('This state has not been specified yet.')
@@ -254,12 +250,9 @@ const UTIL = (function() {
 			// now we change all DOM objects.
 			newState.domElements.forEach(item => {
 				if ( item.innerHtml !== '' ) {
-					console.log(item.innerHtml)
 					document.getElementsByClassName(item.id)[0].innerHTML = `${item.innerHtml}`;
 				};
 				if ( item.style !== '' ) {
-					console.log(document.getElementsByClassName(item.id)[0].style);
-					console.log(item.style);
 					document.getElementsByClassName(item.id)[0].style = `${item.style}`;
 				};
 			});
