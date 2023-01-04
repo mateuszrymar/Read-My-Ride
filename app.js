@@ -1,7 +1,8 @@
 
 // HTML Elements
 const DOM = {
-	uploadTile: document.getElementsByClassName("home")[0],
+	home: document.getElementsByClassName("home")[0],
+	info: document.getElementsByClassName("info")[0],
 
 	readGpxBtn: document.getElementsByClassName("upload__button")[0],
 	uploadInput: document.getElementsByClassName("upload__input")[0],
@@ -35,6 +36,7 @@ import { HOME } from './modules/home.js'
 import { INFO } from './modules/info.js';
 
 /* Todo list
+	- Add a map.
 	- Create a function to generate overall statistics:
 		- DONE total distance
 		- DONE elevation gain
@@ -45,9 +47,6 @@ import { INFO } from './modules/info.js';
 		- average speed
 		- DONE moving time
 		- total time
-	- Display an information to the user when file upload was cancelled.
-	- Display an information to the user uploaded file had a wrong extension.
-	- Check if GPX file is really of an XML / GPX format.
 	- Check if GPX doesn't exceed 5MB limit.
 	- If GPX is too big, remove every 2nd point until it's ok.
 	- Create a function to generate a line chart from elevation data.
@@ -56,7 +55,7 @@ import { INFO } from './modules/info.js';
 		- estimated avg power
 		- max power
 		- calories burnt
-	- Save JSON to local storage
+	- DONE Save JSON to local storage
 	- Add a progress bar.
 	- Add a comparison functionality.
 */
@@ -67,7 +66,7 @@ import { INFO } from './modules/info.js';
 UTIL.StateManager.getStateManager(); // Initialization.
 UTIL.StateManager.storeDom( 'home_baseState', DOM );
 HOME.init();
-console.log(UTIL.storedStates);
+
 UTIL.StateManager.createNewState( 
 	'home_uploadError', 
 	[ DOM.uploadError, DOM.uploadErrorHint ], 
@@ -82,9 +81,9 @@ UTIL.StateManager.createNewState(
 );
 UTIL.StateManager.createNewState( 
 	'info_baseState', 
-	[ DOM.uploadTile ], 
-	[ 'display:none' ],
-	[ '' ],
+	[ DOM.home, DOM.info ], 
+	[ 'display:none', 'display:block' ],
+	[ '', '' ],
 );
 console.log(UTIL.storedStates);
 
@@ -158,17 +157,41 @@ const validateUpload = () => {
 validateUpload()	
 	.then (() => {
 		HOME.processGpx(gpxFileContent);
+		localStorage.clear();
 		// And optionally, display a loading screen in the meantime.
 	})
 	.then (() => {
+		let dataToSave = JSON.stringify(HOME.trackPointObjects);
+		localStorage.setItem('currentGpx', dataToSave);
+
+		INFO.createPolyline(HOME.trackPointObjects);
+
 		INFO.calculateStats(HOME.trackPointObjects)
 	})
 	.then (() => {
-		console.log('now i should switch.')
 		UTIL.StateManager.setState('info_baseState');
-		// Switch to INFO screen.
-
 	})
+	.then (() => {
+		INFO.setupMap();
+
+		// INFO.map.invalidateSize();
+		// INFO.map.fitBounds([
+		// 	[40.712, -74.227],
+		// 	[40.774, -74.125]
+		// ]);
+	})
+	.then(() => {
+		
+	})
+	.then(() => {
+		
+	})
+	.then(() => {
+
+})
+
+
+	
 
 /*
 // create a stateManager utility, store homeBaseState properties (mostly none).

@@ -276,11 +276,11 @@ body {
   margin-top: 0.25rem;
 }
 
-.stats__map{
+#map{
+  /* height: 100px;
+  width: 100px; */
   width: calc(var(--card-width) - 1rem);
   height: calc(var(--card-width) - 1rem);
-  background-image: url(./images/map.png);
-  background-size: cover;
   border: 0.5rem solid var(--grey-10);
 }
 
