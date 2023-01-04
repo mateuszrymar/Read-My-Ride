@@ -1,7 +1,7 @@
 import { UTIL } from './utilities.js';
 
 import { DOM } from '../app.js';
-import { gpxFile, } from '../app.js';
+import { gpxFile, maxFileSize } from '../app.js';
 
 let trackPointList;
 let trackPointObjects = [];
@@ -177,6 +177,7 @@ const HOME = (function () {
     handleFileLoad,
     processGpx,
     calculateGpxProcessingTime,
+		checkFileSize,
     gpxProcessingTime,
 		trackPointObjects
   }	

@@ -26,7 +26,8 @@ let parser;
 let stopTime = 10; // Time interval [s] when we consider user stopped.
 let stopSpeed = 0.3; // Slowest speed [m/s] considered a movement.
 let isUploadValid = false;
-export { gpxFile, gpxText, parser, stopTime, stopSpeed, };
+let maxFileSize = 5e6;
+export { gpxFile, gpxText, parser, stopTime, stopSpeed, maxFileSize };
 
 // Files
 // const fileShort = File ;
@@ -142,10 +143,12 @@ const validateUpload = () => {
 			console.log(event);
 			event.preventDefault();
 			console.log(event.target.href);
+			gpxFile = (event.target.href);
 			fetch(event.target.href)
 				.then(res => res.text())
 				.then(text => {
 					console.log('blob read.');
+					console.log(text);
 					gpxFileContent = text;
 					resolve( 'File is valid.' )
 				})
@@ -154,41 +157,37 @@ const validateUpload = () => {
 	}, isUploadValid)
 }
 
-validateUpload()	
-	.then (() => {
-		HOME.processGpx(gpxFileContent);
-		localStorage.clear();
-		// And optionally, display a loading screen in the meantime.
-	})
-	.then (() => {
-		let dataToSave = JSON.stringify(HOME.trackPointObjects);
-		localStorage.setItem('currentGpx', dataToSave);
-
-		INFO.createPolyline(HOME.trackPointObjects);
-
-		INFO.calculateStats(HOME.trackPointObjects)
-	})
-	.then (() => {
-		UTIL.StateManager.setState('info_baseState');
-	})
-	.then (() => {
-		INFO.setupMap();
-
-		// INFO.map.invalidateSize();
-		// INFO.map.fitBounds([
-		// 	[40.712, -74.227],
-		// 	[40.774, -74.125]
-		// ]);
-	})
+validateUpload()
 	.then(() => {
+		//here we'll check the file size.
+		console.log(gpxFile);
+		HOME.checkFileSize(gpxFile);
+	})
+// 	.then (() => {
+// 		HOME.processGpx(gpxFileContent);
+// 		localStorage.clear();
+// 		// And optionally, display a loading screen in the meantime.
+// 	})
+// 	.then (() => {
+// 		let dataToSave = JSON.stringify(HOME.trackPointObjects);
+// 		localStorage.setItem('currentGpx', dataToSave);
+
+// 		INFO.createPolyline(HOME.trackPointObjects);
+
+// 		INFO.calculateStats(HOME.trackPointObjects)
+// 	})
+// 	.then (() => {
+// 		UTIL.StateManager.setState('info_baseState');
+// 	})
+// 	.then (() => {
+// 		INFO.setupMap();
+// 	})
+// 	.then(() => {
 		
-	})
-	.then(() => {
-		
-	})
-	.then(() => {
+// 	})
+// 	.then(() => {
 
-})
+// })
 
 
 	
