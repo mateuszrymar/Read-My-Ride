@@ -15,6 +15,8 @@
   font-family: 'Poppins', sans-serif;
   font-size: 16px;
   color: var(--grey-90);
+
+  --card-width: 17.5rem;
 }
 
 /* Text Styles */
@@ -115,17 +117,17 @@ body {
 .header {
   display: flex;
   flex-direction: column;
-  /* justify-content: center; */
+  justify-content: center;
+  align-items: left;
   position: relative;
-  width: 92vw;
-  height: 8rem;
-  left: 24px;
-  top: 14px;
+  margin: 1.5rem 0;
+  text-shadow: -2px -2px 5px var(--grey-90),
+               -2px 2px 5px var(--grey-90),
+                2px -2px 5px var(--grey-90),
+                2px 2px 5px var(--grey-90);
 }
 .header__description {
-  display: flex;
   margin: 0;
-  margin-bottom: 3rem;
   position: relative;
   color: var(--grey-40);
   bottom: 0;
@@ -139,13 +141,15 @@ body {
   border-radius: 1.75rem;
   padding: 1rem;
   width: 17.5rem;
+  box-shadow: 2px 2px 5px var(--grey-90);
+
 }
 .card--inner{
   border-radius: 1rem;
   max-width: 100%;
   margin: 0;
   background-color: var(--grey-20);
-  padding: 0.25rem;
+  padding: 0.5rem;
 }
 .card--inner + .card--inner{
   margin-top: 0.75rem;
@@ -247,7 +251,7 @@ body {
   flex-direction: column;
   align-items: center;
 }
-.load-panel{
+.info__load-panel{
   margin: 0;
 }
 .input-group{
@@ -268,11 +272,11 @@ body {
   margin-top: 0.25rem;
 }
 
-.map-panel{
+.stats__map{
+  width: calc(var(--card-width) - 1rem);
+  height: calc(var(--card-width) - 1rem);
   background-image: url(./images/map.png);
   background-size: cover;
-  width: 18.5rem;
-  height: 19.5rem;
   border: 0.5rem solid var(--grey-10);
 }
 
@@ -282,19 +286,15 @@ body {
   margin-top: 0;
   margin-bottom: 0.25rem;
 }
+.graph{
+  width: 100%;
+}
 
 .footer{
   color: var(--grey-20);
   margin-top: 4rem;
-  margin-left: 2rem;
+  margin-left: 0;
 }
 .footer__photo-credit, .footer__webdesign-credit{
   color: var(--grey-20);  
-}
-
-
-
-#data-cluster {
-  display: flex;
-  gap: 1em;
 }
