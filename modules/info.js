@@ -93,6 +93,26 @@ const INFO = (function () {
       return eleLoss.toFixed(0);
     }
 
+    calcTotalTime(trackPointObjects) {
+      let totalTime;
+      let start = trackPointObjects.at(0);
+      let end = trackPointObjects.at(-1);      
+      
+      totalTime = (Date.parse(end.time) - Date.parse(start.time))/1000; //in seconds
+
+      return totalTime;
+    }
+
+    calcAvgSpeed( totalDistance, trackPointObjects ) {
+      let result;
+      let seconds = this.calcMovingTime(trackPointObjects);
+      
+      result = (totalDistance.value / ( seconds / 3600)).toFixed(2);
+      console.log(result);
+
+      return result;
+    }
+
     addStat(stat, unit) {
       statList = (`${statList}
         <li>${stat.name}: ${stat.value} ${unit}</li>
@@ -116,6 +136,21 @@ const INFO = (function () {
         movingTime.calcMovingTime(trackPointObjects));		
       movingTime.addStat(movingTime, '');
 
+    // Total time
+      let totalTime = new Statistic;
+      totalTime.name = 'Total time';
+      totalTime.value = UTIL.secondsToMinutesAndSeconds(
+        totalTime.calcTotalTime(trackPointObjects));		
+      totalTime.addStat(totalTime, '');
+
+    // Average speed
+      let avgSpeed = new Statistic;
+      avgSpeed.name = 'Avg. speed';
+      avgSpeed.value = avgSpeed.calcAvgSpeed(totalDistance, trackPointObjects );		
+      avgSpeed.addStat(avgSpeed, 'km/h');
+
+    // Max speed
+
     // Elevation gain
       let elevationGain  = new Statistic;
       elevationGain.name = 'Elevation Gain';
@@ -127,6 +162,10 @@ const INFO = (function () {
       elevationLoss.name = 'Elevation Loss';
       elevationLoss.value = elevationLoss.calcElevationLoss(trackPointObjects);
       elevationLoss.addStat(elevationLoss, 'm');
+
+    // Max. gradient
+
+    // Avg. gradient
 
     console.log('stat calculation ended.')
     console.log(statList);

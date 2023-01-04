@@ -99,7 +99,6 @@ const HOME = (function () {
 
 	function optimizeFile( contentArray, noOfOptimizations ) {
 		let optimized = [];
-		console.log(contentArray);
 
 		for ( let i=0; i<contentArray.length; i++) {
 			let currentEntry = contentArray[i];
@@ -109,7 +108,6 @@ const HOME = (function () {
 			i = i + Math.pow( 2, (noOfOptimizations - 1) );
 		}
 
-		console.log(optimized);
 		return optimized;
 	}
 
@@ -123,9 +121,9 @@ const HOME = (function () {
 		
 		let trackPointTemplate = /(<trkpt)((.|\n)*?)(<\/trkpt>)/g;
 		trackPointList = content.match(trackPointTemplate); // We divided GPX into individual trackpoints.
-		// Now if file is too large, we'll skip some points.
+		
+		// Now if file is too large, we'll skip some points:
 		let numberOfOptimizations = checkFileSize(gpxFileSize);
-		console.log(numberOfOptimizations);
 		if ( numberOfOptimizations > 0 ) {
 			let newTrackpoints = HOME.optimizeFile( trackPointList, numberOfOptimizations );
 			trackPointList = newTrackpoints;

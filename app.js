@@ -38,7 +38,6 @@ import { HOME } from './modules/home.js'
 import { INFO } from './modules/info.js';
 
 /* Todo list
-	- DONE Add a map.
 	- Create a function to generate overall statistics:
 		- DONE total distance
 		- DONE elevation gain
@@ -48,16 +47,13 @@ import { INFO } from './modules/info.js';
 		- max speed
 		- average speed
 		- DONE moving time
-		- total time
-	- DONE Check if GPX doesn't exceed 5MB limit.
-	- DONE If GPX is too big, remove every 2nd point until it's ok.
+		- DONE total time
 	- Create a function to generate a line chart from elevation data.
 	- Create a function to generate a pie chart of time at gradients from elevation and time data.
 	- Function to create additional power info: takes weights as input, outputs:
 		- estimated avg power
 		- max power
 		- calories burnt
-	- DONE Save JSON to local storage
 	- Add a progress bar.
 	- Add a comparison functionality.
 */
