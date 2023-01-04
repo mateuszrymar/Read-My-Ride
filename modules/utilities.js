@@ -188,8 +188,7 @@ const UTIL = (function() {
 	
 			let newElementsIds = [];
 			for ( let i=0; i<newElements.length; i++) {
-				let currentId = newElements[i].id;
-				console.log(newElements[i]);
+				let currentId = newElements[i].classList[0];
 				newElementsIds.push(currentId);
 			}		
 			let newEntries = []
@@ -199,7 +198,6 @@ const UTIL = (function() {
 			for ( let i=0; i<baseState.domElements.length; i++ ) {
 				let currentEntryId = (baseIds[i]);
 				let indexOfNewElement = newElementsIds.indexOf(currentEntryId);
-				console.log(indexOfNewElement);
 				
 				// THE BUG WAS IN THESE CONDITIONAL STATEMENTS:
 				if (indexOfNewElement !== -1) {
