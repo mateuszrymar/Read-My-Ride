@@ -150,18 +150,18 @@ const UTIL = (function() {
 			let elementsArray = [];
 			let stateToStore = new State;
 			
-
+			
 			stateToStore.name = stateName;
 			stateToStore.current = true;
-
+			
 			let entry = Object.entries(elementsToStore);
 			let styleTemplate = /(style=")((.|\n)*?)(")/;
 			for ( let i = 0; i < entry.length; i++ ) {
 				let currentElement = new domElement;
-
-				currentElement.id = entry[i][1].id;				
+				
+				currentElement.id = entry[i][1].classList[0];				
 				currentElement.innerHtml = entry[i][1].innerHTML;
-
+				
 				// console.log(i);
 				let currentOuterHtml = entry[i][1].outerHTML;
 				let currentStyle = currentOuterHtml.match(styleTemplate);
@@ -189,6 +189,7 @@ const UTIL = (function() {
 			let newElementsIds = [];
 			for ( let i=0; i<newElements.length; i++) {
 				let currentId = newElements[i].id;
+				console.log(newElements[i]);
 				newElementsIds.push(currentId);
 			}		
 			let newEntries = []
@@ -198,6 +199,7 @@ const UTIL = (function() {
 			for ( let i=0; i<baseState.domElements.length; i++ ) {
 				let currentEntryId = (baseIds[i]);
 				let indexOfNewElement = newElementsIds.indexOf(currentEntryId);
+				console.log(indexOfNewElement);
 				
 				// THE BUG WAS IN THESE CONDITIONAL STATEMENTS:
 				if (indexOfNewElement !== -1) {
@@ -252,14 +254,15 @@ const UTIL = (function() {
 			} else throw new Error ('This state has not been specified yet.')
 
 			// now we change all DOM objects.
-			console.log(newState.domElements);
 			newState.domElements.forEach(item => {
-				// document.getElementById(item.element).style = item.style;
 				if ( item.innerHtml !== '' ) {
-					document.getElementById(item.id).innerHTML = item.innerHtml;
+					console.log(item.innerHtml)
+					document.getElementsByClassName(item.id)[0].innerHTML = `${item.innerHtml}`;
 				};
 				if ( item.style !== '' ) {
-					document.getElementById(item.id).style = item.style;
+					console.log(document.getElementsByClassName(item.id)[0].style);
+					console.log(item.style);
+					document.getElementsByClassName(item.id)[0].style = `${item.style}`;
 				};
 			});
 

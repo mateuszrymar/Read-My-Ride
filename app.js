@@ -1,20 +1,20 @@
 
 // HTML Elements
 const DOM = {
-	uploadTile: document.getElementById("upload-tile"),
+	uploadTile: document.getElementsByClassName("home")[0],
 
-	readGpxBtn: document.getElementById("upload-btn"),
-	uploadInput: document.getElementById("upload-input"),
-	performanceObject: document.getElementById("performance"),
-	statisticsObject: document.getElementById("stats"),
-	uploadText: document.getElementById("upload-text"),
-	uploadUndertext: document.getElementById("upload-undertext"),
-	uploadError: document.getElementById("upload-error"),
-	uploadErrorHint: document.getElementById("upload-error-hint"),
-	file_1: document.getElementById("file-1"),
-	file_2: document.getElementById("file-2"),
-	file_3: document.getElementById("file-3"),	
+	readGpxBtn: document.getElementsByClassName("upload__button")[0],
+	uploadInput: document.getElementsByClassName("upload__input")[0],
+	statisticsObject: document.getElementsByClassName("stats")[0],
+	uploadText: document.getElementsByClassName("upload__text")[0],
+	uploadUndertext: document.getElementsByClassName("upload__undertext")[0],
+	uploadError: document.getElementsByClassName("upload__error")[0],
+	uploadErrorHint: document.getElementsByClassName("upload__error-hint")[0],
+	file_1: document.getElementsByClassName("examples__tile-1")[0],
+	file_2: document.getElementsByClassName("examples__tile-2")[0],
+	file_3: document.getElementsByClassName("examples__tile-3")[0],	
 };
+console.log(DOM)
 export { DOM };
 
 // Variables
@@ -140,6 +140,7 @@ const validateUpload = () => {
 		function displayHint() { UTIL.StateManager.setState('home_uploadErrorHint') }
 
 		function loadFile(event) {
+			console.log(event);
 			event.preventDefault();
 			console.log(event.target.href);
 			fetch(event.target.href)
@@ -163,6 +164,7 @@ validateUpload()
 		INFO.calculateStats(HOME.trackPointObjects)
 	})
 	.then (() => {
+		console.log('now i should switch.')
 		UTIL.StateManager.setState('info_baseState');
 		// Switch to INFO screen.
 
