@@ -20,49 +20,54 @@
       <h1 class="header__text">read my ride</h1>
       <p class="header__description medium-text">This tool analyzes your rides.</p>
     </header>
-    <article class="upload card" style=" display:none ">
-      <div class="upload__group">
+
+    <article class="home  card" style=" display:none ">
+      <div class="home__upload">
         <input class="upload__input" type="file" name="file" style="display: none;"/>
-        <button class="upload__btn   button">+</button>
+        <button class="upload__button   button">+</button>
         <div>
           <h3 class="upload__text  large-text">Upload your .gpx file</h3>
           <p class="upload__undertext  medium-underlined-text">...or use one of our examples</p>
-          <p class="upload__error  medium-text" style = "visibility: hidden">Invalid .gpx file.</p>
-          <p class="upload__error-hint   medium-text" style = "visibility: hidden">You can use one of ours:</p>
+          <p class="upload__error  medium-text  medium-text--error" style = "visibility: hidden">
+              Invalid .gpx file.</p>
+          <p class="upload__error-hint   medium-text  medium-text--hint" style = "visibility: hidden">You can use one of ours:</p>
         </div>
       </div>
-      <footer class="example-files">
-        <a href="gpx_examples/short.gpx" class="example-files__tile small-text">
-          <img class="gpx-thumbnail" src="images/mapicon.svg">
-          short.gpx
+      <footer class="home__examples">
+        <a href="gpx_examples/short.gpx" class="examples__tile small-text">
+          <img class="thumbnail" src="images/mapicon.svg">
+          <span class="small-text">short.gpx</span>
         </a>
-        <a href="gpx_examples/medium.gpx" class="example-files__tile small-text">
-          <img class="gpx-thumbnail" src="images/mapicon.svg">
-          med.gpx
+        <a href="gpx_examples/medium.gpx" class="examples__tile small-text">
+          <img class="thumbnail" src="images/mapicon.svg">
+          <span class="small-text">med.gpx</span>
         </a>
-        <a href="gpx_examples/long.gpx" class="example-files__tile small-text">
-          <img class="gpx-thumbnail" src="images/mapicon.svg">
-          long.gpx
+        <a href="gpx_examples/long.gpx" class="examples__tile small-text">
+          <img class="thumbnail" src="images/mapicon.svg">
+          <span class="small-text">long.gpx</span>
         </a>
       </footer>
     </article>
+
     <main class="info" style="  ">
-      <article class="info__load-another-card  card  card--dark">
-        <div class="info__go-back-group">
-          <a class="info__go-back-link">
-            <button class="info__go-back-btn  button  button--dark">+</button>
+
+      <aside class="info__load-panel  card  card--dark">
+        <div class="load__group  input-group">
+          <a class="load__link">
+            <button class="load__button  button  button--dark">+</button>
           </a>
-          <h3 class="info__go-back-text  large-text">Load another ride</h3>
+          <span class="load__text  text  large-text  text--lighter">Load another ride</span>
         </div>  
-      </article>
-      <main>
-        <article class="map card"></article>
+      </aside>
 
-        <aside class="stats-panel  card">
+      <main class="info__stats-panel">
+        <article class="stats__map  card">
+        </article>
 
-          <div class="statistics">
-            <h3 class="xl-text">Statistics</h3>
-            <table class="medium-text" id="table--stats">
+        <aside class="stats__stats  card">
+          <div class="stats">
+            <h3 class="stats__header  xl-text">Statistics</h3>
+            <table class="stats__table  medium-text">
               <tr>
                 <td>Distance:</td>
                 <td><b>15.58</b> km</td>
@@ -103,23 +108,19 @@
             <br>
           </div>
 
-          <div class="power">
-            <h3 class="power__header large-text">Power info</h3>
-            <div class="power__input-box  card  card--inner">
-              <div class="power__your-weight">
-                <a class="power__type-weight-link">
-                  <button class="power__type-weight-btn  button">+</button>
-                </a>
-                <span class="power__type-weight-text  large-text--hint">Type in your weight</span>
+          <div class="stats__power">
+            <h3 class="power__header  large-text">Power info</h3>
+            <div class="power__input-box  card--inner">
+              <div class="power__input  input-group">
+                <button class="power__your-weight-button  button  button--small">+</button>                
+                <span class="power__your-weight-text  text  medium-text  text--lighter">Type in your weight</span>
               </div>  
-              <div class="power__bike-weight">
-                <a class="power__type-weight-link">
-                  <button class="power__type-weight-btn  button">+</button>
-                </a>
-                <span class="power__type-weight-text  large-text--hint">Type in your bike weight</span>
+              <div class="power__input  input-group">
+                <button class="power__bike-weight-button  button  button--small">+</button>
+                <span class="power__bike-weight-text  text  medium-text  text--lighter">Type in your bike weight</span>
               </div>
             </div>
-            <table class="table--power  medium-text">
+            <table class="power__table  medium-text">
               <tr>
                 <td>Avg. power:</td>
                 <td><b>155</b> W</td>
@@ -137,14 +138,17 @@
         </aside>
 
         <aside class="graph-panel  card">
-          <article class="graph__elevation  card  card--inner">
-            <h3 class="large-text  large-text--lighter">Elevation</h3>
+          <article class="graph__elevation  card--inner">
+            <h4 class="graph__header  medium-text  text--lighter">Elevation</h4>
+            <canvas class="graph__elevation-canvas  graph"></canvas>
           </article>
-          <article class="graph__speed  card  card--inner">
-            <h3 class="large-text  large-text--lighter">Speed</h3>
+          <article class="graph__speed  card--inner">
+            <h4 class="graph__header  medium-text  text--lighter">Speed</h4>
+            <canvas class="graph__speed-canvas  graph"></canvas>
           </article>
-          <article class="graph__gradients  card  card--inner">
-            <h3 class="large-text  large-text--lighter">Gradients</h3>
+          <article class="graph__gradients  card--inner">
+            <h4 class="graph__header  medium-text  text--lighter">Gradients</h4>
+            <canvas class="graph__gradient-canvas  graph"></canvas>
           </article>
         </aside>
 
