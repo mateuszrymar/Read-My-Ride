@@ -1,7 +1,7 @@
 import { UTIL } from './utilities.js';
 
 import { DOM } from '../app.js';
-import { gpxFile, maxFileSize } from '../app.js';
+import { gpxFile, maxFileSize, gpxFileSize } from '../app.js';
 
 let trackPointList;
 let trackPointObjects = [];
@@ -88,7 +88,7 @@ const HOME = (function () {
 	}	
 
 	function checkFileSize(fileSize) {
-		let noOfOptimizations = Math.floor(fileSize/maxFileSize);
+		let noOfOptimizations = Math.ceil(Math.log2(fileSize/maxFileSize));
 		if ( fileSize > maxFileSize ) {
       console.log(`File's too big, we need to take 1 in every ${Math.pow( 2, noOfOptimizations )} points.`);
     } else {
@@ -97,7 +97,7 @@ const HOME = (function () {
 		return noOfOptimizations;
 	}
 
-	function optimizeFile(contentArray, noOfOptimizations) {
+	function optimizeFile( contentArray, noOfOptimizations ) {
 		let optimized = [];
 		console.log(contentArray);
 
@@ -106,10 +106,11 @@ const HOME = (function () {
 
 			optimized.push(currentEntry);
 
-			i = i + Math.pow( 2, noOfOptimizations );
+			i = i + Math.pow( 2, (noOfOptimizations - 1) );
 		}
 
 		console.log(optimized);
+		return optimized;
 	}
 
 	function handleFileLoad(event) {
@@ -122,12 +123,22 @@ const HOME = (function () {
 		
 		let trackPointTemplate = /(<trkpt)((.|\n)*?)(<\/trkpt>)/g;
 		trackPointList = content.match(trackPointTemplate); // We divided GPX into individual trackpoints.
+		// Now if file is too large, we'll skip some points.
+		let numberOfOptimizations = checkFileSize(gpxFileSize);
+		console.log(numberOfOptimizations);
+		if ( numberOfOptimizations > 0 ) {
+			let newTrackpoints = HOME.optimizeFile( trackPointList, numberOfOptimizations );
+			trackPointList = newTrackpoints;
+		}
+
 		// Now we need to extract data from trackpoints into elements.
 		let latTemplate = /(lat=")((.|\n)*?)(")/;
 		let lonTemplate = /(lon=")((.|\n)*?)(")/;
 		let eleTemplate = /(<ele>)((.|\n)*?)(<\/ele>)/;
 		let timeTemplate = /(<time>)((.|\n)*?)(<\/time>)/;
 		let previousTrackpoint;
+
+
 	
 		for ( let i=0; i<trackPointList.length; i++ ) {
 			let currentTrackpoint = new UTIL.TrackPoint;

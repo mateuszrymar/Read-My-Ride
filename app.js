@@ -28,7 +28,7 @@ let stopTime = 10; // Time interval [s] when we consider user stopped.
 let stopSpeed = 0.3; // Slowest speed [m/s] considered a movement.
 let isUploadValid = false;
 let maxFileSize = 5e6;
-export { gpxFile, gpxText, parser, stopTime, stopSpeed, maxFileSize };
+export { gpxFile, gpxText, parser, stopTime, stopSpeed, maxFileSize, gpxFileSize };
 
 // Files
 // const fileShort = File ;
@@ -38,7 +38,7 @@ import { HOME } from './modules/home.js'
 import { INFO } from './modules/info.js';
 
 /* Todo list
-	- Add a map.
+	- DONE Add a map.
 	- Create a function to generate overall statistics:
 		- DONE total distance
 		- DONE elevation gain
@@ -49,8 +49,8 @@ import { INFO } from './modules/info.js';
 		- average speed
 		- DONE moving time
 		- total time
-	- Check if GPX doesn't exceed 5MB limit.
-	- If GPX is too big, remove every 2nd point until it's ok.
+	- DONE Check if GPX doesn't exceed 5MB limit.
+	- DONE If GPX is too big, remove every 2nd point until it's ok.
 	- Create a function to generate a line chart from elevation data.
 	- Create a function to generate a pie chart of time at gradients from elevation and time data.
 	- Function to create additional power info: takes weights as input, outputs:
@@ -165,15 +165,6 @@ validateUpload()
 		HOME.processGpx(gpxFileContent);
 		localStorage.clear();
 		// And optionally, display a loading screen in the meantime.
-	})
-	.then(() => {
-		//here we'll check the file size.
-		console.log(gpxFileSize);
-		let numberOfOptimizations = HOME.checkFileSize(gpxFileSize);
-		// console.log(HOME.trackPointObjects)
-		if ( numberOfOptimizations > 0 ) {
-			HOME.optimizeFile( HOME.trackPointObjects, numberOfOptimizations );
-		}
 	})
 	.then (() => {
 		let dataToSave = JSON.stringify(HOME.trackPointObjects);
