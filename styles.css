@@ -296,6 +296,18 @@ a {
 .graph{
   width: 100%;
 }
+.ct-series-a .ct-line,
+.ct-series-a .ct-point {
+  stroke: var(--orange-70);
+}
+.ct-series-a .ct-area{
+  fill: var(--orange-40);
+  fill-opacity: 1;
+}
+.ct-series-b .ct-line,
+.ct-series-b .ct-point {
+  stroke: green;
+}
 
 .footer{
   color: var(--grey-20);

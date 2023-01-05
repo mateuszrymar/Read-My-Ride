@@ -162,6 +162,14 @@ const HOME = (function () {
 			} else {
 				currentTrackpoint.dist = 0;
 			}
+
+			if (i>0) {
+				currentTrackpoint.totDist = parseFloat(previousTrackpoint.totDist) + parseFloat( currentTrackpoint.dist);
+				// currentTrackpoint.totDist = parseFloat(currentTrackpoint.totDist);
+				currentTrackpoint.totDist = currentTrackpoint.totDist.toFixed(3);
+			} else {
+				currentTrackpoint.totDist = 0;
+			}
 	
 			currentTrackpoint.speed = currentTrackpoint.speedBetweenPoints(
 				currentTrackpoint.dist, currentTrackpoint.interval

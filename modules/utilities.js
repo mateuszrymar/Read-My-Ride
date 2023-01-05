@@ -39,6 +39,19 @@ const UTIL = (function() {
 			(accumulator, currentValue) => accumulator + currentValue, initialValue);
 		return sum;
 	}
+
+	function series (startNumber, endNumber, count) {
+		let result = [];
+		let step = ( endNumber - startNumber ) / ( count - 1 );
+
+		for ( let i = 0; i < count; i++) {
+				let y;
+				y = startNumber + step * [i];
+				result.push(y); 
+		}
+		return result;
+}
+
 	
 	class PerformanceStat {
 		constructor(name, value) {
@@ -75,6 +88,7 @@ const UTIL = (function() {
 			this.ele = ele;
 			this.time = time;
 			this.dist = 0;
+			this.totDist = 0;
 			this.speed = 0;
 			this.interval = 0;
 			this.eleDiff = 0;
@@ -311,6 +325,7 @@ const UTIL = (function() {
 		secondsToMinutesAndSeconds, 
 		metersToKm, 
 		sumArray,
+		series,
 		performanceList,
 		PerformanceStat,
 		TrackPoint,

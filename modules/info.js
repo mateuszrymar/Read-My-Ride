@@ -4,15 +4,13 @@ import { UTIL } from './utilities.js';
 import { trackPointObjects, noOfOptimizations } from './home.js';
 import { gpxFile, gpxText, parser,  stopTime, stopSpeed, gradientSmoothing  } from '../app.js';
 
-// import {LineChart} from "/node_modules/chartist/dist/index.umd.js";
-// import TooltipPlugin from "/node_modules/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.min.js";
-
 const INFO = (function () {
   let statList = [];
   let eleGain = 0;
   let eleLoss = 0;
   let map = L.map('map').setView([51.505, -0.09], 13);
   let gpxPolyline;
+  let rideDistance;
 
 
 
@@ -181,6 +179,8 @@ const INFO = (function () {
         totalDistance.calcDist(trackPointObjects));
       totalDistance.addStat(totalDistance, 'km');
 
+      rideDistance = totalDistance.value;
+
     // Moving time
       let movingTime = new Statistic;
       movingTime.name = 'Moving time';
@@ -243,13 +243,47 @@ const INFO = (function () {
     document.getElementsByClassName("stats__table")[0].innerHTML = statList;
   }
 
-  function displayChart() {
+  function prepareGraph( graphId, trackPointObjects, fidelityPerc ) {
+    // We need to divide the ride into equal length segments.
+    let targetDomElement = document.getElementById(graphId);
+    let width = targetDomElement.getBoundingClientRect().width;
+    let samplePoints = parseInt( width - width * (( 100 - fidelityPerc )*0.01));
+    console.log(samplePoints);
+
+    let xAxis = UTIL.series( 0, rideDistance, samplePoints );
+
+    // Then get points closest to our criteria, and read their values.
+    let yAxis = [];
+    let n = 0;
+    let currentDist;
+    let currentEle;
+
+    for (let i = 0; i < trackPointObjects.length;) {
+      currentDist = Number(trackPointObjects[i].totDist) / 1000;
+      currentEle = trackPointObjects[i].ele;
+      // console.log(currentDist);
+      if ( currentDist >= (xAxis[n])){
+        yAxis.push(currentEle);
+        n++;
+      } 
+      
+      i++;
+    }
+
+    if (yAxis.length = (xAxis.length - 1 )) {
+      yAxis.push(trackPointObjects.at(-1).ele);
+    }
+
+    displayChart( graphId, yAxis )
+  }
+
+  function displayChart( graphId, valueArray, min, max ) {
     var data = {
       // A labels array that can contain any sort of values
-      labels: [10, 2, 4, 2, 10, 5,5,7,8,6,4,],
+      labels: [ ],
       // Our series array that contains series objects or in this case series data arrays
       series: [
-        [10, 2, 4, 2, 10, 5,5,7,8,6,4,]
+        valueArray,
       ]
     };
     var options = {
@@ -270,8 +304,8 @@ const INFO = (function () {
         showLabel: false,
         // Lets offset the chart a bit from the labels
         offset: 0,
-        low: 0,
-        high:12,
+        // low: 0,
+        // high:12,
         // The label interpolation function enables you to modify the values
         // used for the labels on each axis. Here we are converting the
         // values into million pound.
@@ -279,11 +313,8 @@ const INFO = (function () {
           return '$' + value + 'm';
         }
       },
-      plugins: [
-        new Chartist.plugins.tooltip()
-      ]
     };
-    new Chartist.LineChart('#graph__elevation-div', data, options);    
+    new Chartist.LineChart(`#${graphId}`, data, options);    
   }
 
   return {
@@ -291,7 +322,7 @@ const INFO = (function () {
     setupMap,
     createPolyline,
     displayAllStats,
-    displayChart,
+    prepareGraph,
     statList,
     map
   }

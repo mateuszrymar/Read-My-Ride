@@ -33,7 +33,7 @@ let stopTime = 10; // Time interval [s] when we consider user stopped.
 let stopSpeed = 0.3; // Slowest speed [m/s] considered a movement.
 let gradientSmoothing = 10;
 let isUploadValid = false;
-let maxFileSize = 5e6;
+let maxFileSize = 1e6;
 export { gpxFile, gpxText, parser, stopTime, stopSpeed, maxFileSize, gpxFileSize, gradientSmoothing };
 
 // Files
@@ -44,14 +44,14 @@ import { HOME } from './modules/home.js';
 import { INFO } from './modules/info.js';
 
 /* Todo list
-	- Create a function to generate overall statistics:
+	- DONE Create a function to generate overall statistics:
 		- DONE total distance
 		- DONE elevation gain
 		- DONE elevation loss
-		- steepest gradient
-		- average gradient
-		- max speed
-		- average speed
+		- DONE steepest gradient
+		- DONE average gradient
+		- DONE max speed
+		- DONE average speed
 		- DONE moving time
 		- DONE total time
 	- Create a function to generate a line chart from elevation data.
@@ -170,7 +170,7 @@ validateUpload()
 	})
 	.then (() => {
 		let dataToSave = JSON.stringify(HOME.trackPointObjects);
-		localStorage.setItem('currentGpx', dataToSave);
+		// localStorage.setItem('currentGpx', dataToSave);
 
 		INFO.createPolyline(HOME.trackPointObjects);
 	})
@@ -182,11 +182,11 @@ validateUpload()
 	})
 	.then(() => {
 		let stats = INFO.calculateStats(HOME.trackPointObjects);
-		INFO.displayAllStats(stats);		
+		INFO.displayAllStats(stats);
+		INFO.prepareGraph('graph__elevation', HOME.trackPointObjects, 50);
 	})
 	.then(() => {
-		console.log('here now')
-		INFO.displayChart();
+		console.log('displaying charts')
 	})
 
 
