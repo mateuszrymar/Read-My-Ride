@@ -4,6 +4,9 @@ import { UTIL } from './utilities.js';
 import { trackPointObjects, noOfOptimizations } from './home.js';
 import { gpxFile, gpxText, parser,  stopTime, stopSpeed, gradientSmoothing  } from '../app.js';
 
+// import {LineChart} from "/node_modules/chartist/dist/index.umd.js";
+// import TooltipPlugin from "/node_modules/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.min.js";
+
 const INFO = (function () {
   let statList = [];
   let eleGain = 0;
@@ -276,11 +279,11 @@ const INFO = (function () {
           return '$' + value + 'm';
         }
       },
-      plugins: [
-        Chartist.plugins.tooltip()
-      ]
+      // plugins: [
+      //   Chartist.plugins.tooltip()
+      // ]
     };
-    new Chartist.Line('#graph__elevation-div', data, options);    
+    new Chartist.LineChart('#graph__elevation-div', data, options);    
   }
 
   return {
