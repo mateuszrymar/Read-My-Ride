@@ -8,8 +8,9 @@ let trackPointObjects = [];
 let gpxProcessingTime = new UTIL.PerformanceStat;
 let gpxProcessingStart;
 let gpxProcessingEnd;
+let noOfOptimizations;
 
-export {trackPointObjects} 
+export {trackPointObjects, noOfOptimizations} 
 
 const HOME = (function () {
 
@@ -88,7 +89,7 @@ const HOME = (function () {
 	}	
 
 	function checkFileSize(fileSize) {
-		let noOfOptimizations = Math.ceil(Math.log2(fileSize/maxFileSize));
+		noOfOptimizations = Math.ceil(Math.log2(fileSize/maxFileSize));
 		if ( fileSize > maxFileSize ) {
       console.log(`File's too big, we need to take 1 in every ${Math.pow( 2, noOfOptimizations )} points.`);
     } else {

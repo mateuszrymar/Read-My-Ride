@@ -32,6 +32,13 @@ const UTIL = (function() {
 	
 		return km;
 	}
+
+	function sumArray(array) {
+		const initialValue = 0;
+		const sum = array.reduce(
+			(accumulator, currentValue) => accumulator + currentValue, initialValue);
+		return sum;
+	}
 	
 	class PerformanceStat {
 		constructor(name, value) {
@@ -303,6 +310,7 @@ const UTIL = (function() {
 	return { 
 		secondsToMinutesAndSeconds, 
 		metersToKm, 
+		sumArray,
 		performanceList,
 		PerformanceStat,
 		TrackPoint,

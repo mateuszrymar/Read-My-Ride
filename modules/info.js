@@ -1,7 +1,8 @@
+import { DOM } from '../app.js';
 import { UTIL } from './utilities.js';
 
-import { trackPointObjects } from './home.js';
-import { gpxFile, gpxText, parser,  stopTime, stopSpeed,  } from '../app.js';
+import { trackPointObjects, noOfOptimizations } from './home.js';
+import { gpxFile, gpxText, parser,  stopTime, stopSpeed, gradientSmoothing  } from '../app.js';
 
 const INFO = (function () {
   let statList = [];
@@ -64,7 +65,8 @@ const INFO = (function () {
       let sum = 0;
       for ( let i=0; i<trackPointObjects.length; i++ ) {
         sum = movingTime;
-        if ((trackPointObjects[i].interval < stopTime) && (trackPointObjects[i].speed > 0.3)) {
+
+        if ((trackPointObjects[i].interval < (stopTime * Math.pow(2, noOfOptimizations))) && (trackPointObjects[i].speed > stopSpeed)) {
           movingTime = sum + Number(trackPointObjects[i].interval);
         } else {
           movingTime = sum;
@@ -108,14 +110,61 @@ const INFO = (function () {
       let seconds = this.calcMovingTime(trackPointObjects);
       
       result = (totalDistance.value / ( seconds / 3600)).toFixed(2);
-      console.log(result);
 
+      return result;
+    }
+
+    calcMaxSpeed (trackPointObjects) {
+      let result = 0;
+      let array = (trackPointObjects).map(
+				({ speed }) => {return speed});
+
+      for (let i = 2; i < trackPointObjects.length; i++) {
+        let point1 = parseFloat(array[i]);
+        let point2 = parseFloat(array[i-1]);
+        let point3 = parseFloat(array[i-2]);
+        let pointArray = [ point1, point2, point3 ];
+        let currentSpeed;
+        
+        currentSpeed = (( UTIL.sumArray(pointArray) / pointArray.length ) * 3.6); // in km/h
+        
+        if (currentSpeed > result) result = currentSpeed.toFixed(1);
+      }
+
+      return result;
+    }
+
+    calcMaxGradient (trackPointObjects) {
+      let result = 0;
+      let array = (trackPointObjects).map(
+				({ eleDiff, dist }) => {return [eleDiff, dist]});
+
+      for (let i = gradientSmoothing; i < trackPointObjects.length; i++) {
+        let eleDiffArray = [];
+        // we need to smooth the numbers to avoid weird values due to geolocation inaccuracies:
+        for ( let n=0; n<gradientSmoothing; n++ ) {
+          eleDiffArray.push(parseFloat(array[i-n][0]));
+        }     
+
+        let distArray = [];
+        for ( let n=0; n<gradientSmoothing; n++ ) {
+          distArray.push(parseFloat(array[i-n][1]));
+        }
+        
+        let currentGradient = ( UTIL.sumArray(eleDiffArray) / UTIL.sumArray(distArray) ) * 100; // in %        
+        
+        if (currentGradient > result) result = currentGradient.toFixed(1);
+      }     
+      
       return result;
     }
 
     addStat(stat, unit) {
       statList = (`${statList}
-        <li>${stat.name}: ${stat.value} ${unit}</li>
+        <tr>
+          <td>${stat.name}:</td>
+          <td><b> ${stat.value}</b> ${unit}</td>
+        </tr>
       `);
     }
   }
@@ -148,9 +197,13 @@ const INFO = (function () {
       avgSpeed.name = 'Avg. speed';
       avgSpeed.value = avgSpeed.calcAvgSpeed(totalDistance, trackPointObjects );		
       avgSpeed.addStat(avgSpeed, 'km/h');
-
+      
     // Max speed
-
+      let maxSpeed = new Statistic;
+      maxSpeed.name = 'Max. speed';
+      maxSpeed.value = maxSpeed.calcMaxSpeed( trackPointObjects );		
+      maxSpeed.addStat(maxSpeed, 'km/h');
+      
     // Elevation gain
       let elevationGain  = new Statistic;
       elevationGain.name = 'Elevation Gain';
@@ -163,27 +216,35 @@ const INFO = (function () {
       elevationLoss.value = elevationLoss.calcElevationLoss(trackPointObjects);
       elevationLoss.addStat(elevationLoss, 'm');
 
-    // Max. gradient
-
     // Avg. gradient
+      let avgGradient  = new Statistic;
+      avgGradient.name = 'Avg. gradient';
+      avgGradient.value = ( elevationGain.value / (totalDistance.value * 1000 / 2) * 100 ).toFixed(1);
+      avgGradient.addStat(avgGradient, '%');
+    
+    // Max. gradient
+      let maxGradient  = new Statistic;
+      maxGradient.name = 'Max. gradient';
+      maxGradient.value = maxGradient.calcMaxGradient(trackPointObjects);
+      maxGradient.addStat(maxGradient, '%');
+
+
 
     console.log('stat calculation ended.')
-    console.log(statList);
+    // console.log(statList);
 
+    return statList;
   }
 
-  function displayAllStats() {
-    console.log(trackPointObjects);
-    calculateStats(trackPointObjects);
-    console.log(statList);
-    statisticsObject.innerHTML = statList;
-    // displayPerformance();
+  function displayAllStats(statList) {
+    document.getElementsByClassName("stats__table")[0].innerHTML = statList;
   }
 
   return {
     calculateStats,
     setupMap,
     createPolyline,
+    displayAllStats,
     statList,
     map
   }

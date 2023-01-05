@@ -13,7 +13,10 @@ const DOM = {
 	uploadErrorHint: document.getElementsByClassName("upload__error-hint")[0],
 	file_1: document.getElementsByClassName("examples__tile-1")[0],
 	file_2: document.getElementsByClassName("examples__tile-2")[0],
-	file_3: document.getElementsByClassName("examples__tile-3")[0],	
+	file_3: document.getElementsByClassName("examples__tile-3")[0],
+
+	statsTable: document.getElementsByClassName("stats__table")[0],
+
 };
 console.log(DOM)
 export { DOM };
@@ -26,9 +29,10 @@ let gpxText;
 let parser;
 let stopTime = 10; // Time interval [s] when we consider user stopped.
 let stopSpeed = 0.3; // Slowest speed [m/s] considered a movement.
+let gradientSmoothing = 10;
 let isUploadValid = false;
 let maxFileSize = 5e6;
-export { gpxFile, gpxText, parser, stopTime, stopSpeed, maxFileSize, gpxFileSize };
+export { gpxFile, gpxText, parser, stopTime, stopSpeed, maxFileSize, gpxFileSize, gradientSmoothing };
 
 // Files
 // const fileShort = File ;
@@ -167,8 +171,6 @@ validateUpload()
 		localStorage.setItem('currentGpx', dataToSave);
 
 		INFO.createPolyline(HOME.trackPointObjects);
-
-		INFO.calculateStats(HOME.trackPointObjects)
 	})
 	.then (() => {
 		UTIL.StateManager.setState('info_baseState');
@@ -176,9 +178,16 @@ validateUpload()
 	.then (() => {
 		INFO.setupMap();
 	})
-// 	.then(() => {
-
-// })
+	.then(() => {
+		let stats = INFO.calculateStats(HOME.trackPointObjects);
+		INFO.displayAllStats(stats);		
+	})
+	.then(() => {
+		console.log('here now')
+		// document.getElementById("stats__table").innerHTML = `blah`;
+		// document.getElementsByClassName("stats__table")[0].innerHTML = `blah`;
+		
+	})
 
 
 	
