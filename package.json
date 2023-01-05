@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "chartist-plugin-tooltips": "^0.0.17"
+  }
+}

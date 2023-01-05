@@ -240,11 +240,55 @@ const INFO = (function () {
     document.getElementsByClassName("stats__table")[0].innerHTML = statList;
   }
 
+  function displayChart() {
+    var data = {
+      // A labels array that can contain any sort of values
+      labels: [10, 2, 4, 2, 10, 5,5,7,8,6,4,],
+      // Our series array that contains series objects or in this case series data arrays
+      series: [
+        [10, 2, 4, 2, 10, 5,5,7,8,6,4,]
+      ]
+    };
+    var options = {
+      fullWidth: true,
+      showArea: true,
+      showPoint: false,
+      lineSmooth: false,
+      chartPadding: 10,
+      // X-Axis specific configuration
+      axisX: {
+        showGrid: false,
+        showLabel: false,
+        stretch: true,
+        offset: 0,
+      },
+      // Y-Axis specific configuration
+      axisY: {
+        showLabel: false,
+        // Lets offset the chart a bit from the labels
+        offset: 0,
+        low: 0,
+        high:12,
+        // The label interpolation function enables you to modify the values
+        // used for the labels on each axis. Here we are converting the
+        // values into million pound.
+        labelInterpolationFnc: function(value) {
+          return '$' + value + 'm';
+        }
+      },
+      plugins: [
+        Chartist.plugins.tooltip()
+      ]
+    };
+    new Chartist.Line('#graph__elevation-div', data, options);    
+  }
+
   return {
     calculateStats,
     setupMap,
     createPolyline,
     displayAllStats,
+    displayChart,
     statList,
     map
   }

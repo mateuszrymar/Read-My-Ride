@@ -186,9 +186,7 @@ validateUpload()
 	})
 	.then(() => {
 		console.log('here now')
-		// document.getElementById("stats__table").innerHTML = `blah`;
-		// document.getElementsByClassName("stats__table")[0].innerHTML = `blah`;
-		
+		INFO.displayChart();
 	})
 
 
