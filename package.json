@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "chart.js": "^4.1.1",
-    "parcel": "^2.8.2"
-  }
-}

@@ -146,15 +146,15 @@
         <aside class="graph-panel  card">
           <article class="graph__elevation  card--inner">
             <h4 class="graph__header  medium-text  text--lighter">Elevation</h4>
-            <canvas class="graph__elevation-canvas  graph"></canvas>
+            <canvas class="graph__elevation-canvas  graph" id="graph__elevation-canvas"></canvas>
           </article>
           <article class="graph__speed  card--inner">
             <h4 class="graph__header  medium-text  text--lighter">Speed</h4>
-            <canvas class="graph__speed-canvas  graph"></canvas>
+            <canvas class="graph__speed-canvas  graph" id="graph__speed-canvas"></canvas>
           </article>
           <article class="graph__gradients  card--inner">
             <h4 class="graph__header  medium-text  text--lighter">Gradients</h4>
-            <canvas class="graph__gradient-canvas  graph"></canvas>
+            <canvas class="graph__gradient-canvas  graph" id="graph__gradient-canvas"></canvas>
           </article>
         </aside>
 
@@ -167,10 +167,9 @@
     </main>
   
   </div>
-  <script src="app.js" type="module"></script> // Main JS file.
+  <script src="app.js" type="module"></script>
   <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
      integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
-     crossorigin=""></script> // Map script.
-  <script type="module" src="elevation-chart.js"></script>
+     crossorigin=""></script>
 </body>
 </html>

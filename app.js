@@ -40,7 +40,7 @@ export { gpxFile, gpxText, parser, stopTime, stopSpeed, maxFileSize, gpxFileSize
 // const fileShort = File ;
 
 import { UTIL } from './modules/utilities.js';
-import { HOME } from './modules/home.js'
+import { HOME } from './modules/home.js';
 import { INFO } from './modules/info.js';
 
 /* Todo list
