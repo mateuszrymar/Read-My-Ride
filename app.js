@@ -21,6 +21,8 @@ const DOM = {
 console.log(DOM)
 export { DOM };
 
+
+
 // Variables
 let gpxFile;
 let gpxFileContent;
