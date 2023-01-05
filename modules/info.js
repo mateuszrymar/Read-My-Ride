@@ -279,9 +279,9 @@ const INFO = (function () {
           return '$' + value + 'm';
         }
       },
-      // plugins: [
-      //   Chartist.plugins.tooltip()
-      // ]
+      plugins: [
+        new Chartist.plugins.tooltip()
+      ]
     };
     new Chartist.LineChart('#graph__elevation-div', data, options);    
   }
