@@ -44,25 +44,20 @@ import { HOME } from './modules/home.js';
 import { INFO } from './modules/info.js';
 
 /* Todo list
-	- DONE Create a function to generate overall statistics:
-		- DONE total distance
-		- DONE elevation gain
-		- DONE elevation loss
-		- DONE steepest gradient
-		- DONE average gradient
-		- DONE max speed
-		- DONE average speed
-		- DONE moving time
-		- DONE total time
-	- Create a function to generate a line chart from elevation data.
+	- DONE Create a function to generate a line chart from elevation data.
+	- Create a function to generate a line chart from speed data.
 	- Create a function to generate a pie chart of time at gradients from elevation and time data.
 	- Function to create additional power info: takes weights as input, outputs:
 		- estimated avg power
 		- max power
 		- calories burnt
 	- Add a progress bar.
+	
+	/* Nice-to-haves
 	- Add a comparison functionality.
-*/
+	- Add an option to store a few files.
+	- Add zoom buttons/pinch zoom on the diagrams.
+	- Add a point that displays data on hover (line diagrams, maybe even on the gpx track.)
 
 /* Known bugs
 
