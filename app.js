@@ -178,10 +178,12 @@ validateUpload()
 	.then(() => {
 		let stats = INFO.calculateStats(HOME.trackPointObjects);
 		INFO.displayAllStats(stats);
-		INFO.prepareGraph('graph__elevation', HOME.trackPointObjects, 50);
+		console.log('displaying charts')
+		INFO.prepareElevationGraph( HOME.trackPointObjects, 30 );
+		INFO.prepareSpeedGraph( HOME.trackPointObjects, 30 );
+		INFO.prepareGradientsGraph( HOME.trackPointObjects, 30 );
 	})
 	.then(() => {
-		console.log('displaying charts')
 	})
 
 

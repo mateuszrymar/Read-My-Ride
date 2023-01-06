@@ -243,12 +243,12 @@ const INFO = (function () {
     document.getElementsByClassName("stats__table")[0].innerHTML = statList;
   }
 
-  function prepareGraph( graphId, trackPointObjects, fidelityPerc ) {
+  function prepareElevationGraph( trackPointObjects, fidelityPerc ) {
     // We need to divide the ride into equal length segments.
+    let graphId = 'graph__elevation';
     let targetDomElement = document.getElementById(graphId);
     let width = targetDomElement.getBoundingClientRect().width;
     let samplePoints = parseInt( width - width * (( 100 - fidelityPerc )*0.01));
-    console.log(samplePoints);
 
     let xAxis = UTIL.series( 0, rideDistance, samplePoints );
 
@@ -274,10 +274,76 @@ const INFO = (function () {
       yAxis.push(trackPointObjects.at(-1).ele);
     }
 
-    displayChart( graphId, yAxis )
+    displayLineChart( graphId, yAxis )
   }
 
-  function displayChart( graphId, valueArray, min, max ) {
+  function prepareSpeedGraph( trackPointObjects, fidelityPerc ) {
+    // We need to divide the ride into equal length segments.
+    let graphId = 'graph__speed';
+    let targetDomElement = document.getElementById(graphId);
+    let width = targetDomElement.getBoundingClientRect().width;
+    let samplePoints = parseInt( width - width * (( 100 - fidelityPerc )*0.01));
+
+    let xAxis = UTIL.series( 0, rideDistance, samplePoints );
+
+    // Then get points closest to our criteria, and read their values.
+    let yAxis = [];
+    let n = 0;
+    let currentDist;
+    let currentSpeed;
+
+    for (let i = 0; i < trackPointObjects.length;) {
+      currentDist = Number(trackPointObjects[i].totDist) * 3.6; // to km/h
+      currentSpeed = trackPointObjects[i].speed;
+      if ( currentDist >= (xAxis[n])){
+        yAxis.push(currentSpeed);
+        n++;
+      } 
+      
+      i++;
+    }
+
+    if (yAxis.length = (xAxis.length - 1 )) {
+      yAxis.push(trackPointObjects.at(-1).speed);
+    }
+
+    displayLineChart( graphId, yAxis )
+  }
+
+  function prepareGradientsGraph( trackPointObjects, fidelityPerc ) {
+    // We need to divide the ride into equal length segments.
+    let graphId = 'graph__gradients';
+    let targetDomElement = document.getElementById(graphId);
+    let width = targetDomElement.getBoundingClientRect().width;
+    let samplePoints = parseInt( width - width * (( 100 - fidelityPerc )*0.01));
+
+    let xAxis = UTIL.series( 0, rideDistance, samplePoints );
+
+    // Then get points closest to our criteria, and read their values.
+    let yAxis = [];
+    let n = 0;
+    let currentDist;
+    let currentSpeed;
+
+    for (let i = 0; i < trackPointObjects.length;) {
+      currentDist = Number(trackPointObjects[i].totDist) * 3.6; // to km/h
+      currentSpeed = trackPointObjects[i].speed;
+      if ( currentDist >= (xAxis[n])){
+        yAxis.push(currentSpeed);
+        n++;
+      } 
+      
+      i++;
+    }
+
+    if (yAxis.length = (xAxis.length - 1 )) {
+      yAxis.push(trackPointObjects.at(-1).speed);
+    }
+
+    displayPieChart( graphId, yAxis )
+  }
+
+  function displayLineChart( graphId, valueArray, min, max ) {
     var data = {
       // A labels array that can contain any sort of values
       labels: [ ],
@@ -317,12 +383,58 @@ const INFO = (function () {
     new Chartist.Line(`#${graphId}`, data, options);    
   }
 
+  function displayPieChart( graphId, valueArray, min, max ) {
+    var data = {
+      // Our series array that contains series objects or in this case series data arrays
+      series: [8, 20, 32, 40],
+
+      // A labels array that can contain any sort of values
+      labels: ['downhill', 'flat', 'mild uphill', 'steep uphill'],
+
+    };
+
+    console.log(data.labels.length)
+
+    let joinedLabels = [];
+    let joinLabels = function(data) {
+      for (let i = 0; i < data.labels.length; i++) {
+        let newLabel;
+        const label = data.labels[i];
+        const value = data.series[i];
+        newLabel = `${label} ${value}`;
+
+        joinedLabels.push(newLabel);
+        
+      }
+      return joinedLabels;
+    };
+    // joinLabels(data);
+
+    let data2 = data.series;
+
+    var options = {
+      
+      chartPadding: 10,
+      donut: true,
+      donutWidth: 55,      
+
+      // labelInterpolationFnc: function(data) {
+      //   return data + '%';        
+      // }
+      
+    };
+    
+    new Chartist.Pie(`#${graphId}`, data, options);    
+  }
+
   return {
     calculateStats,
     setupMap,
     createPolyline,
     displayAllStats,
-    prepareGraph,
+    prepareElevationGraph,
+    prepareSpeedGraph,
+    prepareGradientsGraph,
     statList,
     map
   }

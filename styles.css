@@ -304,9 +304,33 @@ a {
   fill: var(--orange-40);
   fill-opacity: 1;
 }
-.ct-series-b .ct-line,
-.ct-series-b .ct-point {
+/* #graph__gradients > svg > g > path {
   stroke: green;
+} */
+#graph__gradients > svg > .ct-series-a > path {
+  stroke: var(--grey-10);
+}
+#graph__gradients > svg > .ct-series-b > path {
+  stroke: var(--orange-20);
+}
+#graph__gradients > svg > .ct-series-c > path {
+  stroke: var(--orange-40);
+}
+#graph__gradients > svg > .ct-series-d > path {
+  stroke: var(--orange-70);
+}
+/* #graph__gradients > svg > g > path:hover {
+  color: var(--green-70) !important;
+  opacity:0;
+  transition: opacity 0.2s;
+} */
+#graph__gradients > svg > g > text {
+  opacity: 0;
+}
+#graph__gradients:hover > svg > g > text {
+  opacity: 1;
+  transition: opacity 0.2s;
+  text-shadow: 1px 1px 0 var(--grey-10);
 }
 
 .footer{
