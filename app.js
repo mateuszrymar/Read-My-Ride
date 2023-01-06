@@ -31,7 +31,7 @@ let gpxText;
 let parser;
 let stopTime = 10; // Time interval [s] when we consider user stopped.
 let stopSpeed = 0.3; // Slowest speed [m/s] considered a movement.
-let gradientSmoothing = 10;
+let gradientSmoothing = 5;
 let isUploadValid = false;
 let maxFileSize = 1e6;
 export { gpxFile, gpxText, parser, stopTime, stopSpeed, maxFileSize, gpxFileSize, gradientSmoothing };
@@ -180,7 +180,7 @@ validateUpload()
 		INFO.displayAllStats(stats);
 		console.log('displaying charts')
 		INFO.prepareElevationGraph( HOME.trackPointObjects, 30 );
-		INFO.prepareSpeedGraph( HOME.trackPointObjects, 30 );
+		INFO.prepareSpeedGraph( HOME.trackPointObjects, 50 );
 		INFO.prepareGradientsGraph( HOME.trackPointObjects, 30 );
 	})
 	.then(() => {

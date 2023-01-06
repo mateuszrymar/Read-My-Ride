@@ -11,6 +11,7 @@ const INFO = (function () {
   let map = L.map('map').setView([51.505, -0.09], 13);
   let gpxPolyline;
   let rideDistance;
+  let maxSpd;
 
 
 
@@ -160,6 +161,7 @@ const INFO = (function () {
       return result;
     }
 
+
     addStat(stat, unit) {
       statList = (`${statList}
         <tr>
@@ -206,6 +208,7 @@ const INFO = (function () {
       maxSpeed.name = 'Max. speed';
       maxSpeed.value = maxSpeed.calcMaxSpeed( trackPointObjects );		
       maxSpeed.addStat(maxSpeed, 'km/h');
+      maxSpd = maxSpeed.value; 
       
     // Elevation gain
       let elevationGain  = new Statistic;
@@ -292,9 +295,14 @@ const INFO = (function () {
     let currentDist;
     let currentSpeed;
 
+    let graphMargin = 20; // percent
+    let graphTop = (maxSpd * ( 1 + graphMargin/100 )) / 3.6;
+    let graphBottom = (maxSpd * ( graphMargin/100 )) / 3.6;
+    console.log(graphBottom);
+
     for (let i = 0; i < trackPointObjects.length;) {
       currentDist = Number(trackPointObjects[i].totDist) * 3.6; // to km/h
-      currentSpeed = trackPointObjects[i].speed;
+      currentSpeed = Number(trackPointObjects[i].speed);
       if ( currentDist >= (xAxis[n])){
         yAxis.push(currentSpeed);
         n++;
@@ -306,41 +314,142 @@ const INFO = (function () {
     if (yAxis.length = (xAxis.length - 1 )) {
       yAxis.push(trackPointObjects.at(-1).speed);
     }
+    
 
-    displayLineChart( graphId, yAxis )
+    console.log(yAxis)
+
+    displayLineChart( graphId, yAxis, 0, );
   }
 
-  function prepareGradientsGraph( trackPointObjects, fidelityPerc ) {
-    // We need to divide the ride into equal length segments.
+  function prepareGradientsGraph (trackPointObjects) {
     let graphId = 'graph__gradients';
-    let targetDomElement = document.getElementById(graphId);
-    let width = targetDomElement.getBoundingClientRect().width;
-    let samplePoints = parseInt( width - width * (( 100 - fidelityPerc )*0.01));
+    let result = 0;
+    let array = (trackPointObjects).map(
+      ({ eleDiff, dist, interval }) => {return [eleDiff, dist, interval]});
+    let gradientsArray = Array(gradientSmoothing).fill('0');
+    let intervalArray = [];
+    for (let i=0; i<gradientSmoothing; i++ ) {
+      intervalArray.push(array[i][2])
+    }
+    let isArrayValid = false;
+    let valuesToChart;
 
-    let xAxis = UTIL.series( 0, rideDistance, samplePoints );
+    const prepareGradArray = () => {
+      return new Promise((resolve, reject) => {
+        for (let i = gradientSmoothing; i < trackPointObjects.length; i++) {
+          let eleDiffArray = [];
+          // we need to smooth the numbers to avoid weird values due to geolocation inaccuracies:
+          for ( let n=0; n<gradientSmoothing; n++ ) {
+            eleDiffArray.push(parseFloat(array[i-n][0]));
+          }     
 
-    // Then get points closest to our criteria, and read their values.
-    let yAxis = [];
-    let n = 0;
-    let currentDist;
-    let currentSpeed;
+          let distArray = [];
+          for ( let n=0; n<gradientSmoothing; n++ ) {
+            distArray.push(parseFloat(array[i-n][1]));
+          }
+          
+          let currentGradient = ( UTIL.sumArray(eleDiffArray) / UTIL.sumArray(distArray) ) * 100; // in %        
+          let currentInterval = parseFloat(array[i][2]);
 
-    for (let i = 0; i < trackPointObjects.length;) {
-      currentDist = Number(trackPointObjects[i].totDist) * 3.6; // to km/h
-      currentSpeed = trackPointObjects[i].speed;
-      if ( currentDist >= (xAxis[n])){
-        yAxis.push(currentSpeed);
-        n++;
-      } 
-      
-      i++;
+          intervalArray.push(currentInterval);
+          gradientsArray.push(currentGradient.toFixed(1));
+        }
+        if (gradientsArray.length = trackPointObjects.length) {
+          isArrayValid = true;
+          console.log ( 'Array is valid.' ); 
+          resolve ( 'Array is valid.' ); 
+        } else {
+          isArrayValid = false;
+          console.log ( 'Array is invalid.' );
+          reject ( 'Array is invalid.' );
+        }
+      }, isArrayValid)    
     }
 
-    if (yAxis.length = (xAxis.length - 1 )) {
-      yAxis.push(trackPointObjects.at(-1).speed);
-    }
+    // function prepareTimeArray() {
+    //   console.log(trackPointObjects)
+    //   // for (let i = gradientSmoothing; i < trackPointObjects.length; i++) {
+    //   //   let eleDiffArray = [];
+    //   //   // we need to smooth the numbers to avoid weird values due to geolocation inaccuracies:
+    //   //   for ( let n=0; n<gradientSmoothing; n++ ) {
+    //   //     eleDiffArray.push(parseFloat(array[i-n][0]));
+    //   //   }     
 
-    displayPieChart( graphId, yAxis )
+    //   //   let distArray = [];
+    //   //   for ( let n=0; n<gradientSmoothing; n++ ) {
+    //   //     distArray.push(parseFloat(array[i-n][1]));
+    //   //   }
+        
+    //   //   let currentGradient = ( UTIL.sumArray(eleDiffArray) / UTIL.sumArray(distArray) ) * 100; // in %        
+        
+    //   //   gradientsArray.push(currentGradient.toFixed(1));
+    //   // }
+    //   // if (gradientsArray.length = trackPointObjects.length) {
+    //   //   isArrayValid = true;
+    //   //   console.log ( 'Array is valid.' ); 
+    //   //   resolve ( 'Array is valid.' ); 
+    //   // } else {
+    //   //   isArrayValid = false;
+    //   //   console.log ( 'Array is invalid.' );
+    //   //   reject ( 'Array is invalid.' );
+    //   //}
+    // }
+
+    let gradientBoundaries = [ -2, 1, 8 ];
+
+    function sortGradientsByTime ( gradArray, intArray, boundaries ) {
+      let downhill = boundaries[0];
+      let flat = boundaries[1];
+      let mildUphill = boundaries[2];
+
+      let downhillArray = [];
+      let flatArray = [];
+      let mildUphillArray = [];
+      let steepUphillArray = [];
+
+      for (let i = 0; i < gradArray.length; i++) {
+        const gradient = gradArray[i];
+        let interval = intArray[i];
+        interval = Math.min(interval, stopTime);
+
+        if(gradient < downhill) {
+          downhillArray.push(interval);
+        } else if(gradient < flat) {
+          flatArray.push(interval);          
+        } else if(gradient < mildUphill) {
+          mildUphillArray.push(interval);          
+        } else {
+          steepUphillArray.push(interval);
+        }        
+      }
+
+      console.log(steepUphillArray);
+
+      result = [ UTIL.sumArray(downhillArray),
+                 UTIL.sumArray(flatArray),
+                 UTIL.sumArray(mildUphillArray),
+                 UTIL.sumArray(steepUphillArray), ]
+      console.log(result);
+
+      return result;
+    }
+    
+
+    prepareGradArray()
+      .then(() => {
+        console.log(intervalArray);
+      })
+      .then(() => {
+        console.log(gradientsArray);
+        // sort values
+        valuesToChart = sortGradientsByTime( gradientsArray, intervalArray, gradientBoundaries);
+      })
+      .then(() => {
+        displayPieChart( graphId, valuesToChart );
+      })
+      .then(() => {
+
+      })    
   }
 
   function displayLineChart( graphId, valueArray, min, max ) {
@@ -358,6 +467,10 @@ const INFO = (function () {
       showPoint: false,
       lineSmooth: false,
       chartPadding: 10,
+      lineSmooth: Chartist.Interpolation.cardinal({
+        tension: 1,
+        fillHoles: false,
+      }),
       // X-Axis specific configuration
       axisX: {
         showGrid: false,
@@ -371,7 +484,7 @@ const INFO = (function () {
         // Lets offset the chart a bit from the labels
         offset: 0,
         // low: 0,
-        // high:12,
+        // high: max,
         // The label interpolation function enables you to modify the values
         // used for the labels on each axis. Here we are converting the
         // values into million pound.
@@ -386,7 +499,7 @@ const INFO = (function () {
   function displayPieChart( graphId, valueArray, min, max ) {
     var data = {
       // Our series array that contains series objects or in this case series data arrays
-      series: [8, 20, 32, 40],
+      series: valueArray,
 
       // A labels array that can contain any sort of values
       labels: ['downhill', 'flat', 'mild uphill', 'steep uphill'],
