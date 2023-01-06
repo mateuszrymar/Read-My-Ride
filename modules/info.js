@@ -314,7 +314,7 @@ const INFO = (function () {
         }
       },
     };
-    new Chartist.LineChart(`#${graphId}`, data, options);    
+    new Chartist.Line(`#${graphId}`, data, options);    
   }
 
   return {
