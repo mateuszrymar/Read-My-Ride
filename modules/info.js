@@ -2,7 +2,7 @@ import { DOM } from '../app.js';
 import { UTIL } from './utilities.js';
 
 import { trackPointObjects, noOfOptimizations } from './home.js';
-import { gpxFile, gpxText, parser,  stopTime, stopSpeed, gradientSmoothing  } from '../app.js';
+import { gpxFile, gpxText, parser,  stopTime, stopSpeed, numberSmoothing, gradientBoundaries  } from '../app.js';
 
 const INFO = (function () {
   let statList = [];
@@ -67,6 +67,7 @@ const INFO = (function () {
       let sum = 0;
       for ( let i=0; i<trackPointObjects.length; i++ ) {
         sum = movingTime;
+        console.log((trackPointObjects[i].interval < (stopTime * Math.pow(2, noOfOptimizations))))
 
         if ((trackPointObjects[i].interval < (stopTime * Math.pow(2, noOfOptimizations))) && (trackPointObjects[i].speed > stopSpeed)) {
           movingTime = sum + Number(trackPointObjects[i].interval);
@@ -121,7 +122,7 @@ const INFO = (function () {
       let array = (trackPointObjects).map(
 				({ speed }) => {return speed});
 
-      for (let i = 2; i < trackPointObjects.length; i++) {
+      for (let i = 0; i < trackPointObjects.length; i++) {
         let point1 = parseFloat(array[i]);
         let point2 = parseFloat(array[i-1]);
         let point3 = parseFloat(array[i-2]);
@@ -141,15 +142,15 @@ const INFO = (function () {
       let array = (trackPointObjects).map(
 				({ eleDiff, dist }) => {return [eleDiff, dist]});
 
-      for (let i = gradientSmoothing; i < trackPointObjects.length; i++) {
+      for (let i = numberSmoothing; i < trackPointObjects.length; i++) {
         let eleDiffArray = [];
         // we need to smooth the numbers to avoid weird values due to geolocation inaccuracies:
-        for ( let n=0; n<gradientSmoothing; n++ ) {
+        for ( let n=0; n<numberSmoothing; n++ ) {
           eleDiffArray.push(parseFloat(array[i-n][0]));
         }     
 
         let distArray = [];
-        for ( let n=0; n<gradientSmoothing; n++ ) {
+        for ( let n=0; n<numberSmoothing; n++ ) {
           distArray.push(parseFloat(array[i-n][1]));
         }
         
@@ -286,6 +287,7 @@ const INFO = (function () {
     let targetDomElement = document.getElementById(graphId);
     let width = targetDomElement.getBoundingClientRect().width;
     let samplePoints = parseInt( width - width * (( 100 - fidelityPerc )*0.01));
+    // samplePoints = 10;
 
     let xAxis = UTIL.series( 0, rideDistance, samplePoints );
 
@@ -293,16 +295,18 @@ const INFO = (function () {
     let yAxis = [];
     let n = 0;
     let currentDist;
+    let currentEle;
     let currentSpeed;
 
-    let graphMargin = 20; // percent
-    let graphTop = (maxSpd * ( 1 + graphMargin/100 )) / 3.6;
-    let graphBottom = (maxSpd * ( graphMargin/100 )) / 3.6;
-    console.log(graphBottom);
+    // let graphMargin = 20; // percent
+    // let graphTop = (maxSpd * ( 1 + graphMargin/100 )) / 3.6;
+    // let graphBottom = (maxSpd * ( graphMargin/100 )) / 3.6;
+    // console.log(graphBottom);
 
     for (let i = 0; i < trackPointObjects.length;) {
-      currentDist = Number(trackPointObjects[i].totDist) * 3.6; // to km/h
-      currentSpeed = Number(trackPointObjects[i].speed);
+      currentDist = Number(trackPointObjects[i].totDist) / 1000;
+      currentSpeed = trackPointObjects[i].speed;
+      // console.log(currentDist);
       if ( currentDist >= (xAxis[n])){
         yAxis.push(currentSpeed);
         n++;
@@ -314,9 +318,6 @@ const INFO = (function () {
     if (yAxis.length = (xAxis.length - 1 )) {
       yAxis.push(trackPointObjects.at(-1).speed);
     }
-    
-
-    console.log(yAxis)
 
     displayLineChart( graphId, yAxis, 0, );
   }
@@ -326,9 +327,9 @@ const INFO = (function () {
     let result = 0;
     let array = (trackPointObjects).map(
       ({ eleDiff, dist, interval }) => {return [eleDiff, dist, interval]});
-    let gradientsArray = Array(gradientSmoothing).fill('0');
+    let gradientsArray = Array(numberSmoothing).fill('0');
     let intervalArray = [];
-    for (let i=0; i<gradientSmoothing; i++ ) {
+    for (let i=0; i<numberSmoothing; i++ ) {
       intervalArray.push(array[i][2])
     }
     let isArrayValid = false;
@@ -336,15 +337,15 @@ const INFO = (function () {
 
     const prepareGradArray = () => {
       return new Promise((resolve, reject) => {
-        for (let i = gradientSmoothing; i < trackPointObjects.length; i++) {
+        for (let i = numberSmoothing; i < trackPointObjects.length; i++) {
           let eleDiffArray = [];
           // we need to smooth the numbers to avoid weird values due to geolocation inaccuracies:
-          for ( let n=0; n<gradientSmoothing; n++ ) {
+          for ( let n=0; n<numberSmoothing; n++ ) {
             eleDiffArray.push(parseFloat(array[i-n][0]));
           }     
 
           let distArray = [];
-          for ( let n=0; n<gradientSmoothing; n++ ) {
+          for ( let n=0; n<numberSmoothing; n++ ) {
             distArray.push(parseFloat(array[i-n][1]));
           }
           
@@ -366,36 +367,7 @@ const INFO = (function () {
       }, isArrayValid)    
     }
 
-    // function prepareTimeArray() {
-    //   console.log(trackPointObjects)
-    //   // for (let i = gradientSmoothing; i < trackPointObjects.length; i++) {
-    //   //   let eleDiffArray = [];
-    //   //   // we need to smooth the numbers to avoid weird values due to geolocation inaccuracies:
-    //   //   for ( let n=0; n<gradientSmoothing; n++ ) {
-    //   //     eleDiffArray.push(parseFloat(array[i-n][0]));
-    //   //   }     
-
-    //   //   let distArray = [];
-    //   //   for ( let n=0; n<gradientSmoothing; n++ ) {
-    //   //     distArray.push(parseFloat(array[i-n][1]));
-    //   //   }
-        
-    //   //   let currentGradient = ( UTIL.sumArray(eleDiffArray) / UTIL.sumArray(distArray) ) * 100; // in %        
-        
-    //   //   gradientsArray.push(currentGradient.toFixed(1));
-    //   // }
-    //   // if (gradientsArray.length = trackPointObjects.length) {
-    //   //   isArrayValid = true;
-    //   //   console.log ( 'Array is valid.' ); 
-    //   //   resolve ( 'Array is valid.' ); 
-    //   // } else {
-    //   //   isArrayValid = false;
-    //   //   console.log ( 'Array is invalid.' );
-    //   //   reject ( 'Array is invalid.' );
-    //   //}
-    // }
-
-    let gradientBoundaries = [ -2, 1, 8 ];
+    
 
     function sortGradientsByTime ( gradArray, intArray, boundaries ) {
       let downhill = boundaries[0];
@@ -423,8 +395,6 @@ const INFO = (function () {
         }        
       }
 
-      console.log(steepUphillArray);
-
       result = [ UTIL.sumArray(downhillArray),
                  UTIL.sumArray(flatArray),
                  UTIL.sumArray(mildUphillArray),
@@ -437,10 +407,6 @@ const INFO = (function () {
 
     prepareGradArray()
       .then(() => {
-        console.log(intervalArray);
-      })
-      .then(() => {
-        console.log(gradientsArray);
         // sort values
         valuesToChart = sortGradientsByTime( gradientsArray, intervalArray, gradientBoundaries);
       })
@@ -467,10 +433,6 @@ const INFO = (function () {
       showPoint: false,
       lineSmooth: false,
       chartPadding: 10,
-      lineSmooth: Chartist.Interpolation.cardinal({
-        tension: 1,
-        fillHoles: false,
-      }),
       // X-Axis specific configuration
       axisX: {
         showGrid: false,

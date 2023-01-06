@@ -31,22 +31,23 @@ let gpxText;
 let parser;
 let stopTime = 10; // Time interval [s] when we consider user stopped.
 let stopSpeed = 0.3; // Slowest speed [m/s] considered a movement.
-let gradientSmoothing = 5;
+let numberSmoothing = 5;
 let isUploadValid = false;
 let maxFileSize = 1e6;
-export { gpxFile, gpxText, parser, stopTime, stopSpeed, maxFileSize, gpxFileSize, gradientSmoothing };
+let gradientBoundaries = [ -3, 1.5, 6 ];
+export { gpxFile, gpxText, parser, stopTime, stopSpeed, maxFileSize, gpxFileSize, numberSmoothing, gradientBoundaries };
 
 // Files
 // const fileShort = File ;
 
 import { UTIL } from './modules/utilities.js';
-import { HOME } from './modules/home.js';
+import { HOME, trackPointObjects } from './modules/home.js';
 import { INFO } from './modules/info.js';
 
 /* Todo list
 	- DONE Create a function to generate a line chart from elevation data.
-	- Create a function to generate a line chart from speed data.
-	- Create a function to generate a pie chart of time at gradients from elevation and time data.
+	- DONE Create a function to generate a line chart from speed data.
+	- DONE Create a function to generate a pie chart of time at gradients from elevation and time data.
 	- Function to create additional power info: takes weights as input, outputs:
 		- estimated avg power
 		- max power
@@ -60,7 +61,7 @@ import { INFO } from './modules/info.js';
 	- Add a point that displays data on hover (line diagrams, maybe even on the gpx track.)
 
 /* Known bugs
-
+	- With some files from uploads, moving time calculation is incorrect leading to very high avg speeds too.
 */
 UTIL.StateManager.getStateManager(); // Initialization.
 UTIL.StateManager.storeDom( 'home_baseState', DOM );
@@ -180,10 +181,15 @@ validateUpload()
 		INFO.displayAllStats(stats);
 		console.log('displaying charts')
 		INFO.prepareElevationGraph( HOME.trackPointObjects, 30 );
-		INFO.prepareSpeedGraph( HOME.trackPointObjects, 50 );
-		INFO.prepareGradientsGraph( HOME.trackPointObjects, 30 );
 	})
 	.then(() => {
+		INFO.prepareSpeedGraph( HOME.trackPointObjects, 30 );
+	})
+	.then(() => {
+		INFO.prepareGradientsGraph( HOME.trackPointObjects);
+	})
+	.then(() => {
+
 	})
 
 

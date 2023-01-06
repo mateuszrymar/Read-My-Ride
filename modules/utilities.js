@@ -43,14 +43,52 @@ const UTIL = (function() {
 	function series (startNumber, endNumber, count) {
 		let result = [];
 		let step = ( endNumber - startNumber ) / ( count - 1 );
+		// console.log(startNumber === endNumber);
+		// console.log(count);
 
-		for ( let i = 0; i < count; i++) {
+		if (count === 0) {
+			return 0;
+		} else if (startNumber === endNumber) {
+			for ( let x = 0; x < count; x++) {
+				// console.log('this should be our case!');
+				let y;
+				y = startNumber;
+				result.push(y);
+			} 
+		} else {
+			for ( let i = 0; i < count; i++) {
 				let y;
 				y = startNumber + step * [i];
 				result.push(y); 
+			}
 		}
 		return result;
-}
+	}
+
+	function smoothArray(array, smoothingCount, rounding) {
+		let smoothNumbers = []
+
+		for (let i = 0; i < array.length; i++) {
+			let start = parseInt([i]) - parseInt(smoothingCount/2);
+			let end = parseInt([i]) + parseInt(smoothingCount/2);
+			let numbersToAverage = [];
+			const indicesToProcess = series(start, end, smoothingCount);
+			// console.log(start, end, smoothingCount);
+			// console.log(series(start, end, smoothingCount));
+
+			for (let n = 0; n < smoothingCount; n++) {
+				const index = indicesToProcess[n];	
+				// console.log(indicesToProcess[n]);
+				let element = parseFloat(array.at(index));
+				if (element === undefined) element = 0;
+				numbersToAverage.push(element);			
+			}
+			
+			smoothNumbers.push(parseFloat((sumArray(numbersToAverage) / smoothingCount).toFixed(rounding)));		
+		}
+
+		return smoothNumbers;
+	}	
 
 	
 	class PerformanceStat {
@@ -326,6 +364,7 @@ const UTIL = (function() {
 		metersToKm, 
 		sumArray,
 		series,
+		smoothArray,
 		performanceList,
 		PerformanceStat,
 		TrackPoint,

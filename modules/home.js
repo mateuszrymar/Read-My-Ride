@@ -1,7 +1,7 @@
 import { UTIL } from './utilities.js';
 
 import { DOM } from '../app.js';
-import { gpxFile, maxFileSize, gpxFileSize } from '../app.js';
+import { gpxFile, maxFileSize, gpxFileSize, numberSmoothing } from '../app.js';
 
 let trackPointList;
 let trackPointObjects = [];
@@ -139,7 +139,7 @@ const HOME = (function () {
 
 
 	
-		for ( let i=0; i<trackPointList.length; i++ ) {
+		for ( let i=0; i<trackPointList.length;  ) {
 			let currentTrackpoint = new UTIL.TrackPoint;
 			let currentTrackpointRaw = trackPointList[i];
 	
@@ -184,10 +184,27 @@ const HOME = (function () {
 	
 			trackPointObjects.push(currentTrackpoint);
 			previousTrackpoint = currentTrackpoint;
+
+			i++;
+			if ( i ===  (trackPointList.length)) {
+				smoothSpeed(trackPointObjects);
+			}
+		}
+		
+		function smoothSpeed(trackPointObjects) {
+			// numberSmoothing
+			let speeds = (trackPointObjects).map(
+				({ speed }) => {return speed});
+			let smoothSpeeds = UTIL.smoothArray(speeds, numberSmoothing, 2);
+
+			for (let i = 0; i < trackPointObjects.length; i++) {
+				trackPointObjects[i].speed = smoothSpeeds[i];				
+			}
+
+			return trackPointObjects;
 		}
     
     gpxProcessingEnd = gpxProcessingTime.endTimer();
-    console.log('processGPX function ended.');
 		return trackPointObjects;
 	}
 
