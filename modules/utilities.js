@@ -1,4 +1,4 @@
-const UTIL = (function() {
+const UTIL = (function () {
 	let performanceList = [];
 	let storedStates = [];
 
@@ -89,7 +89,6 @@ const UTIL = (function() {
 
 		return smoothNumbers;
 	}	
-
 	
 	class PerformanceStat {
 		constructor(name, value) {
@@ -116,7 +115,7 @@ const UTIL = (function() {
 				<li>${stat.name}: ${stat.value} ${unit}</li>
 			`);
 		}
-	}
+	}	
 	
 	class TrackPoint {
 		constructor(id, lat, lon, ele, time) {
@@ -130,8 +129,7 @@ const UTIL = (function() {
 			this.speed = 0;
 			this.interval = 0;
 			this.eleDiff = 0;
-		}
-		
+		}		
 		distance(lat1, lon1, lat2, lon2) {
 			// Haversine formula - 0.3% error expected		
 			const R = 6371e3; // metres
@@ -180,7 +178,7 @@ const UTIL = (function() {
 		}
 	}
 
-	const StateManager = (function() {
+	const StateManager = (function () {
 		let StateManager;
 		// (!StateManager) ? console.log('no SM') : console.log('SM');
 
@@ -340,7 +338,7 @@ const UTIL = (function() {
 		}
 
 		return {			
-			getStateManager: function() {
+			getStateManager: function () {
 				if (!StateManager) {
 					StateManager = createStateManager();
 				} else {
@@ -365,13 +363,14 @@ const UTIL = (function() {
 		sumArray,
 		series,
 		smoothArray,
-		performanceList,
 		PerformanceStat,
 		TrackPoint,
+		performanceList,
 		StateManager,
 		storedStates,
 	};
 })();
 
 export { UTIL };
+
 
