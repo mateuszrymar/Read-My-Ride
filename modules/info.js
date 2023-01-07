@@ -1,8 +1,6 @@
-import { DOM } from '../app.js';
+import { DOM, APP } from '../app.js';
 import { UTIL } from './utilities.js';
-
-import { trackPointObjects, noOfOptimizations } from './home.js';
-import { gpxFile, gpxText, parser,  stopTime, stopSpeed, numberSmoothing, gradientBoundaries  } from '../app.js';
+import { HOME } from './home.js';
 
 const INFO = (function () {
   let statList = [];
@@ -12,8 +10,6 @@ const INFO = (function () {
   let gpxPolyline;
   let rideDistance;
   let maxSpd;
-
-
 
   function setupMap() {
     map.invalidateSize();
@@ -37,13 +33,10 @@ const INFO = (function () {
     return gpxPolyline;
   }
 
-
-
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
   }).addTo(map);
-
 
   class Statistic {
     constructor(name, value) {
@@ -67,9 +60,8 @@ const INFO = (function () {
       let sum = 0;
       for ( let i=0; i<trackPointObjects.length; i++ ) {
         sum = movingTime;
-        console.log((trackPointObjects[i].interval < (stopTime * Math.pow(2, noOfOptimizations))))
 
-        if ((trackPointObjects[i].interval < (stopTime * Math.pow(2, noOfOptimizations))) && (trackPointObjects[i].speed > stopSpeed)) {
+        if ((trackPointObjects[i].interval < (APP.stopTime * Math.pow(2, HOME.noOfOptimizations))) &&      (trackPointObjects[i].speed > stopSpeed)) {
           movingTime = sum + Number(trackPointObjects[i].interval);
         } else {
           movingTime = sum;
@@ -142,15 +134,15 @@ const INFO = (function () {
       let array = (trackPointObjects).map(
 				({ eleDiff, dist }) => {return [eleDiff, dist]});
 
-      for (let i = numberSmoothing; i < trackPointObjects.length; i++) {
+      for (let i = APP.numberSmoothing; i < trackPointObjects.length; i++) {
         let eleDiffArray = [];
         // we need to smooth the numbers to avoid weird values due to geolocation inaccuracies:
-        for ( let n=0; n<numberSmoothing; n++ ) {
+        for ( let n=0; n<APP.numberSmoothing; n++ ) {
           eleDiffArray.push(parseFloat(array[i-n][0]));
         }     
 
         let distArray = [];
-        for ( let n=0; n<numberSmoothing; n++ ) {
+        for ( let n=0; n<APP.numberSmoothing; n++ ) {
           distArray.push(parseFloat(array[i-n][1]));
         }
         
@@ -327,9 +319,9 @@ const INFO = (function () {
     let result = 0;
     let array = (trackPointObjects).map(
       ({ eleDiff, dist, interval }) => {return [eleDiff, dist, interval]});
-    let gradientsArray = Array(numberSmoothing).fill('0');
+    let gradientsArray = Array(APP.numberSmoothing).fill('0');
     let intervalArray = [];
-    for (let i=0; i<numberSmoothing; i++ ) {
+    for (let i=0; i<APP.numberSmoothing; i++ ) {
       intervalArray.push(array[i][2])
     }
     let isArrayValid = false;
@@ -337,15 +329,15 @@ const INFO = (function () {
 
     const prepareGradArray = () => {
       return new Promise((resolve, reject) => {
-        for (let i = numberSmoothing; i < trackPointObjects.length; i++) {
+        for (let i = APP.numberSmoothing; i < trackPointObjects.length; i++) {
           let eleDiffArray = [];
           // we need to smooth the numbers to avoid weird values due to geolocation inaccuracies:
-          for ( let n=0; n<numberSmoothing; n++ ) {
+          for ( let n=0; n<APP.numberSmoothing; n++ ) {
             eleDiffArray.push(parseFloat(array[i-n][0]));
           }     
 
           let distArray = [];
-          for ( let n=0; n<numberSmoothing; n++ ) {
+          for ( let n=0; n<APP.numberSmoothing; n++ ) {
             distArray.push(parseFloat(array[i-n][1]));
           }
           
@@ -382,7 +374,7 @@ const INFO = (function () {
       for (let i = 0; i < gradArray.length; i++) {
         const gradient = gradArray[i];
         let interval = intArray[i];
-        interval = Math.min(interval, stopTime);
+        interval = Math.min(interval, APP.stopTime);
 
         if(gradient < downhill) {
           downhillArray.push(interval);
@@ -408,7 +400,7 @@ const INFO = (function () {
     prepareGradArray()
       .then(() => {
         // sort values
-        valuesToChart = sortGradientsByTime( gradientsArray, intervalArray, gradientBoundaries);
+        valuesToChart = sortGradientsByTime( gradientsArray, intervalArray, APP.gradientBoundaries);
       })
       .then(() => {
         displayPieChart( graphId, valuesToChart );
@@ -450,7 +442,7 @@ const INFO = (function () {
         // The label interpolation function enables you to modify the values
         // used for the labels on each axis. Here we are converting the
         // values into million pound.
-        labelInterpolationFnc: function(value) {
+        labelInterpolationFnc: function (value) {
           return '$' + value + 'm';
         }
       },
@@ -471,7 +463,7 @@ const INFO = (function () {
     console.log(data.labels.length)
 
     let joinedLabels = [];
-    let joinLabels = function(data) {
+    let joinLabels = function (data) {
       for (let i = 0; i < data.labels.length; i++) {
         let newLabel;
         const label = data.labels[i];
@@ -493,7 +485,7 @@ const INFO = (function () {
       donut: true,
       donutWidth: 55,      
 
-      // labelInterpolationFnc: function(data) {
+      // labelInterpolationFnc: function (data) {
       //   return data + '%';        
       // }
       
@@ -510,8 +502,6 @@ const INFO = (function () {
     prepareElevationGraph,
     prepareSpeedGraph,
     prepareGradientsGraph,
-    statList,
-    map
   }
 })();
 

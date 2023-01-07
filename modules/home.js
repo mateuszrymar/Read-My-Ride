@@ -1,52 +1,29 @@
+import { DOM, APP } from '../app.js';
 import { UTIL } from './utilities.js';
 
-import { DOM } from '../app.js';
-import { gpxFile, maxFileSize, gpxFileSize, numberSmoothing } from '../app.js';
-
-let trackPointList;
-let trackPointObjects = [];
-let gpxProcessingTime = new UTIL.PerformanceStat;
-let gpxProcessingStart;
-let gpxProcessingEnd;
-let noOfOptimizations;
-
-export {trackPointObjects, noOfOptimizations} 
-
 const HOME = (function () {
+	let trackPointList;
+	let trackPointObjects = [];
+	let gpxProcessingTime = new UTIL.PerformanceStat;
+	let gpxProcessingStart;
+	let gpxProcessingEnd;
+	let noOfOptimizations;
+
 
 	function init() {
-		[ DOM.readGpxBtn, DOM.uploadText ].forEach(function(element) {
+		[ DOM.readGpxBtn, DOM.uploadText ].forEach(function (element) {
 			element.addEventListener('click', uploadClicked);
 		});
 		DOM.uploadUndertext.addEventListener('click', undertextClicked)
 	};
 
-	function doNothing() {console.log('nothing')};
-
 	function uploadClicked(){
 		DOM.uploadInput.click();
-	}	
+	}
 
   function undertextClicked() {
     console.log('TODO: undertext clicked');
   }
-
-	function handleFileSelect(event) {
-		console.log('handleFileSelect');
-		const inputFile = event.target.files[0].name;
-    console.log('File size: ', event.target.files[0].size);
-		const extension = inputFile.split('.')[1];
-		if (extension != 'gpx') {
-			console.log('This tool accepts only .gpx files.');
-			return;
-		}
-		
-    trackPointObjects = [];	
-		const reader = new FileReader();
-		reader.onload = handleFileLoad;
-		reader.readAsText(event.target.files[0]);
-		checkFileSize(event.target.files[0]);
-	}
 
 	function processDataFromUpload(data) {
 		console.log('processDataFromUpload function started.')
@@ -67,54 +44,17 @@ const HOME = (function () {
         gpxProcessingTime.addStat(gpxProcessingTime, 'ms')
         // performanceObject.innerHTML = performanceList;
 			})
-	}	
-	
-	function fetchDataFromGpx() {
-		console.log('fetchDataFromGpx function started.')
-		const fetchPromise = fetch(gpxFile);
-	
-		fetchPromise
-			.then((response) => {
-				if (!response.ok) {
-					throw new Error(`HTTP error: ${response.status}`);
-				}
-				return response.text();
-			})
-			.then((data) => {
-				processGpx(data);
-			})
-			.then(() => {
-				displayAllStats()
-			});
-	}	
+	}		
 
 	function checkFileSize(fileSize) {
-		noOfOptimizations = Math.ceil(Math.log2(fileSize/maxFileSize));
-		if ( fileSize > maxFileSize ) {
+		noOfOptimizations = Math.ceil(Math.log2(fileSize/APP.maxFileSize));
+		if ( fileSize > APP.maxFileSize ) {
       console.log(`File's too big, we need to take 1 in every ${Math.pow( 2, noOfOptimizations )} points.`);
     } else {
       console.log("File size ok, no need to optimize it.");			
 		}
 		return noOfOptimizations;
 	}
-
-	function optimizeFile( contentArray, noOfOptimizations ) {
-		let optimized = [];
-
-		for ( let i=0; i<contentArray.length; i++) {
-			let currentEntry = contentArray[i];
-
-			optimized.push(currentEntry);
-
-			i = i + Math.pow( 2, (noOfOptimizations - 1) );
-		}
-
-		return optimized;
-	}
-
-	function handleFileLoad(event) {
-		processDataFromUpload(event.target.result);
-	}	
 
 	function processGpx(content) {
 		console.log('processGPX function started.');
@@ -124,7 +64,7 @@ const HOME = (function () {
 		trackPointList = content.match(trackPointTemplate); // We divided GPX into individual trackpoints.
 		
 		// Now if file is too large, we'll skip some points:
-		let numberOfOptimizations = checkFileSize(gpxFileSize);
+		let numberOfOptimizations = checkFileSize(APP.gpxFileSize);
 		if ( numberOfOptimizations > 0 ) {
 			let newTrackpoints = HOME.optimizeFile( trackPointList, numberOfOptimizations );
 			trackPointList = newTrackpoints;
@@ -136,8 +76,6 @@ const HOME = (function () {
 		let eleTemplate = /(<ele>)((.|\n)*?)(<\/ele>)/;
 		let timeTemplate = /(<time>)((.|\n)*?)(<\/time>)/;
 		let previousTrackpoint;
-
-
 	
 		for ( let i=0; i<trackPointList.length;  ) {
 			let currentTrackpoint = new UTIL.TrackPoint;
@@ -195,7 +133,7 @@ const HOME = (function () {
 			// numberSmoothing
 			let speeds = (trackPointObjects).map(
 				({ speed }) => {return speed});
-			let smoothSpeeds = UTIL.smoothArray(speeds, numberSmoothing, 2);
+			let smoothSpeeds = UTIL.smoothArray(speeds, APP.numberSmoothing, 2);
 
 			for (let i = 0; i < trackPointObjects.length; i++) {
 				trackPointObjects[i].speed = smoothSpeeds[i];				
@@ -217,17 +155,17 @@ const HOME = (function () {
 
   return {
 		init,
-    uploadClicked,
-    undertextClicked,
-    processDataFromUpload,
-    fetchDataFromGpx,
-    handleFileSelect,
-    handleFileLoad,
+    // uploadClicked,
+    // undertextClicked,
+    // processDataFromUpload,
+    // fetchDataFromGpx,
+    // handleFileSelect,
+    // handleFileLoad,
     processGpx,
-    calculateGpxProcessingTime,
-		checkFileSize,
-		optimizeFile,
-    gpxProcessingTime,
+    // calculateGpxProcessingTime,
+		// checkFileSize,
+		// optimizeFile,
+    // gpxProcessingTime,
 		trackPointObjects
   }	
 })();

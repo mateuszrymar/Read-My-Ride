@@ -1,5 +1,7 @@
+import { HOME } from './modules/home.js';
+import { INFO } from './modules/info.js';
+import { UTIL } from './modules/utilities.js';
 
-// HTML Elements
 const DOM = {
 	home: document.getElementsByClassName("home")[0],
 	info: document.getElementsByClassName("info")[0],
@@ -16,207 +18,199 @@ const DOM = {
 	file_3: document.getElementsByClassName("examples__tile-3")[0],
 
 	statsTable: document.getElementsByClassName("stats__table")[0],
-
 };
-console.log(DOM)
-export { DOM };
 
+const APP = (function () {
+	// Variables
+	const stopTime = 10; // Time interval [s] when we consider user stopped.
+	const stopSpeed = 0.3; // Slowest speed [m/s] considered a movement.
+	const numberSmoothing = 5;
+	const maxFileSize = 1e6;
+	const gradientBoundaries = [ -3, 1.5, 6 ];
+	let gpxFile;
+	let gpxFileContent;
+	let gpxFileSize;
+	let gpxText;
+	let parser;
+	let isUploadValid = false;
 
+	/* Todo list
+		- Function to create additional power info: takes weights as input, outputs:
+			- estimated avg power
+			- max power
+			- calories burnt
+		- Add a progress bar.
+		
+		/* Nice-to-haves
+		- Add a comparison functionality.
+		- Add an option to store a few files.
+		- Add zoom buttons/pinch zoom on the diagrams.
+		- Add a point that displays data on hover (line diagrams, maybe even on the gpx track.)
 
-// Variables
-let gpxFile;
-let gpxFileContent;
-let gpxFileSize;
-let gpxText;
-let parser;
-let stopTime = 10; // Time interval [s] when we consider user stopped.
-let stopSpeed = 0.3; // Slowest speed [m/s] considered a movement.
-let numberSmoothing = 5;
-let isUploadValid = false;
-let maxFileSize = 1e6;
-let gradientBoundaries = [ -3, 1.5, 6 ];
-export { gpxFile, gpxText, parser, stopTime, stopSpeed, maxFileSize, gpxFileSize, numberSmoothing, gradientBoundaries };
+	/* Known bugs
+		- Moving time calculation is completely broken now.
+		- Max gradient calculation looks wrong now.
+	*/
 
-// Files
-// const fileShort = File ;
+	UTIL.StateManager.getStateManager(); // Initialization.
+	UTIL.StateManager.storeDom( 'home_baseState', DOM );
+	HOME.init();
 
-import { UTIL } from './modules/utilities.js';
-import { HOME, trackPointObjects } from './modules/home.js';
-import { INFO } from './modules/info.js';
+	UTIL.StateManager.createNewState( 
+		'home_uploadError', 
+		[ DOM.uploadError, DOM.uploadErrorHint ], 
+		[ 'visibility: visible', 'visibility: hidden' ],
+		[ '', '' ],
+	);
+	UTIL.StateManager.createNewState( 
+		'home_uploadErrorHint', 
+		[ DOM.readGpxBtn, DOM.uploadError, DOM.uploadErrorHint, DOM.file_1, DOM.file_2, DOM.file_3, ], 
+		[ 'background-color: var(--grey-40)', 'visibility: hidden', 'visibility: visible', 'background-color: var(--green-70)', 'background-color: var(--green-70)', 'background-color: var(--green-70)' ],
+		[ '', '', '', '', '', '' ],
+	);
+	UTIL.StateManager.createNewState( 
+		'info_baseState', 
+		[ DOM.home, DOM.info ], 
+		[ 'display:none', 'display:block' ],
+		[ '', '' ],
+	);
+	console.log(UTIL.storedStates)
 
-/* Todo list
-	- DONE Create a function to generate a line chart from elevation data.
-	- DONE Create a function to generate a line chart from speed data.
-	- DONE Create a function to generate a pie chart of time at gradients from elevation and time data.
-	- Function to create additional power info: takes weights as input, outputs:
-		- estimated avg power
-		- max power
-		- calories burnt
-	- Add a progress bar.
-	
-	/* Nice-to-haves
-	- Add a comparison functionality.
-	- Add an option to store a few files.
-	- Add zoom buttons/pinch zoom on the diagrams.
-	- Add a point that displays data on hover (line diagrams, maybe even on the gpx track.)
+	const validateUpload = () => {
+		return new Promise((resolve, reject) => {
 
-/* Known bugs
-	- With some files from uploads, moving time calculation is incorrect leading to very high avg speeds too.
-*/
-UTIL.StateManager.getStateManager(); // Initialization.
-UTIL.StateManager.storeDom( 'home_baseState', DOM );
-HOME.init();
+			DOM.uploadInput.addEventListener('change', checkUpload, false);
+			DOM.uploadUndertext.addEventListener('click', displayHint, false);
+			DOM.file_1.addEventListener('click', loadFile, false);
+			DOM.file_2.addEventListener('click', loadFile, false);
+			DOM.file_3.addEventListener('click', loadFile, false);
 
-UTIL.StateManager.createNewState( 
-	'home_uploadError', 
-	[ DOM.uploadError, DOM.uploadErrorHint ], 
-	[ 'visibility: visible', 'visibility: hidden' ],
-	[ '', '' ],
-);
-UTIL.StateManager.createNewState( 
-	'home_uploadErrorHint', 
-	[ DOM.readGpxBtn, DOM.uploadError, DOM.uploadErrorHint, DOM.file_1, DOM.file_2, DOM.file_3, ], 
-	[ 'background-color: var(--grey-40)', 'visibility: hidden', 'visibility: visible', 'background-color: var(--green-70)', 'background-color: var(--green-70)', 'background-color: var(--green-70)' ],
-	[ '', '', '', '', '', '' ],
-);
-UTIL.StateManager.createNewState( 
-	'info_baseState', 
-	[ DOM.home, DOM.info ], 
-	[ 'display:none', 'display:block' ],
-	[ '', '' ],
-);
-console.log(UTIL.storedStates);
+			function checkUpload(event) {
 
-const validateUpload = () => {
-	return new Promise((resolve, reject) => {
+				console.log('Upload is being validated.');
+				
+				gpxFile = event.target.files[0];
 
-		DOM.uploadInput.addEventListener('change', checkUpload, false);
-		DOM.uploadUndertext.addEventListener('click', displayHint, false);
-		DOM.file_1.addEventListener('click', loadFile, false);
-		DOM.file_2.addEventListener('click', loadFile, false);
-		DOM.file_3.addEventListener('click', loadFile, false);
+				const extension = gpxFile.name.split('.')[1];
+				
+				if (extension != 'gpx') {
 
-		function checkUpload(event) {
+					// On wrong extension do that:
+					isUploadValid = false;
+					UTIL.StateManager.setState('home_uploadError');
 
-			console.log('Upload is being validated.');
-			
-			gpxFile = event.target.files[0];
+					setTimeout(() => {					
+						displayHint();
+					}, 1600);
 
-			const extension = gpxFile.name.split('.')[1];
-			
-			if (extension != 'gpx') {
+					reject( Error('This tool accepts only .gpx files.' ));
 
-				// On wrong extension do that:
-				isUploadValid = false;
-				UTIL.StateManager.setState('home_uploadError');
+				} else {
+					isUploadValid = true;
+					console.log('File is valid.');
+					const reader = new FileReader();
+					gpxFileSize = gpxFile.size;
 
-				setTimeout(() => {					
-					displayHint();
-				}, 1600);
+					if (gpxFile) {
+						reader.readAsText(gpxFile);
+					}
 
-				reject( Error('This tool accepts only .gpx files.' ));
-
-			} else {
-				isUploadValid = true;
-				console.log('File is valid.');
-				const reader = new FileReader();
-				gpxFileSize = gpxFile.size;
-
-				if (gpxFile) {
-					reader.readAsText(gpxFile);
+					reader.addEventListener("load", () => {
+						// this will then display a text file
+						// console.log(reader.result);
+						gpxFileContent = reader.result;
+						resolve( 'File is valid.' );
+					}, false);
 				}
-
-				reader.addEventListener("load", () => {
-					// this will then display a text file
-					// console.log(reader.result);
-					gpxFileContent = reader.result;
-					resolve( 'File is valid.' );
-				}, false);
 			}
-		}
 
-		function displayHint() { UTIL.StateManager.setState('home_uploadErrorHint') }
+			function displayHint() { UTIL.StateManager.setState('home_uploadErrorHint') }
 
-		function loadFile(event) {
-			event.preventDefault();
-			gpxFile = (event.target.href);
-			fetch(event.target.href)
-				.then(res => res.blob())
-				.then(blob => {
-					// here we can check file size:
-					gpxFileSize = blob.size;
-					return blob
-				})
-				.then(blob => blob.text())
-				.then(text => {
-					console.log('blob read.');
-					gpxFileContent = text;
-					resolve( 'File is valid.' )
-				})
-		}
+			function loadFile(event) {
+				event.preventDefault();
+				gpxFile = (event.target.href);
+				fetch(event.target.href)
+					.then(res => res.blob())
+					.then(blob => {
+						// here we can check file size:
+						gpxFileSize = blob.size;
+						return blob
+					})
+					.then(blob => blob.text())
+					.then(text => {
+						console.log('blob read.');
+						gpxFileContent = text;
+						resolve( 'File is valid.' )
+					})
+			}
 
-	}, isUploadValid)
-}
+		}, isUploadValid)
+	}
 
-validateUpload()
-	.then (() => {
-		HOME.processGpx(gpxFileContent);
-		localStorage.clear();
-		// And optionally, display a loading screen in the meantime.
-	})
-	.then (() => {
-		let dataToSave = JSON.stringify(HOME.trackPointObjects);
-		// localStorage.setItem('currentGpx', dataToSave);
+	validateUpload()
+		.then (() => {
+			HOME.processGpx(gpxFileContent);
+			localStorage.clear();
+			// And optionally, display a loading screen in the meantime.
+		})
+		.then (() => {
+			// let dataToSave = JSON.stringify(HOME.trackPointObjects);
+			// localStorage.setItem('currentGpx', dataToSave);
 
-		INFO.createPolyline(HOME.trackPointObjects);
-	})
-	.then (() => {
-		UTIL.StateManager.setState('info_baseState');
-	})
-	.then (() => {
-		INFO.setupMap();
-	})
-	.then(() => {
-		let stats = INFO.calculateStats(HOME.trackPointObjects);
-		INFO.displayAllStats(stats);
-		console.log('displaying charts')
-		INFO.prepareElevationGraph( HOME.trackPointObjects, 30 );
-	})
-	.then(() => {
-		INFO.prepareSpeedGraph( HOME.trackPointObjects, 30 );
-	})
-	.then(() => {
-		INFO.prepareGradientsGraph( HOME.trackPointObjects);
-	})
-	.then(() => {
+			INFO.createPolyline(HOME.trackPointObjects);
+		})
+		.then (() => {
+			UTIL.StateManager.setState('info_baseState');
+		})
+		.then (() => {
+		})
+		.then(() => {
+			INFO.setupMap();
+			let stats = INFO.calculateStats(HOME.trackPointObjects);
+			INFO.displayAllStats(stats);
+			console.log('displaying charts')
+			INFO.prepareElevationGraph( HOME.trackPointObjects, 30 );
+			INFO.prepareSpeedGraph( HOME.trackPointObjects, 30 );
+			INFO.prepareGradientsGraph( HOME.trackPointObjects);
+		})
+		.then(() => {
+		})
+		.then(() => {
+		})
+		.then(() => {
+		})
 
-	})
+	/*
+	// create a stateManager utility, store homeBaseState properties (mostly none).
 
+	if we get a valid upload, or one of the examples was clicked,
+		process data and switch to INFO screen.
+	else if undertext is clicked, change state to selectExample.
+	else if we get an invalid input extension, change state to errorInvalid.
+	else if upload was cancelled, change state to errorCancelled.
 
-	
+	handleSwitch: change state to infoBaseState.
+	if weightInfo was filled, process data and change state to infoWeightSubmitted (?).
+	if anotherFile button was clicked, use stateManager to restore all variables to default
+		and switch to HOME screen.
 
-/*
-// create a stateManager utility, store homeBaseState properties (mostly none).
+	*/
 
-if we get a valid upload, or one of the examples was clicked,
-	 process data and switch to INFO screen.
-else if undertext is clicked, change state to selectExample.
-else if we get an invalid input extension, change state to errorInvalid.
-else if upload was cancelled, change state to errorCancelled.
+	function displayPerformance() {
+		// Calculate statistics here
+	};
 
-handleSwitch: change state to infoBaseState.
-if weightInfo was filled, process data and change state to infoWeightSubmitted (?).
-if anotherFile button was clicked, use stateManager to restore all variables to default
-	and switch to HOME screen.
+	return { 
+		gpxFile, 
+		gpxText, 
+		parser, 
+		stopTime, 
+		stopSpeed, 
+		maxFileSize, 
+		gpxFileSize, 
+		numberSmoothing, 
+		gradientBoundaries 
+	};
+})();
 
-*/
-
-
-
-
-
-
-
-function displayPerformance() {
-	// Calculate statistics here
-};
+export { DOM, APP };
