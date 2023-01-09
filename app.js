@@ -34,28 +34,6 @@ const APP = (function () {
 	let parser;
 	let isUploadValid = false;
 
-	/* Todo list
-		- Function to create additional power info: takes weights as input, outputs:
-			- estimated avg power
-			- max power
-			- calories burnt
-		- Add a progress bar.
-		
-		/* Nice-to-haves
-		- Add a comparison functionality.
-		- Add an option to store a few files.
-		- Add zoom buttons/pinch zoom on the diagrams.
-		- Add a point that displays data on hover (line diagrams, maybe even on the gpx track.)
-
-	/* Known bugs
-		- Moving time calculation is completely broken now.
-		- Max gradient calculation looks wrong now.
-
-	/* Optimization log
-		- HOME Time To Interactive (@ Low-end mobile, Slow 3G) - 6.79s;
-
-	*/
-
 	UTIL.StateManager.getStateManager(); // Initialization.
 	UTIL.StateManager.storeDom( 'home_baseState', DOM );
 	HOME.init();
