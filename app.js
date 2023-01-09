@@ -33,6 +33,7 @@ const APP = (function () {
 	let gpxText;
 	let parser;
 	let isUploadValid = false;
+	let stats;
 
 	UTIL.StateManager.getStateManager(); // Initialization.
 	UTIL.StateManager.storeDom( 'home_baseState', DOM );
@@ -131,14 +132,15 @@ const APP = (function () {
 
 	validateUpload()
 		.then (() => {
-			HOME.processGpx(gpxFileContent);
+			console.log(gpxFileSize);
+			HOME.processGpx(gpxFileContent, gpxFileSize);
 			localStorage.clear();
 			// And optionally, display a loading screen in the meantime.
 		})
 		.then (() => {
 			// let dataToSave = JSON.stringify(HOME.trackPointObjects);
 			// localStorage.setItem('currentGpx', dataToSave);
-
+			
 			INFO.createPolyline(HOME.trackPointObjects);
 		})
 		.then (() => {
@@ -148,14 +150,15 @@ const APP = (function () {
 		})
 		.then(() => {
 			INFO.setupMap();
-			let stats = INFO.calculateStats(HOME.trackPointObjects);
+			stats = INFO.calculateStats(HOME.trackPointObjects, gpxFileSize );
+			return stats;
+		})
+		.then(() => {
 			INFO.displayAllStats(stats);
 			console.log('displaying charts')
 			INFO.prepareElevationGraph( HOME.trackPointObjects, 30 );
 			INFO.prepareSpeedGraph( HOME.trackPointObjects, 30 );
 			INFO.prepareGradientsGraph( HOME.trackPointObjects);
-		})
-		.then(() => {
 		})
 		.then(() => {
 		})

@@ -48,6 +48,7 @@ const HOME = (function () {
 
 	function checkFileSize(fileSize) {
 		noOfOptimizations = Math.ceil(Math.log2(fileSize/APP.maxFileSize));
+		// console.log(noOfOptimizations);
 		if ( fileSize > APP.maxFileSize ) {
       console.log(`File's too big, we need to take 1 in every ${Math.pow( 2, noOfOptimizations )} points.`);
     } else {
@@ -56,7 +57,7 @@ const HOME = (function () {
 		return noOfOptimizations;
 	}
 
-	function processGpx(content) {
+	function processGpx(content, fileSize) {
 		console.log('processGPX function started.');
 		gpxProcessingStart = gpxProcessingTime.startTimer();
 		
@@ -64,7 +65,7 @@ const HOME = (function () {
 		trackPointList = content.match(trackPointTemplate); // We divided GPX into individual trackpoints.
 		
 		// Now if file is too large, we'll skip some points:
-		let numberOfOptimizations = checkFileSize(APP.gpxFileSize);
+		let numberOfOptimizations = checkFileSize(fileSize);
 		if ( numberOfOptimizations > 0 ) {
 			let newTrackpoints = HOME.optimizeFile( trackPointList, numberOfOptimizations );
 			trackPointList = newTrackpoints;
@@ -152,7 +153,6 @@ const HOME = (function () {
       gpxProcessingTime, gpxProcessingStart, gpxProcessingEnd);
   };
 
-
   return {
 		init,
     // uploadClicked,
@@ -163,7 +163,7 @@ const HOME = (function () {
     // handleFileLoad,
     processGpx,
     // calculateGpxProcessingTime,
-		// checkFileSize,
+		checkFileSize,
 		// optimizeFile,
     // gpxProcessingTime,
 		trackPointObjects
