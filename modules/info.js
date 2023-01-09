@@ -6,10 +6,14 @@ const INFO = (function () {
   let statList = [];
   let eleGain = 0;
   let eleLoss = 0;
-  let map = L.map('map').setView([51.505, -0.09], 13);
   let gpxPolyline;
+  let map;
   let rideDistance;
   let maxSpd;
+
+  function initMap() {
+    map = L.map('map').setView([51.919437, 51.919437], 13);
+  }
 
   function setupMap() {
     map.invalidateSize();
@@ -33,10 +37,14 @@ const INFO = (function () {
     return gpxPolyline;
   }
 
-  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-  }).addTo(map);
+  function addMapTiles() {
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+  }
+
+
 
   class Statistic {
     constructor(name, value) {
@@ -508,9 +516,11 @@ const INFO = (function () {
   }
 
   return {
+    initMap,
     calculateStats,
     setupMap,
     createPolyline,
+    addMapTiles,
     displayAllStats,
     prepareElevationGraph,
     prepareSpeedGraph,

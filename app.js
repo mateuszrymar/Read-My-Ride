@@ -84,7 +84,7 @@ const APP = (function () {
 
 					setTimeout(() => {					
 						displayHint();
-					}, 1600);
+					}, 3000);
 
 					reject( Error('This tool accepts only .gpx files.' ));
 
@@ -134,26 +134,22 @@ const APP = (function () {
 		.then (() => {
 			console.log(gpxFileSize);
 			HOME.processGpx(gpxFileContent, gpxFileSize);
+			INFO.initMap()
 			localStorage.clear();
 			// And optionally, display a loading screen in the meantime.
 		})
 		.then (() => {
-			// let dataToSave = JSON.stringify(HOME.trackPointObjects);
-			// localStorage.setItem('currentGpx', dataToSave);
-			
 			INFO.createPolyline(HOME.trackPointObjects);
-		})
-		.then (() => {
+			stats = INFO.calculateStats(HOME.trackPointObjects, gpxFileSize );
 			UTIL.StateManager.setState('info_baseState');
 		})
 		.then (() => {
 		})
 		.then(() => {
 			INFO.setupMap();
-			stats = INFO.calculateStats(HOME.trackPointObjects, gpxFileSize );
-			return stats;
 		})
 		.then(() => {
+			INFO.addMapTiles();
 			INFO.displayAllStats(stats);
 			console.log('displaying charts')
 			INFO.prepareElevationGraph( HOME.trackPointObjects, 30 );
