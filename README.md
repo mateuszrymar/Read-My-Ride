@@ -20,7 +20,7 @@ My goal for this project was to become familiar with best practices and tools us
 
     HTML: [Google Style Guide](https://google.github.io/styleguide/htmlcssguide.html)
     
-    CSS: [AirBnB CSS Style Guide](https://google.github.io/styleguide/htmlcssguide.html)
+    CSS: [AirBnB CSS Style Guide](https://github.com/airbnb/css)
     
     JavaScript: [AirBnB JavaScipt Style Guide](https://github.com/airbnb/javascript)
     
@@ -45,7 +45,7 @@ My goal for this project was to become familiar with best practices and tools us
   This was my second personal project in vanilla JavaScript (I'm not counting tutorial projects). 
   Previous one used a functional approach, so this time I wanted to practice OOP that I just learned.
   This is my last vanilla JS project before jumping into React, so I wanted to practice State Management in vanilla JS before I hand this task over to a framework.
-  Having struggled with spaghetti code in the last project, I digged a little into how mature developers structure their code. I found this [video](https://youtu.be/exiC1Qsv5mc),
+  Having struggled with spaghetti code in the last project, I digged a little into how mature developers structure their code. I found this [video](https://youtu.be/exiC1Qsv5mc?t=871),
   and used the same code structure.
 
 ## If I had more time, I'd do this
