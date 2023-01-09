@@ -113,11 +113,11 @@ const INFO = (function () {
       return totalTime;
     }
 
-    calcAvgSpeed( totalDistance, trackPointObjects ) {
+    calcAvgSpeed( totalDistance, trackPointObjects, gpxFileSize ) {
       let result;
-      let seconds = this.calcMovingTime(trackPointObjects);
+      let seconds = this.calcMovingTime(trackPointObjects, gpxFileSize);
       
-      result = (totalDistance.value / ( seconds / 3600)).toFixed(2);
+      result = (totalDistance.value / ( seconds / 3600)).toFixed(1);
 
       return result;
     }
@@ -206,7 +206,7 @@ const INFO = (function () {
     // Average speed
       let avgSpeed = new Statistic;
       avgSpeed.name = 'Avg. speed';
-      avgSpeed.value = avgSpeed.calcAvgSpeed(totalDistance, trackPointObjects );		
+      avgSpeed.value = avgSpeed.calcAvgSpeed(totalDistance, trackPointObjects, gpxFileSize );		
       avgSpeed.addStat(avgSpeed, 'km/h');
       
     // Max speed
