@@ -57,6 +57,16 @@ const HOME = (function () {
 		return noOfOptimizations;
 	}
 
+	function optimizeFile( contentArray, noOfOptimizations ) {
+		let optimized = [];
+		for ( let i=0; i<contentArray.length; i++) {
+			let currentEntry = contentArray[i];
+			optimized.push(currentEntry);
+			i = i + Math.pow( 2, (noOfOptimizations - 1) );
+		}
+		return optimized;
+	}
+
 	function processGpx(content, fileSize) {
 		console.log('processGPX function started.');
 		gpxProcessingStart = gpxProcessingTime.startTimer();
@@ -164,9 +174,9 @@ const HOME = (function () {
     processGpx,
     // calculateGpxProcessingTime,
 		checkFileSize,
-		// optimizeFile,
+		optimizeFile,
     // gpxProcessingTime,
-		trackPointObjects
+		trackPointObjects,
   }	
 })();
 
