@@ -50,6 +50,10 @@ const APP = (function () {
 	/* Known bugs
 		- Moving time calculation is completely broken now.
 		- Max gradient calculation looks wrong now.
+
+	/* Optimization log
+		- HOME Time To Interactive (@ Low-end mobile, Slow 3G) - 6.79s;
+
 	*/
 
 	UTIL.StateManager.getStateManager(); // Initialization.
