@@ -1,10 +1,10 @@
 import {
   BlobReader,
-  BlobWriter,
-  TextReader,
+  // BlobWriter,
+  // TextReader,
   TextWriter,
   ZipReader,
-  ZipWriter,
+  // ZipWriter,
 } from "https://deno.land/x/zipjs/index.js";
 
 const getZip = async(blob) => {
@@ -29,7 +29,7 @@ const getZip = async(blob) => {
 
   // Retrieves the Blob object containing the zip content into `zipFileBlob`. It
   // is also returned by zipWriter.close() for more convenience.
-  const zipFileBlob = await blob;
+  const zipFileBlob = blob;
 
   // ----
   // Read the zip file
@@ -45,12 +45,18 @@ const getZip = async(blob) => {
   // retrieves metadata (name, dates, etc.) of the first entry, retrieves its
   // content via `helloWorldWriter`, and closes the reader.
   const zipReader = new ZipReader(zipFileReader);
+
+  
   const firstEntry = (await zipReader.getEntries()).shift();
-  const helloWorldText = await firstEntry.getData(helloWorldWriter);
+
+  let fileSize = (firstEntry.uncompressedSize);
+  let unzippedText = await firstEntry.getData(helloWorldWriter);
   await zipReader.close();
 
-  // Displays "Hello world!".
-  console.log(helloWorldText);
+  return {
+    unzippedText,
+    fileSize
+  }
 }
 
 export { getZip }
