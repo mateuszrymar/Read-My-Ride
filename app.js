@@ -1,7 +1,9 @@
 import { HOME } from './modules/home.js';
 import { INFO } from './modules/info.js';
 import { UTIL } from './modules/utilities.js';
-import { getZip } from './modules/zipreader.js';
+import {  } from './modules/zipreader.js';
+// var zip = new JSZip();
+
 
 const DOM = {
 	home: document.getElementsByClassName("home")[0],
