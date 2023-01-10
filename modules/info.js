@@ -378,9 +378,7 @@ const INFO = (function () {
           reject ( 'Array is invalid.' );
         }
       }, isArrayValid)    
-    }
-
-    
+    }    
 
     function sortGradientsByTime ( gradArray, intArray, boundaries ) {
       let downhill = boundaries[0];

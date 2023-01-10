@@ -5,6 +5,8 @@ import { UTIL } from './modules/utilities.js';
 const DOM = {
 	home: document.getElementsByClassName("home")[0],
 	info: document.getElementsByClassName("info")[0],
+	homeUpload: document.getElementsByClassName("home__upload")[0],
+	homeExamples: document.getElementsByClassName("home__examples")[0],
 
 	readGpxBtn: document.getElementsByClassName("upload__button")[0],
 	uploadInput: document.getElementsByClassName("upload__input")[0],
@@ -21,6 +23,7 @@ const DOM = {
 };
 
 const APP = (function () {
+	console.log('APP script started');
 	// Variables
 	const stopTime = 10; // Time interval [s] when we consider user stopped.
 	const stopSpeed = 0.3; // Slowest speed [m/s] considered a movement.
@@ -35,30 +38,23 @@ const APP = (function () {
 	let isUploadValid = false;
 	let stats;
 
+
 	UTIL.StateManager.getStateManager(); // Initialization.
 	UTIL.StateManager.storeDom( 'home_baseState', DOM );
+	HOME.createStates();
+	console.log(UTIL.storedStates);
+
+	//Here we prevent unwanted behaviour before loading the DOM:
+	document.addEventListener("DOMContentLoaded", () => {
+		console.log('DOM loaded.');
+		DOM.home.classList.remove("no-click");
+		// UTIL.StateManager.setState('home_domContentLoaded');		
+	});	
+
+	// UTIL.StateManager.setState('home_domContentLoaded');
 	HOME.init();
-
-	UTIL.StateManager.createNewState( 
-		'home_uploadError', 
-		[ DOM.uploadError, DOM.uploadErrorHint ], 
-		[ 'visibility: visible', 'visibility: hidden' ],
-		[ '', '' ],
-	);
-	UTIL.StateManager.createNewState( 
-		'home_uploadErrorHint', 
-		[ DOM.readGpxBtn, DOM.uploadError, DOM.uploadErrorHint, DOM.file_1, DOM.file_2, DOM.file_3, ], 
-		[ 'background-color: var(--grey-40)', 'visibility: hidden', 'visibility: visible', 'background-color: var(--green-70)', 'background-color: var(--green-70)', 'background-color: var(--green-70)' ],
-		[ '', '', '', '', '', '' ],
-	);
-	UTIL.StateManager.createNewState( 
-		'info_baseState', 
-		[ DOM.home, DOM.info ], 
-		[ 'display:none', 'display:block' ],
-		[ '', '' ],
-	);
-	console.log(UTIL.storedStates)
-
+	
+		
 	const validateUpload = () => {
 		return new Promise((resolve, reject) => {
 
@@ -143,8 +139,6 @@ const APP = (function () {
 			stats = INFO.calculateStats(HOME.trackPointObjects, gpxFileSize );
 			UTIL.StateManager.setState('info_baseState');
 		})
-		.then (() => {
-		})
 		.then(() => {
 			INFO.setupMap();
 		})
@@ -155,8 +149,6 @@ const APP = (function () {
 			INFO.prepareElevationGraph( HOME.trackPointObjects, 30 );
 			INFO.prepareSpeedGraph( HOME.trackPointObjects, 30 );
 			INFO.prepareGradientsGraph( HOME.trackPointObjects);
-		})
-		.then(() => {
 		})
 		.then(() => {
 		})

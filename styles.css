@@ -83,6 +83,9 @@
 }
 
 /* Page */
+.no-click{
+  pointer-events: none;
+}
 body {
   margin: 0;
   padding: 0;

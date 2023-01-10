@@ -9,19 +9,51 @@ const HOME = (function () {
 	let gpxProcessingEnd;
 	let noOfOptimizations;
 
-
-	function init() {
-		[ DOM.readGpxBtn, DOM.uploadText ].forEach(function (element) {
-			element.addEventListener('click', uploadClicked);
-		});
-		DOM.uploadUndertext.addEventListener('click', undertextClicked)
-	};
-
-	function uploadClicked(){
-		DOM.uploadInput.click();
+	function createStates() {
+		UTIL.StateManager.createNewState( 
+			'home_domContentLoaded', 
+			[ DOM.homeUpload, DOM.homeExamples ], 
+			[ 'visibility: visible', 'visibility: visible' ],
+			[ '', '' ],
+		);
+		UTIL.StateManager.createNewState( 
+			'home_uploadError', 
+			[ DOM.uploadError, DOM.uploadErrorHint ], 
+			[ 'visibility: visible', 'visibility: hidden' ],
+			[ '', '' ],
+		);
+		UTIL.StateManager.createNewState( 
+			'home_uploadErrorHint', 
+			[ DOM.readGpxBtn, DOM.uploadError, DOM.uploadErrorHint, DOM.file_1, DOM.file_2, DOM.file_3, ], 
+			[ 'background-color: var(--grey-40)', 'visibility: hidden', 'visibility: visible', 'background-color: var(--green-70)', 'background-color: var(--green-70)', 'background-color: var(--green-70)' ],
+			[ '', '', '', '', '', '' ],
+		);
+		UTIL.StateManager.createNewState( 
+			'info_baseState', 
+			[ DOM.home, DOM.info ], 
+			[ 'display:none', 'display:block' ],
+			[ '', '' ],
+		);
 	}
 
-  function undertextClicked() {
+	function init() {
+		console.log('initialized');
+		console.log(DOM.uploadUndertext);
+		[ DOM.readGpxBtn, DOM.uploadText ].forEach(function (element) {
+			element.addEventListener('click', uploadClicked);
+		}, { capture: true });		
+		DOM.uploadUndertext.addEventListener('click', undertextClicked);
+	};
+
+	function uploadClicked(event){
+		console.log('uploadClicked works');
+		event.preventDefault();
+		DOM.uploadInput.click();
+	}
+	
+  function undertextClicked(event) {
+		console.log('undertextClicked works');
+		event.preventDefault();
     console.log('TODO: undertext clicked');
   }
 
@@ -164,6 +196,7 @@ const HOME = (function () {
   };
 
   return {
+		createStates,
 		init,
     // uploadClicked,
     // undertextClicked,

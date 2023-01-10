@@ -7,9 +7,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Read my ride</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
   <link rel="stylesheet"href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" >
+  <!-- <link rel="stylesheet" href="initial-style.css"> -->
+  <link rel="stylesheet" href="styles.css">
+
   <link rel="icon" type="image/x-icon" href="images/favicon.ico">
 
   <link rel="preload" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
@@ -33,8 +35,8 @@
       <p class="header__description medium-text">This tool analyzes your rides.</p>
     </header>
 
-    <article class="home  card" style="">
-      <div class="home__upload">
+    <article class="home  card  no-click" style="">
+      <div class="home__upload" style = "visibility: visible">
         <input class="upload__input" type="file" name="file" style="display: none"/>
         <button class="upload__button   button">+</button>
         <div>
@@ -45,7 +47,7 @@
           <p class="upload__error-hint   medium-text  medium-text--hint" style = "visibility: hidden">You can use one of ours:</p>
         </div>
       </div>
-      <footer class="home__examples">
+      <footer class="home__examples" style = "visibility: visible">
         <a href="gpx_examples/short.gpx" class="examples__tile-1  example-tile  small-text">
           <img class="thumbnail" src="images/mapicon.svg">
           <span class="example-name  small-text">short.gpx</span>
@@ -176,6 +178,7 @@
     </main>
   
   </div>
+
   <script src="app.js" type="module"></script>  
   <script defer src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
      integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
