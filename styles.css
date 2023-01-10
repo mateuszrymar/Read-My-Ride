@@ -299,11 +299,11 @@ a {
 .graph{
   width: 100%;
 }
-.ct-series-a .ct-line,
-.ct-series-a .ct-point {
+.ct-series-a .ct-line.ct-line,
+.ct-series-a .ct-point.ct-point {
   stroke: var(--orange-70);
 }
-.ct-series-a .ct-area{
+.ct-series-a .ct-area.ct-area{
   fill: var(--orange-40);
   fill-opacity: 1;
 }
