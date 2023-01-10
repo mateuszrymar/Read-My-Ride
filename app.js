@@ -1,6 +1,7 @@
 import { HOME } from './modules/home.js';
 import { INFO } from './modules/info.js';
 import { UTIL } from './modules/utilities.js';
+import { getZip } from './modules/zipreader.js';
 
 const DOM = {
 	home: document.getElementsByClassName("home")[0],
@@ -35,7 +36,7 @@ const APP = (function () {
 	let gpxText;
 	let parser;
 	let isUploadValid = false;
-	let stats;
+	let stats;	
 
 
 	UTIL.StateManager.getStateManager(); // Initialization.
