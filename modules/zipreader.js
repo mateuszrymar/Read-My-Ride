@@ -1,34 +1,10 @@
 import {
   BlobReader,
-  // BlobWriter,
-  // TextReader,
   TextWriter,
   ZipReader,
-  // ZipWriter,
-} from "https://deno.land/x/zipjs/index.js";
+} from "../node_modules/@zip.js/zip.js/index.js";
 
 const getZip = async(blob) => {
-
-  // ----
-  // Write the zip file
-  // ----
-
-
-  // Creates a BlobWriter object where the zip content will be written.
-  // const zipFileWriter = new BlobWriter();
-  // Creates a TextReader object storing the text of the entry to add in the zip
-  // (i.e. "Hello world!").
-  // const helloWorldReader = new TextReader("Hello world!");
-
-  // Creates a ZipWriter object writing data via `zipFileWriter`, adds the entry
-  // "hello.txt" containing the text "Hello world!" via `helloWorldReader`, and
-  // closes the writer.
-  // const zipWriter = new ZipWriter(zipFileWriter);
-  // await zipWriter.add("hello.txt", helloWorldReader);
-  // await zipWriter.close();
-
-  // Retrieves the Blob object containing the zip content into `zipFileBlob`. It
-  // is also returned by zipWriter.close() for more convenience.
   const zipFileBlob = blob;
 
   // ----
@@ -39,7 +15,7 @@ const getZip = async(blob) => {
   const zipFileReader = new BlobReader(zipFileBlob);
   // Creates a TextWriter object where the content of the first entry in the zip
   // will be written.
-  const helloWorldWriter = new TextWriter();
+  const unzippedTextWriter = new TextWriter();
 
   // Creates a ZipReader object reading the zip content via `zipFileReader`,
   // retrieves metadata (name, dates, etc.) of the first entry, retrieves its
@@ -50,7 +26,7 @@ const getZip = async(blob) => {
   const firstEntry = (await zipReader.getEntries()).shift();
 
   let fileSize = (firstEntry.uncompressedSize);
-  let unzippedText = await firstEntry.getData(helloWorldWriter);
+  let unzippedText = await firstEntry.getData(unzippedTextWriter);
   await zipReader.close();
 
   return {
