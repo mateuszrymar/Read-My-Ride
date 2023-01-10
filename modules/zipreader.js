@@ -7,7 +7,7 @@ import {
   ZipWriter,
 } from "https://deno.land/x/zipjs/index.js";
 
-const getZip = async() => {
+const getZip = async(blob) => {
 
   // ----
   // Write the zip file
@@ -15,21 +15,21 @@ const getZip = async() => {
 
 
   // Creates a BlobWriter object where the zip content will be written.
-  const zipFileWriter = new BlobWriter();
+  // const zipFileWriter = new BlobWriter();
   // Creates a TextReader object storing the text of the entry to add in the zip
   // (i.e. "Hello world!").
-  const helloWorldReader = new TextReader("Hello world!");
+  // const helloWorldReader = new TextReader("Hello world!");
 
   // Creates a ZipWriter object writing data via `zipFileWriter`, adds the entry
   // "hello.txt" containing the text "Hello world!" via `helloWorldReader`, and
   // closes the writer.
-  const zipWriter = new ZipWriter(zipFileWriter);
-  await zipWriter.add("hello.txt", helloWorldReader);
-  await zipWriter.close();
+  // const zipWriter = new ZipWriter(zipFileWriter);
+  // await zipWriter.add("hello.txt", helloWorldReader);
+  // await zipWriter.close();
 
   // Retrieves the Blob object containing the zip content into `zipFileBlob`. It
   // is also returned by zipWriter.close() for more convenience.
-  const zipFileBlob = await zipFileWriter.getData();
+  const zipFileBlob = await blob;
 
   // ----
   // Read the zip file

@@ -111,6 +111,10 @@ const APP = (function () {
 				fetch(event.target.href)
 					.then(res => res.blob())
 					.then(blob => {
+						getZip(blob);
+						return blob
+					})
+					.then(blob => {
 						// here we can check file size:
 						gpxFileSize = blob.size;
 						return blob
