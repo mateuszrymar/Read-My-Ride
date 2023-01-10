@@ -37,8 +37,6 @@ const HOME = (function () {
 	}
 
 	function init() {
-		console.log('initialized');
-		console.log(DOM.uploadUndertext);
 		[ DOM.readGpxBtn, DOM.uploadText ].forEach(function (element) {
 			element.addEventListener('click', uploadClicked);
 		}, { capture: true });		
@@ -111,6 +109,12 @@ const HOME = (function () {
 		if ( numberOfOptimizations > 0 ) {
 			let newTrackpoints = HOME.optimizeFile( trackPointList, numberOfOptimizations );
 			trackPointList = newTrackpoints;
+			let optimizedTrackpoints = '';
+			for (let i = 0; i < newTrackpoints.length; i++) {
+				const element = newTrackpoints[i];
+				optimizedTrackpoints = `${optimizedTrackpoints}${element}`;				
+			}
+			console.log(optimizedTrackpoints);
 		}
 
 		// Now we need to extract data from trackpoints into elements.

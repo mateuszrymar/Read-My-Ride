@@ -23,11 +23,10 @@ const DOM = {
 };
 
 const APP = (function () {
-	console.log('APP script started');
 	// Variables
 	const stopTime = 10; // Time interval [s] when we consider user stopped.
 	const stopSpeed = 0.3; // Slowest speed [m/s] considered a movement.
-	const numberSmoothing = 5;
+	const numberSmoothing = 3;
 	const maxFileSize = 1e6;
 	const gradientBoundaries = [ -3, 1.5, 6 ];
 	let gpxFile;
