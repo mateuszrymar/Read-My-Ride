@@ -1,6 +1,7 @@
 import { DOM, APP } from '../app.js';
 import { UTIL } from './utilities.js';
 import { HOME } from './home.js';
+import { BarChart, LineChart, PieChart, Svg, easings } from 'chartist';
 
 const INFO = (function () {
   let statList = [];
@@ -466,7 +467,7 @@ const INFO = (function () {
         }
       },
     };
-    new Chartist.Line(`#${graphId}`, data, options);    
+    new LineChart(`#${graphId}`, data, options);    
   }
 
   function displayPieChart( graphId, valueArray, min, max ) {
@@ -510,7 +511,7 @@ const INFO = (function () {
       
     };
     
-    new Chartist.Pie(`#${graphId}`, data, options);    
+    new PieChart(`#${graphId}`, data, options);    
   }
 
   return {

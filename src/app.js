@@ -1,6 +1,7 @@
 import { HOME } from './modules/home.js';
 import { INFO } from './modules/info.js';
 import { UTIL } from './modules/utilities.js';
+import { getZip } from './modules/zipreader.js';
 
 const DOM = {
 	home: document.getElementsByClassName("home")[0],
@@ -35,7 +36,7 @@ const APP = (function () {
 	let gpxText;
 	let parser;
 	let isUploadValid = false;
-	let stats;
+	let stats;	
 
 
 	UTIL.StateManager.getStateManager(); // Initialization.
@@ -104,22 +105,18 @@ const APP = (function () {
 
 			function displayHint() { UTIL.StateManager.setState('home_uploadErrorHint') }
 
-			function loadFile(event) {
+			async function loadFile(event) {
 				event.preventDefault();
 				gpxFile = (event.target.href);
-				fetch(event.target.href)
-					.then(res => res.blob())
-					.then(blob => {
-						// here we can check file size:
-						gpxFileSize = blob.size;
-						return blob
-					})
-					.then(blob => blob.text())
-					.then(text => {
-						console.log('blob read.');
-						gpxFileContent = text;
-						resolve( 'File is valid.' )
-					})
+				const response = await fetch(event.target.href);
+				const zippedBlob = await response.blob();
+				const unzippedBlob = await getZip(zippedBlob);
+				gpxFileContent = unzippedBlob.unzippedText;
+				gpxFileSize = unzippedBlob.fileSize;
+
+				console.log(gpxFileContent);
+				console.log(gpxFileSize);
+				resolve( 'File is valid.' );
 			}
 
 		}, isUploadValid)
