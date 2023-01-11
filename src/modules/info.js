@@ -1,7 +1,7 @@
-import { DOM, APP } from '../app.js';
-import { UTIL } from './utilities.js';
-import { HOME } from './home.js';
-import { BarChart, LineChart, PieChart, Svg, easings } from 'chartist';
+import { DOM, APP } from 'D:\\coding\\221227_gpx-analyzer\\src\\app.js';
+import { UTIL } from 'D:\\coding\\221227_gpx-analyzer\\src\\modules\\utilities.js';
+import { HOME } from 'D:\\coding\\221227_gpx-analyzer\\src\\modules\\home.js';
+import { LineChart, PieChart } from 'D:\\coding\\221227_gpx-analyzer\\node_modules\\chartist\\dist\\index.js';
 
 const INFO = (function () {
   let statList = [];

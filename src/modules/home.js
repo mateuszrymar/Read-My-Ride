@@ -1,5 +1,5 @@
-import { DOM, APP } from '../app.js';
-import { UTIL } from './utilities.js';
+import { DOM, APP } from 'D:\\coding\\221227_gpx-analyzer\\src\\app.js';
+import { UTIL } from 'D:\\coding\\221227_gpx-analyzer\\src\\modules\\utilities.js';
 
 const HOME = (function () {
 	let trackPointList;

@@ -2,14 +2,20 @@
   "name": "read-my-ride",
   "version": "0.1.0",
   "description": "This web app lets users display statistics from their GPS tracking data.",
-  "main": "dist/main.js",
+  "main": "dist/index.html",
+	"targets": {
+		"main": {
+			"outputFormat": "esmodule"
+		}
+	},
   "scripts": {
     "start": "parcel ./src/index.html",
     "prebuild-dev": "shx rm -rf dist/*",
     "build-dev": "parcel build ./src/index.html --public-url ./",
     "prebuild": "shx rm -rf dist/*",
     "build-gh": "parcel build ./src/index.html --public-url ./",
-    "build-netlify": "parcel build /src/index.html",
+    "build-netlify": "parcel build src/index.html",
+    "build": "parcel build ./src/index.html --target node --bundle-node-modules --out-dir ./dist --no-minify --out-file index.html && sed -i '' '1s;^;var ;' ./dist/index.html",
     "push-gh-pages": "push-dir --dir=dist --branch=gh-pages --cleanup --verbose"  
   },
   "dependencies": {

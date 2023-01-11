@@ -1,8 +1,7 @@
-
-import { HOME } from './modules/home.js';
-import { INFO } from './modules/info.js';
-import { UTIL } from './modules/utilities.js';
-import { getZip } from './modules/zipreader.js';
+import { HOME } from 'D:\\coding\\221227_gpx-analyzer\\src\\modules\\home.js';
+import { INFO } from 'D:\\coding\\221227_gpx-analyzer\\src\\modules\\info.js';
+import { UTIL } from 'D:\\coding\\221227_gpx-analyzer\\src\\modules\\utilities.js';
+import { getZip } from 'D:\\coding\\221227_gpx-analyzer\\src\\modules\\zipreader.js';
 
 const DOM = {
 	home: document.getElementsByClassName("home")[0],
