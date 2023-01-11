@@ -95,7 +95,7 @@ body {
 }
 .page__background{
   display: block;
-  background-image: url(images/Background-mobile-small.jpg);
+  background-image: url(/Background-mobile-small.e84fa858.jpg);
   background-position: 50% 50%;
   background-size: cover;
   position: absolute;
@@ -344,3 +344,5 @@ a {
 .footer__photo-credit, .footer__webdesign-credit{
   color: var(--grey-20);  
 }
+
+/*# sourceMappingURL=/styles.8986bff4.css.map */
