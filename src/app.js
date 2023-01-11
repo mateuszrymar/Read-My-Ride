@@ -1,3 +1,4 @@
+
 import { HOME } from './modules/home.js';
 import { INFO } from './modules/info.js';
 import { UTIL } from './modules/utilities.js';
@@ -36,7 +37,10 @@ const APP = (function () {
 	let gpxText;
 	let parser;
 	let isUploadValid = false;
-	let stats;	
+	let stats;
+	var parcelRequire;
+	window.global = window;
+	
 
 
 	UTIL.StateManager.getStateManager(); // Initialization.
