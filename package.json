@@ -9,12 +9,7 @@
     "build-dev": "parcel build ./src/index.html --public-url ./",
     "prebuild": "shx rm -rf dist/*",
     "build": "parcel build src/index.html",
-    "push-gh-pages": "push-dir --dir=dist --branch=gh-pages --cleanup --verbose"
-  },
-  "targets": {
-    "default": {
-      "distDir": "./output"
-    }
+    "push-gh-pages": "push-dir --dir=dist --branch=gh-pages --cleanup --verbose"  
   },
   "dependencies": {
     "@zip.js/zip.js": "^2.6.61",
