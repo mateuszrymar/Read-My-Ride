@@ -8,7 +8,8 @@
     "prebuild-dev": "shx rm -rf dist/*",
     "build-dev": "parcel build ./src/index.html --public-url ./",
     "prebuild": "shx rm -rf dist/*",
-    "build": "parcel build src/index.html",
+    "build-gh": "parcel build ./src/index.html --public-url ./",
+    "build-netlify": "parcel build ./src/index.html",
     "push-gh-pages": "push-dir --dir=dist --branch=gh-pages --cleanup --verbose"  
   },
   "dependencies": {
