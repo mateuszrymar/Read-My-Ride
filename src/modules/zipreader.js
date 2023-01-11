@@ -2,7 +2,7 @@ import {
   BlobReader,
   TextWriter,
   ZipReader,
-} from "D:\\coding\\221227_gpx-analyzer\\node_modules\\@zip.js/zip.js\\index.js";
+} from "../../node_modules/@zip.js/zip.js/index.js";
 
 const getZip = async(blob) => {
   const zipFileBlob = blob;
