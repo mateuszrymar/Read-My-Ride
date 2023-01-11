@@ -1,5 +1,16 @@
 {
+  "name": "read-my-ride",
+  "version": "0.1.0",
+  "description": "This web app lets users display statistics from their GPS tracking data.",
+  "scripts": {
+    "dev": "parcel src/index.html",
+    "build": "parcel build src/index.html"
+  },
   "dependencies": {
-    "@zip.js/zip.js": "^2.6.61"
+    "@zip.js/zip.js": "^2.6.61",
+    "leaflet": "^1.9.3"
+  },
+  "devDependencies": {
+    "parcel-bundler": "^1.12.5"
   }
 }
