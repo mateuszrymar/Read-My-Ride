@@ -51,6 +51,8 @@ const APP = (function () {
 	let stats;
 	var parcelRequire;
 	window.global = window;
+
+	
 	
 
 

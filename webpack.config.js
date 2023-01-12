@@ -7,8 +7,10 @@ module.exports = {
   output: {
     filename: 'index_bundle.js',
     path: path.resolve(__dirname, 'dist'),
+    sourceMapFilename: "[name].js.map",
     clean: true,
   },
+  devtool: "source-map",
   devServer: {
     static: {
       directory: path.resolve(__dirname, 'dist')
@@ -23,7 +25,24 @@ module.exports = {
       {
         test: /\.js$/,
         enforce: "pre",
-        use: ["source-map-loader"],
+        use: [
+          {
+            loader: "source-map-loader",
+            options: {
+              filterSourceMappingUrl: (url, resourcePath) => {
+                if (/broker-source-map-url\.js$/i.test(url)) {
+                  return false;
+                }
+
+                if (/keep-source-mapping-url\.js$/i.test(resourcePath)) {
+                  return "skip";
+                }
+
+                return true;
+              },
+            },
+          },
+        ],
       },
       {
         test: /\.css$/i,
