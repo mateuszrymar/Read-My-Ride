@@ -1,4 +1,4 @@
-import { DOM, APP } from '../app.js';
+import { DOM, APP } from '../index.js';
 import { UTIL } from './utilities.js';
 import { HOME } from './home.js';
 import { LineChart, PieChart } from '../../node_modules/chartist/dist/index.cjs';

@@ -1,4 +1,4 @@
-import { DOM, APP } from '../app.js';
+import { DOM, APP } from '../index.js';
 import { UTIL } from './utilities.js';
 
 const HOME = (function () {

@@ -1,3 +1,13 @@
+import "leaflet/dist/leaflet.js";
+import "chartist";
+import "./styles.css";
+import './gpx_examples/short-optimized.zip';
+import './gpx_examples/medium-optimized.zip';
+import './gpx_examples/long-optimized.zip';
+import './images/Background-mobile-small.jpg';
+import './images/favicon.ico';
+import './images/mapicon.svg';
+
 import { HOME } from './modules/home.js';
 import { INFO } from './modules/info.js';
 import { UTIL } from './modules/utilities.js';
