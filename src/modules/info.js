@@ -1,7 +1,7 @@
 import { DOM, APP } from '../app.js';
 import { UTIL } from './utilities.js';
 import { HOME } from './home.js';
-import { LineChart, PieChart } from '../../node_modules/chartist/dist/index.js';
+import { LineChart, PieChart } from '../../node_modules/chartist/dist/index.cjs';
 
 const INFO = (function () {
   let statList = [];

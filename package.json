@@ -1,33 +1,29 @@
 {
-  "name": "my-project",
-  "source": "src/index.html",
-  "default": "index.html",
-  "browserslist": "> 0.5%, last 2 versions, not dead",
-  "scripts": {
-    "start": "parcel",
-    "build": "parcel build",
-    "watch": "parcel watch"
+  "author": "Mateusz Rymar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mateuszrymar/gpx-analyzer/issues"
   },
+  "homepage": "https://github.com/mateuszrymar/gpx-analyzer#readme",
+  "name": "221227_gpx-analyzer",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "description": "",
   "dependencies": {
-    "@parcel/transformer-sass": "^2.8.2",
     "@zip.js/zip.js": "^2.6.61",
     "chartist": "^1.3.0",
     "leaflet": "^1.9.3"
   },
   "devDependencies": {
     "gh-pages": "^4.0.0",
-    "parcel": "^2.8.2",
-    "parcel-bundler": "^1.12.5",
     "shx": "^0.3.4"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mateuszrymar/gpx-analyzer.git"
-  },
-  "author": "Mateusz Rymar",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/mateuszrymar/gpx-analyzer/issues"
-  },
-  "homepage": "https://github.com/mateuszrymar/gpx-analyzer#readme"
+  }
 }
