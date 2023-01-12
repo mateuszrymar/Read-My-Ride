@@ -3,9 +3,9 @@ import "../node_modules/leaflet/dist/leaflet.css";
 import "../node_modules/chartist/dist/index.js";
 import "../node_modules/chartist/dist/index.css";
 import "./styles.css";
-import './gpx_examples/short-optimized.zip';
-import './gpx_examples/medium-optimized.zip';
-import './gpx_examples/long-optimized.zip';
+import zipFile_1 from './gpx_examples/short-optimized.zip';
+import zipFile_2 from './gpx_examples/medium-optimized.zip';
+import zipFile_3 from './gpx_examples/long-optimized.zip';
 import './images/Background-mobile-small.jpg';
 import './images/favicon.ico';
 import './images/mapicon.svg';
@@ -52,9 +52,12 @@ const APP = (function () {
 	var parcelRequire;
 	window.global = window;
 
-	
-	
-
+	// This function adds href links to the example buttons. 
+	(function() {
+		DOM.file_1.setAttribute("href", zipFile_1);
+		DOM.file_2.setAttribute("href", zipFile_2);
+		DOM.file_3.setAttribute("href", zipFile_3);
+	})();
 
 	UTIL.StateManager.getStateManager(); // Initialization.
 	UTIL.StateManager.storeDom( 'home_baseState', DOM );
