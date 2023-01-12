@@ -9,6 +9,7 @@
     "build": "webpack"
   },
   "keywords": [],
+  "type":"module",
   "author": "Mateusz Rymar",
   "license": "ISC",
   "bugs": {
@@ -28,6 +29,7 @@
     "sass": "^1.57.1",
     "sass-loader": "^13.2.0",
     "shx": "^0.3.4",
+    "source-map-loader": "^4.0.1",
     "style-loader": "^3.3.1",
     "webpack": "^5.75.0",
     "webpack-cli": "^5.0.1",

@@ -1,5 +1,7 @@
-import "leaflet/dist/leaflet.js";
-import "chartist";
+import "../node_modules/leaflet/dist/leaflet.js";
+import "../node_modules/leaflet/dist/leaflet.css";
+import "../node_modules/chartist/dist/index.js";
+import "../node_modules/chartist/dist/index.css";
 import "./styles.css";
 import zipFile_1 from './gpx_examples/short-optimized.zip';
 import zipFile_2 from'./gpx_examples/medium-optimized.zip';
