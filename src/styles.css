@@ -1,3 +1,8 @@
+/* For debugging only */
+/* *{
+  outline: 1px solid red;
+} */
+
 /* Global Styles */
 :root {
   --grey-10: #EDE8E5;
@@ -91,10 +96,11 @@ body {
   padding: 0;
   display: block;
   width: 100vw;
-  height: 100vh;
+  height: 100vh;  
 }
 .page__background{
   display: block;
+  background-color: var(--grey-90);
   background-image: url(images/Background-mobile-small.jpg);
   background-position: 50% 50%;
   background-size: cover;
@@ -343,4 +349,36 @@ a {
 }
 .footer__photo-credit, .footer__webdesign-credit{
   color: var(--grey-20);  
+}
+
+@media (max-width: 48em) and (min-aspect-ratio: 7/8) {  
+  .page__container{
+    align-items: center;
+  }
+  .home{
+    top: 0;
+    margin: auto 0 auto 0;
+  }  
+}
+
+@media (min-width:32em) {
+  .page__background{
+    background-image: url(images/Background\ -\ mobile.jpg);
+  }  
+}
+
+@media (min-width: 48em) and (min-aspect-ratio: 7/8) {
+  .page__background{
+    background-image: url(images/Background\ -\ desktop.jpg);
+  }
+  .page__container{
+    align-items: flex-start;
+  }
+  .header{
+    margin-left: 6rem;
+  }
+  .home{
+    top: 0;
+    margin: auto 0 auto 6rem;
+  }  
 }

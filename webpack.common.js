@@ -7,7 +7,7 @@ module.exports = {
   output: {
     filename: 'index_bundle.js',
     path: path.resolve(__dirname, 'dist'),
-    sourceMapFilename: "[name].js.map",
+    // sourceMapFilename: "[name].js.map",
     clean: true,
   },
   module: {
