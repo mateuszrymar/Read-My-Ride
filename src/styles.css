@@ -1,7 +1,8 @@
 /* For debugging only */
-/* *{
+*{
   outline: 1px solid red;
-} */
+  
+}
 
 /* Global Styles */
 :root {
@@ -9,6 +10,7 @@
   --grey-20: #CAC2BB;
   --grey-40: #9D958E;
   --grey-70: #746E68;
+  --grey-80: #3f3c3a;
   --grey-90: #1F1E1A;
   --green-20: #BCD2D1;
   --green-40: #6EABA7;
@@ -19,10 +21,15 @@
 
   font-family: 'Poppins', sans-serif;
   font-size: 16px;
-  color: var(--grey-90);
+  color: var(--grey-80);  
+
 
   --card-width: 17.5rem;
+  --header-font-size: 3rem;
+  --medium-font-size: 0.75rem;
+  --header-height: calc(2 * var(--header-font-size) + var(--medium-font-size));
 }
+
 
 /* Text Styles */
 .header, h1 {
@@ -30,7 +37,7 @@
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 700;
-  font-size: 3rem;
+  font-size: var(--header-font-size);
   line-height: 1;
   margin: 0;
   color: var(--grey-40);
@@ -68,7 +75,7 @@
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 500;
-  font-size: 12px;
+  font-size: var(--medium-font-size);
   line-height: 18px;
   display: flex;
   align-items: center;
@@ -96,7 +103,8 @@ body {
   padding: 0;
   display: block;
   width: 100vw;
-  height: 100vh;  
+  height: 100vh;
+  overflow: auto;
 }
 .page__background{
   display: block;
@@ -118,8 +126,6 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  overflow-y: scroll;
-  overflow-x: hidden;
 }
 a {
   text-decoration: 0;
@@ -132,7 +138,7 @@ a {
   justify-content: center;
   align-items: left;
   position: relative;
-  margin: 1.5rem 0;
+  margin: calc(0.5 * var(--header-font-size)) 0;
   text-shadow: -2px -2px 5px var(--grey-90),
                -2px 2px 5px var(--grey-90),
                 2px -2px 5px var(--grey-90),
@@ -154,7 +160,7 @@ a {
   padding: 1rem;
   width: 17.5rem;
   box-shadow: 2px 2px 5px var(--grey-90);
-
+  z-index: 1;
 }
 .card--inner{
   border-radius: 1rem;
@@ -288,7 +294,17 @@ a {
   margin-top: 0.25rem;
 }
 
-#map{
+.stats__stats{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.stats__header{
+  margin-top: 0;
+}
+
+.stats__map{
   /* height: 100px;
   width: 100px; */
   width: calc(var(--card-width) - 1rem);
@@ -343,12 +359,21 @@ a {
 }
 
 .footer{
-  color: var(--grey-20);
-  margin-top: 4rem;
-  margin-left: 0;
+  /* position: absolute; */
+  margin: 2rem 0;
+  bottom: 2rem;
+  display: flex;
+  gap: 2rem;
+  flex-direction: row;
+  justify-content: space-between;
+  z-index: 0;
 }
 .footer__photo-credit, .footer__webdesign-credit{
-  color: var(--grey-20);  
+  color: var(--grey-40);
+  text-shadow: -2px -2px 5px var(--grey-90),
+               -2px 2px 5px var(--grey-90),
+                2px -2px 5px var(--grey-90),
+                2px 2px 5px var(--grey-90);
 }
 
 @media (max-width: 48em) and (min-aspect-ratio: 7/8) {  
@@ -380,5 +405,70 @@ a {
   .home{
     top: 0;
     margin: auto 0 auto 6rem;
-  }  
+  }
+  .card {
+    width: 16.125rem;
+  }
+  .info{
+    margin: auto 6rem auto 6rem;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 1rem;
+    flex-grow: 1;
+
+  }
+  .info__stats-panel{
+    box-shadow: 2px 2px 5px var(--grey-90);
+    display: flex;
+    flex-grow: 1;
+    width: calc(calc(100vw - (var(--card-width))) - 1rem - 12rem - 2rem - 2rem);
+    height: calc(100vh - 2 * var(--header-height) - 2rem - 0.5rem);
+
+    background: var(--grey-10);
+    padding: 1em;
+    border-radius: 2.625rem;
+  }
+  .info__stats-panel > * {
+    box-shadow: none;
+    border: 1px solid var(--grey-20);
+    z-index: 1;
+    overflow-y: auto;
+  }
+  .stats__map{
+    flex-grow: 1;
+    height: auto;
+    order: 1;
+    overflow-y: hidden;
+  }
+  .graph-panel{
+    order: 2;
+    z-index: 1;
+  }
+  .footer{
+    width: calc(100vw - 12rem);
+    margin-left: 6rem;
+    justify-content: space-between;
+  }
+}
+
+.scrollable::-webkit-scrollbar-track
+{
+  -webkit-box-shadow: inset 0 0 8px rgba(0,0,0,0.3);
+  border-radius: 10px;
+  background-color: var(--grey-10);
+}
+
+.scrollable::-webkit-scrollbar
+{
+  width: 8px;
+  background-color: var(--grey-20);
+
+}
+
+.scrollable::-webkit-scrollbar-thumb
+{
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 8px rgba(0,0,0,.3);
+  background-color: var(--grey-20);
 }

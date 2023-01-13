@@ -30,9 +30,9 @@ const HOME = (function () {
 		);
 		UTIL.StateManager.createNewState( 
 			'info_baseState', 
-			[ DOM.home, DOM.info ], 
-			[ 'display:none', 'display:block' ],
-			[ '', '' ],
+			[ DOM.home, DOM.info, DOM.footer ], 
+			[ 'display:none', 'display:flex', 'display: flex;' ],
+			[ '', '', '' ],
 		);
 	}
 

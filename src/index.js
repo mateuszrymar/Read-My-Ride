@@ -33,6 +33,7 @@ const DOM = {
 	file_3: document.getElementsByClassName("examples__tile-3")[0],
 
 	statsTable: document.getElementsByClassName("stats__table")[0],
+	footer: document.getElementsByClassName("footer")[0],
 };
 
 const APP = (function () {
