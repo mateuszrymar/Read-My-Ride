@@ -67,22 +67,11 @@ const INFO = (function () {
     calcMovingTime( trackPointObjects, gpxFileSize) {
       let movingTime = 0;
       let sum = 0;
-      let numberOfOptimizations = HOME.checkFileSize(gpxFileSize);
-      // console.log(gpxFileSize);
-      // console.log(numberOfOptimizations);
-
-      // console.log(trackPointObjects[1].interval);
-      // console.log(APP.stopTime);
-      // console.log(Math.pow(2, HOME.noOfOptimizations));
-      // console.log(HOME.noOfOptimizations);
-      // console.log(APP.stopTime * Math.pow(2, HOME.noOfOptimizations));
-      // console.log((trackPointObjects[0].interval < (APP.stopTime * Math.pow(2, HOME.noOfOptimizations))));
-      // console.log((trackPointObjects[0].speed > APP.stopSpeed)); //OK!
-
-
+      let numberOfOptimizations = Math.max(HOME.checkFileSize(gpxFileSize), 0);      
+      
       for ( let i=0; i<trackPointObjects.length; i++ ) {
-        sum = movingTime;               
-
+        sum = movingTime;           
+        
         if ((trackPointObjects[i].interval < (APP.stopTime * Math.pow(2, numberOfOptimizations))) && (trackPointObjects[i].speed > APP.stopSpeed)) {
           movingTime = sum + Number(trackPointObjects[i].interval);
         } else {
@@ -371,7 +360,6 @@ const INFO = (function () {
         }
         if (gradientsArray.length = trackPointObjects.length) {
           isArrayValid = true;
-          console.log ( 'Array is valid.' ); 
           resolve ( 'Array is valid.' ); 
         } else {
           isArrayValid = false;

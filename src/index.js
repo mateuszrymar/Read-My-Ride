@@ -38,8 +38,8 @@ const DOM = {
 
 const APP = (function () {
 	// Variables
-	const stopTime = 10; // Time interval [s] when we consider user stopped.
-	const stopSpeed = 0.3; // Slowest speed [m/s] considered a movement.
+	const stopTime = 240; // Time interval [s] when we consider user stopped.
+	const stopSpeed = 0.1; // Slowest speed [m/s] considered a movement.
 	const numberSmoothing = 3;
 	const maxFileSize = 1e6;
 	const gradientBoundaries = [ -3, 1.5, 6 ];
@@ -135,8 +135,6 @@ const APP = (function () {
 				gpxFileContent = unzippedBlob.unzippedText;
 				gpxFileSize = unzippedBlob.fileSize;
 
-				console.log(gpxFileContent);
-				console.log(gpxFileSize);
 				resolve( 'File is valid.' );
 			}
 
@@ -145,7 +143,6 @@ const APP = (function () {
 
 	validateUpload()
 		.then (() => {
-			console.log(gpxFileSize);
 			HOME.processGpx(gpxFileContent, gpxFileSize);
 			INFO.initMap()
 			localStorage.clear();
