@@ -28,6 +28,7 @@ const DOM = {
 	file_2: document.getElementsByClassName("examples__tile-2")[0],
 	file_3: document.getElementsByClassName("examples__tile-3")[0],
 
+	loadGroup: document.getElementsByClassName("load__group")[0],
 	statsTable: document.getElementsByClassName("stats__table")[0],
 	footer: document.getElementsByClassName("footer")[0],
 };

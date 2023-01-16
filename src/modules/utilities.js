@@ -299,6 +299,7 @@ const UTIL = (function () {
 			let newState;
 			// first we need to check if a State exists with a name === newState
 			if ( findStateIndex(newStateName) !== -1 ) {
+				console.log('switching from', oldState.name, 'to', newStateName )
 				newState = storedStates[findStateIndex(newStateName)];
 				switchStates( oldState, baseState );
 				switchStates( baseState, newState );

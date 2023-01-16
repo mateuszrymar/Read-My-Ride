@@ -45,6 +45,8 @@ const HOME = (function () {
 			DOM.file_2.setAttribute("href", zipFile_2);
 			DOM.file_3.setAttribute("href", zipFile_3);
 		})();
+
+		DOM.loadGroup.addEventListener('click', anotherRideClicked);
 	};
 
 	function uploadClicked(event){
@@ -58,6 +60,11 @@ const HOME = (function () {
 		event.preventDefault();
     console.log('TODO: undertext clicked');
   }
+	
+	function anotherRideClicked(event) {
+		console.log('another ride works');
+		UTIL.StateManager.setState('home_baseState');
+	}
 
 	function processDataFromUpload(data) {
 		console.log('processDataFromUpload function started.')
