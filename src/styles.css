@@ -78,6 +78,7 @@
   display: flex;
   align-items: center;
 }
+
 .small-text{
   font-family: 'Poppins';
   font-style: normal;
@@ -90,6 +91,9 @@
 }
 .text--lighter{
   color: var(--grey-70);
+}
+.no-margin{
+  margin: 0;
 }
 
 /* Page */
@@ -213,13 +217,11 @@ a {
   font-weight: 700;
   z-index: 2;
 }
-.upload__error-hint {
+.upload__hint {
   position: relative;
   bottom: 0;
   display: inline-block;
   background-color: var(--grey-10);
-  color: var(--green-70);
-  font-weight: 700;
   margin: 0;
   transform: translateY(0.25rem);
 }
@@ -241,7 +243,7 @@ a {
   position: relative;
   width: 3rem;
   height: 3rem;
-  background-color: var(--grey-20);
+  background-color: var(--green-70);
   padding: 0.25rem;
   border-radius: 0.8125rem;
   z-index: 1;
@@ -594,6 +596,9 @@ a {
 
 /* Large desktop */
 @media (min-width: 1536px) {
+  :root {
+    --outer-margin: 6rem;
+  }
   .page__container{
     background-image: url(images/Background\ -\ desktop.jpg);
     align-items: flex-start;

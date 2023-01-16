@@ -3,9 +3,6 @@ import "../node_modules/leaflet/dist/leaflet.css";
 import "../node_modules/chartist/dist/index.js";
 import "../node_modules/chartist/dist/index.css";
 import "./styles.css";
-import zipFile_1 from './gpx_examples/short-optimized.zip';
-import zipFile_2 from './gpx_examples/medium-optimized.zip';
-import zipFile_3 from './gpx_examples/long-optimized.zip';
 import './images/Background-mobile-small.jpg';
 import './images/favicon.ico';
 import './images/mapicon.svg';
@@ -27,7 +24,6 @@ const DOM = {
 	uploadText: document.getElementsByClassName("upload__text")[0],
 	uploadUndertext: document.getElementsByClassName("upload__undertext")[0],
 	uploadError: document.getElementsByClassName("upload__error")[0],
-	uploadErrorHint: document.getElementsByClassName("upload__error-hint")[0],
 	file_1: document.getElementsByClassName("examples__tile-1")[0],
 	file_2: document.getElementsByClassName("examples__tile-2")[0],
 	file_3: document.getElementsByClassName("examples__tile-3")[0],
@@ -50,15 +46,6 @@ const APP = (function () {
 	let parser;
 	let isUploadValid = false;
 	let stats;
-	var parcelRequire;
-	window.global = window;
-
-	// This function adds href links to the example buttons. 
-	(function() {
-		DOM.file_1.setAttribute("href", zipFile_1);
-		DOM.file_2.setAttribute("href", zipFile_2);
-		DOM.file_3.setAttribute("href", zipFile_3);
-	})();
 
 	UTIL.StateManager.getStateManager(); // Initialization.
 	UTIL.StateManager.storeDom( 'home_baseState', DOM );
@@ -80,7 +67,6 @@ const APP = (function () {
 		return new Promise((resolve, reject) => {
 
 			DOM.uploadInput.addEventListener('change', checkUpload, false);
-			DOM.uploadUndertext.addEventListener('click', displayHint, false);
 			DOM.file_1.addEventListener('click', loadFile, false);
 			DOM.file_2.addEventListener('click', loadFile, false);
 			DOM.file_3.addEventListener('click', loadFile, false);
@@ -100,7 +86,7 @@ const APP = (function () {
 					UTIL.StateManager.setState('home_uploadError');
 
 					setTimeout(() => {					
-						displayHint();
+						UTIL.StateManager.setState('home_baseState');
 					}, 3000);
 
 					reject( Error('This tool accepts only .gpx files.' ));
@@ -123,8 +109,6 @@ const APP = (function () {
 					}, false);
 				}
 			}
-
-			function displayHint() { UTIL.StateManager.setState('home_uploadErrorHint') }
 
 			async function loadFile(event) {
 				event.preventDefault();

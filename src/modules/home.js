@@ -1,3 +1,6 @@
+import zipFile_1 from '../gpx_examples/short-optimized.zip';
+import zipFile_2 from '../gpx_examples/medium-optimized.zip';
+import zipFile_3 from '../gpx_examples/long-optimized.zip';
 import { DOM, APP } from '../index.js';
 import { UTIL } from './utilities.js';
 
@@ -18,15 +21,9 @@ const HOME = (function () {
 		);
 		UTIL.StateManager.createNewState( 
 			'home_uploadError', 
-			[ DOM.uploadError, DOM.uploadErrorHint ], 
-			[ 'visibility: visible', 'visibility: hidden' ],
+			[ DOM.uploadError, ], 
+			[ 'visibility: visible', ],
 			[ '', '' ],
-		);
-		UTIL.StateManager.createNewState( 
-			'home_uploadErrorHint', 
-			[ DOM.readGpxBtn, DOM.uploadError, DOM.uploadErrorHint, DOM.file_1, DOM.file_2, DOM.file_3, ], 
-			[ 'background-color: var(--grey-40)', 'visibility: hidden', 'visibility: visible', 'background-color: var(--green-70)', 'background-color: var(--green-70)', 'background-color: var(--green-70)' ],
-			[ '', '', '', '', '', '' ],
 		);
 		UTIL.StateManager.createNewState( 
 			'info_baseState', 
@@ -41,6 +38,13 @@ const HOME = (function () {
 			element.addEventListener('click', uploadClicked);
 		}, { capture: true });		
 		DOM.uploadUndertext.addEventListener('click', undertextClicked);
+
+		// This function adds href links to the example buttons:
+		(function() {
+			DOM.file_1.setAttribute("href", zipFile_1);
+			DOM.file_2.setAttribute("href", zipFile_2);
+			DOM.file_3.setAttribute("href", zipFile_3);
+		})();
 	};
 
 	function uploadClicked(event){
