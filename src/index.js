@@ -47,6 +47,7 @@ const APP = (function () {
 	let parser;
 	let isUploadValid = false;
 	let stats;
+	let clickedEvent;
 
 	UTIL.StateManager.getStateManager(); // Initialization.
 	UTIL.StateManager.storeDom( 'home_baseState', DOM );
@@ -61,16 +62,43 @@ const APP = (function () {
 	});	
 
 	// UTIL.StateManager.setState('home_domContentLoaded');
-	HOME.init();
-	
+	const init = () => {
+		return new Promise((resolve, reject) => {
+			document.addEventListener('click', userClicked);
 		
-	const validateUpload = () => {
+			// [ DOM.readGpxBtn, DOM.uploadText ].forEach(function (element) {
+			// 	element.addEventListener('click', uploadClicked);
+			// }, { capture: true });		
+			// DOM.uploadUndertext.addEventListener('click', undertextClicked);
+
+			// // This function adds href links to the example buttons:
+			(function() {
+				DOM.file_1.setAttribute("href", zipFile_1);
+				DOM.file_2.setAttribute("href", zipFile_2);
+				DOM.file_3.setAttribute("href", zipFile_3);
+			})();
+
+			function userClicked(event) {
+				console.log(event.target, 'was clicked.');
+				if ((event.target.classList[0] === 'upload__button') || (event.target.classList[0] === 'upload__text')) {
+					APP.validateUpload(event);
+					console.log('Known element clicked.')
+				} else {
+					console.log('Unknown element clicked.')
+				}
+			}
+		}, clickedEvent)
+	}
+		
+	const validateUpload = (event) => {
 		return new Promise((resolve, reject) => {
 
-			DOM.uploadInput.addEventListener('change', checkUpload, false);
-			DOM.file_1.addEventListener('click', loadFile, false);
-			DOM.file_2.addEventListener('click', loadFile, false);
-			DOM.file_3.addEventListener('click', loadFile, false);
+			// DOM.uploadInput.addEventListener('change', checkUpload, false);
+			// DOM.file_1.addEventListener('click', loadFile, false);
+			// DOM.file_2.addEventListener('click', loadFile, false);
+			// DOM.file_3.addEventListener('click', loadFile, false);
+
+			if (event.target.classList[0] === 'upload__button') {}
 
 			function checkUpload(event) {
 
@@ -126,7 +154,10 @@ const APP = (function () {
 		}, isUploadValid)
 	}
 
-	validateUpload()
+	init()
+		.then(() => {
+			validateUpload(clickedEvent);
+		})
 		.then (() => {
 			HOME.processGpx(gpxFileContent, gpxFileSize);
 			INFO.initMap()
