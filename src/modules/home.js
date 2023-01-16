@@ -1,6 +1,3 @@
-import zipFile_1 from '../gpx_examples/short-optimized.zip';
-import zipFile_2 from '../gpx_examples/medium-optimized.zip';
-import zipFile_3 from '../gpx_examples/long-optimized.zip';
 import { DOM, APP } from '../index.js';
 import { UTIL } from './utilities.js';
 
@@ -35,11 +32,11 @@ const HOME = (function () {
 
 
 
-	// function uploadClicked(event){
-	// 	console.log('uploadClicked works');
-	// 	// event.preventDefault();
-	// 	APP.validateUpload(event);
-	// }
+	function uploadClicked(event){
+		console.log('uploadClicked works');
+		event.preventDefault();
+		DOM.uploadInput.click();
+	}
 	
   function undertextClicked(event) {
 		console.log('undertextClicked works');
@@ -234,8 +231,7 @@ const HOME = (function () {
 
   return {
 		createStates,
-		init,
-    // uploadClicked,
+    uploadClicked,
     // undertextClicked,
     // processDataFromUpload,
     // fetchDataFromGpx,
