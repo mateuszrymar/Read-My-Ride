@@ -79,8 +79,7 @@ const APP = (function () {
 		UTIL.ClickManager.listenTo( `load__text`, INFO.backToHome );
 		UTIL.ClickManager.listenTo( `load__button`, INFO.backToHome );
 		UTIL.ClickManager.listenTo( `info__load-panel`, INFO.backToHome );
-		UTIL.ClickManager.listenTo( `power__your-weight-submit`, INFO.submitUserWeight );
-		UTIL.ClickManager.listenTo( `power__bike-weight-submit`, INFO.submitBikeWeight );
+		// UTIL.ClickManager.listenTo( `power__weight-submit`, INFO.submitWeight );
 
 	}
 	

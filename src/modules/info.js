@@ -2,6 +2,7 @@ import { DOM, APP } from '../index.js';
 import { UTIL } from './utilities.js';
 import { HOME } from './home.js';
 import { LineChart, PieChart } from '../../node_modules/chartist/dist/index.cjs';
+import { MultiWatching } from 'webpack';
 
 const INFO = (function () {
   let statList = [];
@@ -12,6 +13,8 @@ const INFO = (function () {
   let rideDistance;
   let maxSpd;
   let avgSpd;
+  let avgGrad;
+  let moveTime
   let userWeight = 70;
   let bikeWeight = 12;
 
@@ -198,9 +201,10 @@ const INFO = (function () {
     // Moving time
       let movingTime = new Statistic;
       movingTime.name = 'Moving time';
-      movingTime.value = UTIL.secondsToMinutesAndSeconds(
-        movingTime.calcMovingTime(trackPointObjects, gpxFileSize));		
+      let movingTimeInSec = movingTime.calcMovingTime(trackPointObjects, gpxFileSize);
+      movingTime.value = UTIL.secondsToMinutesAndSeconds(movingTimeInSec);		
       movingTime.addStat(movingTime, '');
+      moveTime = movingTimeInSec;
 
     // Total time
       let totalTime = new Statistic;
@@ -240,6 +244,7 @@ const INFO = (function () {
       avgGradient.name = 'Avg. gradient';
       avgGradient.value = ( elevationGain.value / (totalDistance.value * 1000 / 2) * 100 ).toFixed(1);
       avgGradient.addStat(avgGradient, '%');
+      avgGrad = avgGradient.value;
     
     // Max. gradient
       let maxGradient  = new Statistic;
@@ -255,18 +260,40 @@ const INFO = (function () {
     return statList;
   }
 
-  function calculateAvgPower( userWeight, bikeWeight, avgSpeed, elevationGain ) {
-    let avgPower = 0;
-    let gravityForce;
-    let rollingResistanceForce;
-    let aeroDragForce;
-    let totalMass = userWeight + bikeWeight;
+  // function calculateAvgPower( userWeight, bikeWeight, avgSpeed, avgGradient ) {
+  //   let avgPower = 0;
+  //   let avgGrad = avgGradient * 0.01;
+  //   let g = 9.81;
+  //   let totalMass = userWeight + bikeWeight;
+  //   let speedInMetersPerSec = avgSpeed / 3.6;
 
-    avgPower = 555;
-    console.log(`Your total mass is: ${totalMass}`);
+  //   let gravityForce;
+  //   let rollingResistanceForce;
+  //   let aeroDragForce;
+  //   let percentageLosses;
 
-    return avgPower;
-  };
+  //   gravityForce = g * Math.sin(Math.atan(avgGrad)) * totalMass;
+  //   rollingResistanceForce = g * Math.cos(Math.atan(avgGrad)) * totalMass * 0.0060;
+  //   aeroDragForce = 0.5 * 0.408 * 1.18219495744 * Math.pow(speedInMetersPerSec, 2);
+  //   percentageLosses = 0.03;
+
+  //   avgPower = (gravityForce + rollingResistanceForce + aeroDragForce) * 
+  //       speedInMetersPerSec / ( 1 - percentageLosses);
+
+  //   // avgPower = 555;
+  //   console.log(`Your total mass is: ${totalMass}`);
+  //   console.log(`Your average power is: ${avgPower} W`);
+
+  //   return avgPower;
+  // };
+
+  // function calculateCalories( avgPower, movingTime ) {
+  //   let calories;
+
+  //   calories = (( avgPower * movingTime ) / 4.18 ) / 0.24;
+
+  //   return calories;
+  // }
 
   function displayAllStats(statList) {
     document.getElementsByClassName("stats__table")[0].innerHTML = statList;
@@ -524,28 +551,23 @@ const INFO = (function () {
     new PieChart(`#${graphId}`, data, options);    
   }
 
-  function submitUserWeight(event) {
-    event.preventDefault();
+  // function submitWeight(event) {
+  //   event.preventDefault();
 
-    userWeight = Number(document.getElementsByClassName("power__your-weight-input")[0].value);
+  //   userWeight = Number(document.getElementsByClassName("power__your-weight-input")[0].value);
+  //   bikeWeight = Number(document.getElementsByClassName("power__bike-weight-input")[0].value);
 
-    console.log(event);
-    console.log(`Submitting user weight: ${userWeight}.`)
+  //   console.log(event);
+  //   console.log(`Submitting user weight: ${userWeight}.`);
+  //   console.log(`Submitting bike weight: ${bikeWeight}.`);
 
-    return userWeight;
-  }
-
-  function submitBikeWeight(event) {
-    event.preventDefault();
-
-    bikeWeight = Number(document.getElementsByClassName("power__bike-weight-input")[0].value);
-
-    console.log(event);
-    console.log(`Submitting bike weight: ${bikeWeight}.`);
-    calculateAvgPower( userWeight, bikeWeight, avgSpd, eleGain );
-
-    return bikeWeight;
-  }
+  //   let avgPower =  calculateAvgPower( userWeight, bikeWeight, avgSpd, avgGrad );
+  //   console.log(`Your average power is: ${avgPower} W.`);
+  //   let calories =  calculateCalories( avgPower, moveTime );
+  //   console.log(`You burnt: ${calories} kCal.`);
+    
+  //   return userWeight, bikeWeight;
+  // }
 
   function backToHome() {
     UTIL.StateManager.setState(`home_baseState`);
@@ -563,8 +585,7 @@ const INFO = (function () {
     prepareSpeedGraph,
     prepareGradientsGraph,
     backToHome,
-    submitUserWeight,
-    submitBikeWeight,
+    submitWeight,
   }
 })();
 
