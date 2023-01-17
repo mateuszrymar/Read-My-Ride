@@ -380,6 +380,7 @@ const UTIL = (function () {
 		}
 
 		function handleClick(event) {
+
 			let clickedElement = event.target.classList[0];
 			console.log( clickedElement, `was clicked`);
 			let keyArray = listenedElements.map(i => i.element);
@@ -392,20 +393,13 @@ const UTIL = (function () {
 			
 			if (found !== -1) {
 				const foundFunction = functionArray[found];
-				console.log(`Now I should run ${foundFunction}`);
+				console.log(`Now I should run a function`);
 				// This runs a function:
 				functionArray[found](event);
 			}			
 		}
 
 		return {			
-			getStateManager: function () {
-				if (!StateManager) {
-					StateManager = createStateManager();
-				} else {
-					return StateManager;
-				}
-			},
 			listenTo,
 		}
 	})();

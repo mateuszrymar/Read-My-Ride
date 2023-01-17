@@ -54,10 +54,11 @@ const APP = (function () {
 	let isUploadValid = false;
 	let stats;
 	let clickedEvent;
+	let trackPointObjects = [];
 
 	UTIL.StateManager.getStateManager(); // Initialization.
 	
-	UTIL.StateManager.storeDom( 'home_baseState', DOMtoStateManage );
+	UTIL.StateManager.storeDom( 'home_baseState', DOM );
 	HOME.createStates();
 	console.log(UTIL.storedStates);
 
@@ -71,29 +72,31 @@ const APP = (function () {
 			
 		UTIL.ClickManager.listenTo( `upload__button`, HOME.uploadClicked );
 		UTIL.ClickManager.listenTo( `upload__text`, HOME.uploadClicked );
+		UTIL.ClickManager.listenTo( `upload__text`, HOME.uploadClicked );
+		UTIL.ClickManager.listenTo( `examples__tile-1`, runCheck );
+		UTIL.ClickManager.listenTo( `examples__tile-2`, runCheck );
+		UTIL.ClickManager.listenTo( `examples__tile-3`, runCheck );
+		UTIL.ClickManager.listenTo( `load__text`, INFO.backToHome );
+		UTIL.ClickManager.listenTo( `load__button`, INFO.backToHome );
 
-			// [ DOM.readGpxBtn, DOM.uploadText ].forEach(function (element) {
-			// 	element.addEventListener('click', HOME.uploadClicked);
-			// }, { capture: true });		
-
-			// // This function adds href links to the example buttons:
+			// This function adds href links to the example buttons:
 			(function() {
-				DOM.file_1.setAttribute("href", zipFile_1);
-				DOM.file_2.setAttribute("href", zipFile_2);
-				DOM.file_3.setAttribute("href", zipFile_3);				
+				document.getElementsByClassName("examples__tile-1")[0].setAttribute("href", zipFile_1);
+				document.getElementsByClassName("examples__tile-2")[0].setAttribute("href", zipFile_2);
+				document.getElementsByClassName("examples__tile-3")[0].setAttribute("href", zipFile_3);				
 			})();			
 	}
 		
-	const validateUpload = () => {
+	const validateUpload = (clickedEvent) => {
+		let currentEvent = clickedEvent;
 		return new Promise((resolve, reject) => {
 
 			DOM.uploadInput.addEventListener('change', checkUpload, false);
+
+			if ((currentEvent.target.classList[1]) === `example-tile`) { loadFile(currentEvent) };
 			// DOM.file_1.addEventListener('click', loadFile, false);
 			// DOM.file_2.addEventListener('click', loadFile, false);
 			// DOM.file_3.addEventListener('click', loadFile, false);
-			UTIL.ClickManager.listenTo( `examples__tile-1`, loadFile );
-			UTIL.ClickManager.listenTo( `examples__tile-2`, loadFile );
-			UTIL.ClickManager.listenTo( `examples__tile-3`, loadFile );
 
 
 			function checkUpload(event) {
@@ -136,8 +139,9 @@ const APP = (function () {
 			}
 
 			async function loadFile(event) {
-				event.preventDefault();
+				// event.preventDefault();
 				gpxFile = (event.target.href);
+				console.log(gpxFile);
 				const response = await fetch(event.target.href);
 				const zippedBlob = await response.blob();
 				const unzippedBlob = await getZip(zippedBlob);
@@ -152,16 +156,21 @@ const APP = (function () {
 
 	init();
 
-	validateUpload(clickedEvent)
+	function runCheck(clickedEvent) {
+		clickedEvent.preventDefault();
+		trackPointObjects = [];
+		console.log(trackPointObjects);
+
+		validateUpload(clickedEvent)
 		.then (() => {
-			HOME.processGpx(gpxFileContent, gpxFileSize);
-			INFO.initMap()
-			localStorage.clear();
+			trackPointObjects = HOME.processGpx(gpxFileContent, gpxFileSize);
 			// And optionally, display a loading screen in the meantime.
 		})
 		.then (() => {
-			INFO.createPolyline(HOME.trackPointObjects);
-			stats = INFO.calculateStats(HOME.trackPointObjects, gpxFileSize );
+			INFO.initMap()
+			localStorage.clear();
+			INFO.createPolyline(trackPointObjects);
+			stats = INFO.calculateStats(trackPointObjects, gpxFileSize );
 			UTIL.StateManager.setState('info_baseState');
 		})
 		.then(() => {
@@ -171,12 +180,16 @@ const APP = (function () {
 			INFO.addMapTiles();
 			INFO.displayAllStats(stats);
 			console.log('displaying charts')
-			INFO.prepareElevationGraph( HOME.trackPointObjects, 30 );
-			INFO.prepareSpeedGraph( HOME.trackPointObjects, 30 );
-			INFO.prepareGradientsGraph( HOME.trackPointObjects);
+			INFO.prepareElevationGraph( trackPointObjects, 30 );
+			INFO.prepareSpeedGraph( trackPointObjects, 30 );
+			INFO.prepareGradientsGraph( trackPointObjects);
 		})
 		.then(() => {
+			console.log('returning now');
+			return;
 		})
+	}
+
 
 	/*
 	// create a stateManager utility, store homeBaseState properties (mostly none).
@@ -207,7 +220,10 @@ const APP = (function () {
 		maxFileSize, 
 		gpxFileSize, 
 		numberSmoothing, 
-		gradientBoundaries 
+		gradientBoundaries,
+		validateUpload,
+		runCheck,
+		init,
 	};
 })();
 

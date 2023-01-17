@@ -3,7 +3,7 @@ import { UTIL } from './utilities.js';
 
 const HOME = (function () {
 	let trackPointList;
-	let trackPointObjects = [];
+	// let trackPointObjects = [];
 	let gpxProcessingTime = new UTIL.PerformanceStat;
 	let gpxProcessingStart;
 	let gpxProcessingEnd;
@@ -35,6 +35,7 @@ const HOME = (function () {
 	function uploadClicked(event){
 		console.log('uploadClicked works');
 		event.preventDefault();
+		APP.runCheck(event);
 		DOM.uploadInput.click();
 	}
 	
@@ -91,9 +92,12 @@ const HOME = (function () {
 		return optimized;
 	}
 
+	
+
 	function processGpx(content, fileSize) {
 		console.log('processGPX function started.');
 		gpxProcessingStart = gpxProcessingTime.startTimer();
+		let trackPointObjects = [];
 		
 		let trackPointTemplate = /(<trkpt)((.|\s)*?)(\/trkpt>)/g;
 		trackPointList = content.match(trackPointTemplate); // We divided GPX into individual trackpoints.
@@ -242,7 +246,7 @@ const HOME = (function () {
 		checkFileSize,
 		optimizeFile,
     // gpxProcessingTime,
-		trackPointObjects,
+		// trackPointObjects,
   }	
 })();
 

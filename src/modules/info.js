@@ -502,6 +502,11 @@ const INFO = (function () {
     new PieChart(`#${graphId}`, data, options);    
   }
 
+  function backToHome() {
+    UTIL.StateManager.setState(`home_baseState`);
+    APP.init();
+  }
+
   return {
     initMap,
     calculateStats,
@@ -512,6 +517,7 @@ const INFO = (function () {
     prepareElevationGraph,
     prepareSpeedGraph,
     prepareGradientsGraph,
+    backToHome,
   }
 })();
 
