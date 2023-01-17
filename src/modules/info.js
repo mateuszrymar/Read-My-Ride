@@ -285,7 +285,7 @@ const INFO = (function () {
 
     // kCal burnt
       let kiloCaloriesBurnt = new Statistic;
-      kiloCaloriesBurnt.name = 'Avg. power' ;
+      kiloCaloriesBurnt.name = 'Energy burnt' ;
       kiloCaloriesBurnt.value = kCalBurnt;
       kiloCaloriesBurnt.addPowerStat(kiloCaloriesBurnt, 'kCal');
 
@@ -309,12 +309,12 @@ const INFO = (function () {
     aeroDragForce = 0.5 * 0.408 * 1.18219495744 * Math.pow(speedInMetersPerSec, 2);
     percentageLosses = 0.03;
 
-    avgPower = (gravityForce + rollingResistanceForce + aeroDragForce) * 
-        speedInMetersPerSec / ( 1 - percentageLosses);
+    avgPower = parseInt((gravityForce + rollingResistanceForce + aeroDragForce) * 
+        speedInMetersPerSec / ( 1 - percentageLosses));
 
     // avgPower = 555;
-    console.log(`Your total mass is: ${totalMass}`);
-    console.log(`Your average power is: ${avgPower} W`);
+    // console.log(`Your total mass is: ${totalMass}`);
+    // console.log(`Your average power is: ${avgPower} W`);
 
     return avgPower;
   };
@@ -322,7 +322,7 @@ const INFO = (function () {
   function calculateCalories( avgPower, movingTime ) {
     let kiloCalories;
 
-    kiloCalories = (( avgPower * movingTime ) / 4.18 ) / 0.24 / 1000;
+    kiloCalories = parseInt((( avgPower * movingTime ) / 4.18 ) / 0.24 / 1000);
 
     return kiloCalories;
   }
@@ -581,7 +581,8 @@ const INFO = (function () {
   }
 
   function submitWeight(event) {
-    event.preventDefault();
+
+    if (event) {event.preventDefault()};    
 
     userWeight = Number(document.getElementsByClassName("power__your-weight-input")[0].value);
     bikeWeight = Number(document.getElementsByClassName("power__bike-weight-input")[0].value);
@@ -606,6 +607,8 @@ const INFO = (function () {
     console.log(`Your average power is: ${avgPower} W.`);
     kCalBurnt =  calculateCalories( avgPower, moveTime );
     console.log(`You burnt: ${kCalBurnt} kCal.`);
+    calculatePowerStats();
+    displayAllStats( statList, powerStatList );
     
     return userWeight, bikeWeight, avgPower, kCalBurnt;
   }

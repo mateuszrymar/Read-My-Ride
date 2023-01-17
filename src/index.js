@@ -201,11 +201,12 @@ const APP = (function () {
 			// localStorage.clear();
 			INFO.createPolyline( trackPointObjects );
 			stats = INFO.calculateStats( trackPointObjects, gpxFileSize );
-			powerStats = INFO.calculatePowerStats();
 			UTIL.StateManager.setState('info_baseState');
 		})
 		.then(() => {
+			INFO.submitWeight();
 			INFO.setupMap();
+			powerStats = INFO.calculatePowerStats();
 		})
 		.then(() => {
 			INFO.addMapTiles();
