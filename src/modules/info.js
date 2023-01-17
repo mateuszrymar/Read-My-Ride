@@ -11,6 +11,10 @@ const INFO = (function () {
   let map;
   let rideDistance;
   let maxSpd;
+  let avgSpd;
+  let userWeight = 70;
+  let bikeWeight = 12;
+
 
   function initMap() {
     map = L.map('map').setView([51.919437, 51.919437], 13);
@@ -210,6 +214,7 @@ const INFO = (function () {
       avgSpeed.name = 'Avg. speed';
       avgSpeed.value = avgSpeed.calcAvgSpeed(totalDistance, trackPointObjects, gpxFileSize );		
       avgSpeed.addStat(avgSpeed, 'km/h');
+      avgSpd = avgSpeed.value;
       
     // Max speed
       let maxSpeed = new Statistic;
@@ -249,6 +254,19 @@ const INFO = (function () {
 
     return statList;
   }
+
+  function calculateAvgPower( userWeight, bikeWeight, avgSpeed, elevationGain ) {
+    let avgPower = 0;
+    let gravityForce;
+    let rollingResistanceForce;
+    let aeroDragForce;
+    let totalMass = userWeight + bikeWeight;
+
+    avgPower = 555;
+    console.log(`Your total mass is: ${totalMass}`);
+
+    return avgPower;
+  };
 
   function displayAllStats(statList) {
     document.getElementsByClassName("stats__table")[0].innerHTML = statList;
@@ -506,6 +524,29 @@ const INFO = (function () {
     new PieChart(`#${graphId}`, data, options);    
   }
 
+  function submitUserWeight(event) {
+    event.preventDefault();
+
+    userWeight = Number(document.getElementsByClassName("power__your-weight-input")[0].value);
+
+    console.log(event);
+    console.log(`Submitting user weight: ${userWeight}.`)
+
+    return userWeight;
+  }
+
+  function submitBikeWeight(event) {
+    event.preventDefault();
+
+    bikeWeight = Number(document.getElementsByClassName("power__bike-weight-input")[0].value);
+
+    console.log(event);
+    console.log(`Submitting bike weight: ${bikeWeight}.`);
+    calculateAvgPower( userWeight, bikeWeight, avgSpd, eleGain );
+
+    return bikeWeight;
+  }
+
   function backToHome() {
     UTIL.StateManager.setState(`home_baseState`);
     APP.init();
@@ -522,6 +563,8 @@ const INFO = (function () {
     prepareSpeedGraph,
     prepareGradientsGraph,
     backToHome,
+    submitUserWeight,
+    submitBikeWeight,
   }
 })();
 

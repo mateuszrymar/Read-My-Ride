@@ -79,6 +79,8 @@ const APP = (function () {
 		UTIL.ClickManager.listenTo( `load__text`, INFO.backToHome );
 		UTIL.ClickManager.listenTo( `load__button`, INFO.backToHome );
 		UTIL.ClickManager.listenTo( `info__load-panel`, INFO.backToHome );
+		UTIL.ClickManager.listenTo( `power__your-weight-submit`, INFO.submitUserWeight );
+		UTIL.ClickManager.listenTo( `power__bike-weight-submit`, INFO.submitBikeWeight );
 
 	}
 	
@@ -86,7 +88,7 @@ const APP = (function () {
 		let currentEvent = clickedEvent;
 		return new Promise((resolve, reject) => {
 			console.log('new promise created.');
-			
+
 			// This function adds href links to the example buttons. 
 			// We do it here to prevent default behaviour before page load:
 			(function() {

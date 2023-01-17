@@ -113,22 +113,22 @@
           <div class="stats__power">
             <h3 class="power__header  large-text">Power info</h3>
             <div class="power__input-box  card--inner">
-              <div class="power__input  input-group">
-                <button class="power__your-weight-button  button  button--small">+</button>                
-                <span class="power__your-weight-text  text  medium-text  text--lighter">Type in your weight</span>
-              </div>  
-              <div class="power__input  input-group">
-                <button class="power__bike-weight-button  button  button--small">+</button>
-                <span class="power__bike-weight-text  text  medium-text  text--lighter">Type in your bike weight</span>
-              </div>
+              <form class="power__input  input-group">
+                <span class="power__your-weight-label  label  medium-text">Your weight:</span>
+                <input type="number" class="power__your-weight-input  text  large-text  text--lighter"></input>
+                <span class="power__your-weight-label  label  medium-text">kg</span>
+                <button type="submit" class="power__your-weight-submit  button">+</button>                
+              </form>  
+              <form class="power__input  input-group">
+                <span class="power__bike-weight-label  label  medium-text">Bike weight:</span>
+                <input type="number" class="power__bike-weight-input  text  large-text  text--lighter"></input>
+                <span class="power__your-weight-label  label  medium-text">kg</span>
+                <button type="submit" class="power__bike-weight-submit  button">+</button>                
+              </form>
             </div>
             <table class="power__table  medium-text">
               <tr>
                 <td>Avg. power:</td>
-                <td><b>0</b> W</td>
-              </tr>
-              <tr>
-                <td>Max power:</td>
                 <td><b>0</b> W</td>
               </tr>
               <tr>
