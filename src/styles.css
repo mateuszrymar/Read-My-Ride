@@ -537,7 +537,7 @@ a {
         "stats map"
         "stats graph";
     grid-template-columns: 1fr 2fr;
-    grid-template-rows: auto calc(var(--card-width) * 0.7 + 3.5rem);
+    grid-template-rows: auto calc(var(--card-width) * 0.9 + 3.5rem);
     /* flex-grow: 1; */
     width: calc(100vw - calc(2 * var(--outer-margin)) - 2rem);
     height: calc(100vh - var(--header-height) - 2rem - 0.5rem - 2rem);
@@ -582,9 +582,16 @@ a {
     justify-content: space-between;
     flex-grow: 1;
     padding-bottom: 0;
-    min-width: calc(var(--card-width) * 0.7);
-    height: calc(var(--card-width) * 0.7);
+    min-width: calc(var(--card-width) * 0.9);
+    height: calc(var(--card-width) * 0.9);
     margin-top: 0 !important;
+  }
+  .graph__gradients > div {
+    display: flex;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    margin: 0 ;
   }
   .footer{
     width: calc(100vw - calc(2 * var(--outer-margin)));

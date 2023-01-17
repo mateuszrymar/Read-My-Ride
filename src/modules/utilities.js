@@ -393,7 +393,7 @@ const UTIL = (function () {
 			
 			if (found !== -1) {
 				const foundFunction = functionArray[found];
-				console.log(`Now I should run a function`);
+				console.log(`Now I should run a function ${foundFunction}`);
 				// This runs a function:
 				functionArray[found](event);
 			}			

@@ -30,13 +30,11 @@ const HOME = (function () {
 		);
 	}
 
-
-
 	function uploadClicked(event){
 		console.log('uploadClicked works');
 		event.preventDefault();
 		APP.runCheck(event);
-		DOM.uploadInput.click();
+		document.getElementsByClassName("upload__input")[0].click();
 	}
 	
   function undertextClicked(event) {
