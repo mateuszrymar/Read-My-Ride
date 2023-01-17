@@ -53,8 +53,11 @@ const APP = (function () {
 	let parser;
 	let isUploadValid = false;
 	let stats;
+	let powerStats;
 	let clickedEvent;
 	let trackPointObjects = [];
+	let userWeight = 70;
+	let bikeWeight = 12;
 
 	UTIL.StateManager.getStateManager(); // Initialization.
 	
@@ -79,7 +82,26 @@ const APP = (function () {
 		UTIL.ClickManager.listenTo( `load__text`, INFO.backToHome );
 		UTIL.ClickManager.listenTo( `load__button`, INFO.backToHome );
 		UTIL.ClickManager.listenTo( `info__load-panel`, INFO.backToHome );
-		// UTIL.ClickManager.listenTo( `power__weight-submit`, INFO.submitWeight );
+		UTIL.ClickManager.listenTo( `power__weight-submit`, INFO.submitWeight );
+
+		// If the user has submitted weights, we get them here:
+		(function() {
+			let weightJSON = localStorage.getItem('weightData');
+
+			if (weightJSON === null) {
+				document.getElementsByClassName("power__your-weight-input")[0].setAttribute("value", userWeight);
+				document.getElementsByClassName("power__bike-weight-input")[0].setAttribute("value", bikeWeight);
+				console.log('Weight values were set to default.');
+			} else {
+				let weightData = JSON.parse(weightJSON);
+				let userWeight = weightData[0].userWeight;
+				let bikeWeight = weightData[1].bikeWeight;
+
+				document.getElementsByClassName("power__your-weight-input")[0].setAttribute("value", userWeight);
+				document.getElementsByClassName("power__bike-weight-input")[0].setAttribute("value", bikeWeight);
+				console.log('Weight values were set from localStorage.');
+			}			
+		})();			
 
 	}
 	
@@ -94,7 +116,7 @@ const APP = (function () {
 				document.getElementsByClassName("examples__tile-1")[0].setAttribute("href", zipFile_1);
 				document.getElementsByClassName("examples__tile-2")[0].setAttribute("href", zipFile_2);
 				document.getElementsByClassName("examples__tile-3")[0].setAttribute("href", zipFile_3);				
-			})();			
+			})();
 	
 
 			document.getElementsByClassName("upload__input")[0].addEventListener('change', checkUpload, false);
@@ -176,9 +198,10 @@ const APP = (function () {
 		.then (() => {
 			console.log('I didnt quit afterall..')
 			INFO.initMap()
-			localStorage.clear();
+			// localStorage.clear();
 			INFO.createPolyline( trackPointObjects );
 			stats = INFO.calculateStats( trackPointObjects, gpxFileSize );
+			powerStats = INFO.calculatePowerStats();
 			UTIL.StateManager.setState('info_baseState');
 		})
 		.then(() => {
@@ -186,7 +209,7 @@ const APP = (function () {
 		})
 		.then(() => {
 			INFO.addMapTiles();
-			INFO.displayAllStats( stats );
+			INFO.displayAllStats( stats, powerStats );
 			console.log('displaying charts')
 			INFO.prepareElevationGraph( trackPointObjects, 30 );
 			INFO.prepareSpeedGraph( trackPointObjects, 30 );
@@ -229,6 +252,8 @@ const APP = (function () {
 		gpxFileSize, 
 		numberSmoothing, 
 		gradientBoundaries,
+		userWeight,
+		bikeWeight,
 		validateUpload,
 		runCheck,
 		init,
