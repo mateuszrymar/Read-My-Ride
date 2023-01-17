@@ -199,7 +199,6 @@ const INFO = (function () {
 
   function calculateStats( trackPointObjects, gpxFileSize ) {
     statList = [];
-    console.log('stat calculation begun.')
     // Total distance
       let totalDistance = new Statistic;
       totalDistance.name = 'Distance';
@@ -262,9 +261,6 @@ const INFO = (function () {
       maxGradient.name = 'Max. gradient';
       maxGradient.value = maxGradient.calcMaxGradient(trackPointObjects);
       maxGradient.addStat(maxGradient, '%');
-
-    console.log('stat calculation ended.')
-    // console.log(statList);
 
     return statList;
   }
@@ -477,7 +473,6 @@ const INFO = (function () {
                  UTIL.sumArray(flatArray),
                  UTIL.sumArray(mildUphillArray),
                  UTIL.sumArray(steepUphillArray), ]
-      console.log(result);
 
       return result;
     }
@@ -546,7 +541,8 @@ const INFO = (function () {
 
     };
 
-    console.log(data.labels.length)
+    console.log(valueArray);
+    console.log(data.labels.length);
 
     let joinedLabels = [];
     let joinLabels = function (data) {
@@ -587,7 +583,6 @@ const INFO = (function () {
     userWeight = Number(document.getElementsByClassName("power__your-weight-input")[0].value);
     bikeWeight = Number(document.getElementsByClassName("power__bike-weight-input")[0].value);
 
-    console.log('reset from submitweight');
     document.getElementsByClassName("power__your-weight-input")[0].setAttribute("value", userWeight);
     document.getElementsByClassName("power__bike-weight-input")[0].setAttribute("value", bikeWeight);
 
@@ -599,14 +594,8 @@ const INFO = (function () {
     let json = JSON.stringify(dataToSave);
     localStorage.setItem('weightData', json);
 
-    console.log(event);
-    console.log(`Submitting user weight: ${userWeight}.`);
-    console.log(`Submitting bike weight: ${bikeWeight}.`);
-
     avgPower =  calculateAvgPower( userWeight, bikeWeight, avgSpd, avgGrad );
-    console.log(`Your average power is: ${avgPower} W.`);
     kCalBurnt =  calculateCalories( avgPower, moveTime );
-    console.log(`You burnt: ${kCalBurnt} kCal.`);
     calculatePowerStats();
     displayAllStats( statList, powerStatList );
     

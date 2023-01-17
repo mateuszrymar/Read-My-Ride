@@ -37,7 +37,6 @@ const DOM = {
 	loadGroup: document.getElementsByClassName("load__group")[0],
 	statsTable: document.getElementsByClassName("stats__table")[0],
 };
-const DOMtoStateManage = [ DOM.home, DOM.info, DOM.uploadError, DOM.homeUpload, DOM.homeExamples, DOM.footer ];
 
 const APP = (function () {
 	// Variables
@@ -108,7 +107,6 @@ const APP = (function () {
 	const validateUpload = (clickedEvent) => {
 		let currentEvent = clickedEvent;
 		return new Promise((resolve, reject) => {
-			console.log('new promise created.');
 
 			// This function adds href links to the example buttons. 
 			// We do it here to prevent default behaviour before page load:
@@ -117,22 +115,15 @@ const APP = (function () {
 				document.getElementsByClassName("examples__tile-2")[0].setAttribute("href", zipFile_2);
 				document.getElementsByClassName("examples__tile-3")[0].setAttribute("href", zipFile_3);				
 			})();
-	
 
 			document.getElementsByClassName("upload__input")[0].addEventListener('change', checkUpload, false);
 
 			if ((currentEvent.target.classList[1]) === `example-tile`) { loadFile(currentEvent) };
-			// DOM.file_1.addEventListener('click', loadFile, false);
-			// DOM.file_2.addEventListener('click', loadFile, false);
-			// DOM.file_3.addEventListener('click', loadFile, false);
-
 
 			function checkUpload(event) {
 
 				console.log('Upload is being validated.');
-				
 				gpxFile = event.target.files[0];
-
 				const extension = gpxFile.name.split('.')[1];
 				
 				if (extension != 'gpx') {
@@ -169,7 +160,6 @@ const APP = (function () {
 			async function loadFile(event) {
 				// event.preventDefault();
 				gpxFile = (event.target.href);
-				console.log(gpxFile);
 				const response = await fetch(event.target.href);
 				const zippedBlob = await response.blob();
 				const unzippedBlob = await getZip(zippedBlob);
@@ -187,7 +177,6 @@ const APP = (function () {
 	function runCheck(clickedEvent) {
 		clickedEvent.preventDefault();
 		trackPointObjects = [];
-		console.log(trackPointObjects);
 
 		validateUpload(clickedEvent)
 		.then (() => {			
@@ -196,8 +185,7 @@ const APP = (function () {
 			// And optionally, display a loading screen in the meantime.
 		})
 		.then (() => {
-			console.log('I didnt quit afterall..')
-			INFO.initMap()
+			INFO.initMap();
 			// localStorage.clear();
 			INFO.createPolyline( trackPointObjects );
 			stats = INFO.calculateStats( trackPointObjects, gpxFileSize );
@@ -211,17 +199,14 @@ const APP = (function () {
 		.then(() => {
 			INFO.addMapTiles();
 			INFO.displayAllStats( stats, powerStats );
-			console.log('displaying charts')
 			INFO.prepareElevationGraph( trackPointObjects, 30 );
 			INFO.prepareSpeedGraph( trackPointObjects, 30 );
 			INFO.prepareGradientsGraph( trackPointObjects );
 		})
 		.then(() => {
-			console.log('returning now');
 			return;
 		})
 	}
-
 
 	/*
 	// create a stateManager utility, store homeBaseState properties (mostly none).

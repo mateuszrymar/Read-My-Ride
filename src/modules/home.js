@@ -3,7 +3,6 @@ import { UTIL } from './utilities.js';
 
 const HOME = (function () {
 	let trackPointList;
-	// let trackPointObjects = [];
 	let gpxProcessingTime = new UTIL.PerformanceStat;
 	let gpxProcessingStart;
 	let gpxProcessingEnd;
@@ -71,12 +70,7 @@ const HOME = (function () {
 
 	function checkFileSize(fileSize) {
 		noOfOptimizations = Math.ceil(Math.log2(fileSize/APP.maxFileSize));
-		// console.log(noOfOptimizations);
-		if ( fileSize > APP.maxFileSize ) {
-      console.log(`File's too big, we need to take 1 in every ${Math.pow( 2, noOfOptimizations )} points.`);
-    } else {
-      console.log("File size ok, no need to optimize it.");			
-		}
+		
 		return noOfOptimizations;
 	}
 
