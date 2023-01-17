@@ -78,13 +78,15 @@ const APP = (function () {
 		UTIL.ClickManager.listenTo( `examples__tile-3`, runCheck );
 		UTIL.ClickManager.listenTo( `load__text`, INFO.backToHome );
 		UTIL.ClickManager.listenTo( `load__button`, INFO.backToHome );
+		UTIL.ClickManager.listenTo( `info__load-panel`, INFO.backToHome );
 
-			// This function adds href links to the example buttons:
-			(function() {
-				document.getElementsByClassName("examples__tile-1")[0].setAttribute("href", zipFile_1);
-				document.getElementsByClassName("examples__tile-2")[0].setAttribute("href", zipFile_2);
-				document.getElementsByClassName("examples__tile-3")[0].setAttribute("href", zipFile_3);				
-			})();			
+		// This function adds href links to the example buttons. 
+		// We do it here to prevent default behaviour before page load:
+		(function() {
+			document.getElementsByClassName("examples__tile-1")[0].setAttribute("href", zipFile_1);
+			document.getElementsByClassName("examples__tile-2")[0].setAttribute("href", zipFile_2);
+			document.getElementsByClassName("examples__tile-3")[0].setAttribute("href", zipFile_3);				
+		})();			
 	}
 		
 	const validateUpload = (clickedEvent) => {
@@ -163,14 +165,14 @@ const APP = (function () {
 
 		validateUpload(clickedEvent)
 		.then (() => {
-			trackPointObjects = HOME.processGpx(gpxFileContent, gpxFileSize);
+			trackPointObjects = HOME.processGpx( gpxFileContent, gpxFileSize );
 			// And optionally, display a loading screen in the meantime.
 		})
 		.then (() => {
 			INFO.initMap()
 			localStorage.clear();
-			INFO.createPolyline(trackPointObjects);
-			stats = INFO.calculateStats(trackPointObjects, gpxFileSize );
+			INFO.createPolyline( trackPointObjects );
+			stats = INFO.calculateStats( trackPointObjects, gpxFileSize );
 			UTIL.StateManager.setState('info_baseState');
 		})
 		.then(() => {
@@ -178,11 +180,11 @@ const APP = (function () {
 		})
 		.then(() => {
 			INFO.addMapTiles();
-			INFO.displayAllStats(stats);
+			INFO.displayAllStats( stats );
 			console.log('displaying charts')
 			INFO.prepareElevationGraph( trackPointObjects, 30 );
 			INFO.prepareSpeedGraph( trackPointObjects, 30 );
-			INFO.prepareGradientsGraph( trackPointObjects);
+			INFO.prepareGradientsGraph( trackPointObjects );
 		})
 		.then(() => {
 			console.log('returning now');

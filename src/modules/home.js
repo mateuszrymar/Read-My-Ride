@@ -90,9 +90,7 @@ const HOME = (function () {
 			i = i + Math.pow( 2, (noOfOptimizations - 1) );
 		}
 		return optimized;
-	}
-
-	
+	}	
 
 	function processGpx(content, fileSize) {
 		console.log('processGPX function started.');

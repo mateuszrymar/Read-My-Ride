@@ -82,6 +82,8 @@ const INFO = (function () {
     }
 
     calcElevationGain(trackPointObjects) {
+      let eleGain = 0;
+
       for ( let i=0; i<trackPointObjects.length; i++ ) {
         if (trackPointObjects[i].eleDiff >= 0) {
           eleGain = eleGain + Number(trackPointObjects[i].eleDiff);
@@ -92,6 +94,7 @@ const INFO = (function () {
     };
 
     calcElevationLoss(trackPointObjects) {
+      let eleLoss = 0;
       for ( let i=0; i<trackPointObjects.length; i++ ) {
         if (trackPointObjects[i].eleDiff < 0) {
           eleLoss = eleLoss + Number(trackPointObjects[i].eleDiff);
@@ -102,7 +105,7 @@ const INFO = (function () {
     }
 
     calcTotalTime(trackPointObjects) {
-      let totalTime;
+      let totalTime = 0;
       let start = trackPointObjects.at(0);
       let end = trackPointObjects.at(-1);      
       
@@ -177,6 +180,7 @@ const INFO = (function () {
   }
 
   function calculateStats( trackPointObjects, gpxFileSize ) {
+    statList = [];
     console.log('stat calculation begun.')
     // Total distance
       let totalDistance = new Statistic;
