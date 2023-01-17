@@ -43,14 +43,11 @@ const UTIL = (function () {
 	function series (startNumber, endNumber, count) {
 		let result = [];
 		let step = ( endNumber - startNumber ) / ( count - 1 );
-		// console.log(startNumber === endNumber);
-		// console.log(count);
 
 		if (count === 0) {
 			return 0;
 		} else if (startNumber === endNumber) {
 			for ( let x = 0; x < count; x++) {
-				// console.log('this should be our case!');
 				let y;
 				y = startNumber;
 				result.push(y);
@@ -73,12 +70,9 @@ const UTIL = (function () {
 			let end = parseInt([i]) + parseInt(smoothingCount/2);
 			let numbersToAverage = [];
 			const indicesToProcess = series(start, end, smoothingCount);
-			// console.log(start, end, smoothingCount);
-			// console.log(series(start, end, smoothingCount));
 
 			for (let n = 0; n < smoothingCount; n++) {
 				const index = indicesToProcess[n];	
-				// console.log(indicesToProcess[n]);
 				let element = parseFloat(array.at(index));
 				if (element === undefined) element = 0;
 				numbersToAverage.push(element);			
@@ -180,7 +174,6 @@ const UTIL = (function () {
 
 	const StateManager = (function () {
 		let StateManager;
-		// (!StateManager) ? console.log('no SM') : console.log('SM');
 
 		class State {
 			constructor( name, domElements, current ) {
@@ -219,7 +212,6 @@ const UTIL = (function () {
 				currentElement.id = entry[i][1].classList[0];				
 				currentElement.innerHtml = entry[i][1].innerHTML;
 				
-				// console.log(i);
 				let currentOuterHtml = entry[i][1].outerHTML;
 				let currentStyle = currentOuterHtml.match(styleTemplate);
 				if (currentStyle !== null) {
@@ -372,28 +364,21 @@ const UTIL = (function () {
 
 		function listenTo( element, functionToRun ) {
 			let newListener = new eventToListenTo;
-			// console.log(element);
 			newListener.element = `${element}`;
 			newListener.functionToRun = functionToRun;
 			listenedElements.push(newListener);
-			// console.log(listenedElements);
 		}
 
 		function handleClick(event) {
 
 			let clickedElement = event.target.classList[0];
-			console.log( clickedElement, `was clicked`);
 			let keyArray = listenedElements.map(i => i.element);
-			// console.log(keyArray);
 			let functionArray = listenedElements.map(i => i.functionToRun);
-			// console.log(functionArray);
 
 			const found = keyArray.indexOf(clickedElement);
-			console.log(found);
 			
 			if (found !== -1) {
 				const foundFunction = functionArray[found];
-				console.log(`Now I should run a function ${foundFunction}`);
 				// This runs a function:
 				functionArray[found](event);
 			}			
