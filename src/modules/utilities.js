@@ -357,6 +357,59 @@ const UTIL = (function () {
 	
 		}
 	})();
+
+	const ClickManager = (function() {
+		window.addEventListener('click', handleClick);
+
+		let listenedElements = [];
+
+		class eventToListenTo {
+			constructor ( element, functionToRun ) {
+				element = this.element,
+				functionToRun = this.functionToRun
+			}
+		}
+
+		function listenTo( element, functionToRun ) {
+			let newListener = new eventToListenTo;
+			// console.log(element);
+			newListener.element = `${element}`;
+			newListener.functionToRun = functionToRun;
+			listenedElements.push(newListener);
+			// console.log(listenedElements);
+		}
+
+		function handleClick(event) {
+			let clickedElement = event.target.classList[0];
+			console.log( clickedElement, `was clicked`);
+			let keyArray = listenedElements.map(i => i.element);
+			// console.log(keyArray);
+			let functionArray = listenedElements.map(i => i.functionToRun);
+			// console.log(functionArray);
+
+			const found = keyArray.indexOf(clickedElement);
+			console.log(found);
+			
+			if (found !== -1) {
+				const foundFunction = functionArray[found];
+				console.log(`Now I should run ${foundFunction}`);
+				// This runs a function:
+				functionArray[found](event);
+			}			
+		}
+
+		return {			
+			getStateManager: function () {
+				if (!StateManager) {
+					StateManager = createStateManager();
+				} else {
+					return StateManager;
+				}
+			},
+			listenTo,
+		}
+	})();
+
 	
 	return { 
 		secondsToMinutesAndSeconds, 
@@ -369,6 +422,7 @@ const UTIL = (function () {
 		performanceList,
 		StateManager,
 		storedStates,
+		ClickManager
 	};
 })();
 

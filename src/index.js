@@ -69,9 +69,12 @@ const APP = (function () {
 
 	const init = () => {
 			
-			[ DOM.readGpxBtn, DOM.uploadText ].forEach(function (element) {
-				element.addEventListener('click', HOME.uploadClicked);
-			}, { capture: true });		
+		UTIL.ClickManager.listenTo( `upload__button`, HOME.uploadClicked );
+		UTIL.ClickManager.listenTo( `upload__text`, HOME.uploadClicked );
+
+			// [ DOM.readGpxBtn, DOM.uploadText ].forEach(function (element) {
+			// 	element.addEventListener('click', HOME.uploadClicked);
+			// }, { capture: true });		
 
 			// // This function adds href links to the example buttons:
 			(function() {
@@ -80,15 +83,18 @@ const APP = (function () {
 				DOM.file_3.setAttribute("href", zipFile_3);				
 			})();			
 	}
-
 		
 	const validateUpload = () => {
 		return new Promise((resolve, reject) => {
 
 			DOM.uploadInput.addEventListener('change', checkUpload, false);
-			DOM.file_1.addEventListener('click', loadFile, false);
-			DOM.file_2.addEventListener('click', loadFile, false);
-			DOM.file_3.addEventListener('click', loadFile, false);
+			// DOM.file_1.addEventListener('click', loadFile, false);
+			// DOM.file_2.addEventListener('click', loadFile, false);
+			// DOM.file_3.addEventListener('click', loadFile, false);
+			UTIL.ClickManager.listenTo( `examples__tile-1`, loadFile );
+			UTIL.ClickManager.listenTo( `examples__tile-2`, loadFile );
+			UTIL.ClickManager.listenTo( `examples__tile-3`, loadFile );
+
 
 			function checkUpload(event) {
 
