@@ -9,6 +9,7 @@ const INFO = (function () {
   let eleGain = 0;
   let eleLoss = 0;
   let gpxPolyline;
+  let polylineGroup;
   let map;
   let rideDistance;
   let maxSpd;
@@ -23,6 +24,7 @@ const INFO = (function () {
 
   function initMap() {
     map = L.map('map').setView([51.919437, 51.919437], 13);
+    polylineGroup = L.featureGroup().addTo(map);
   }
 
   function setupMap() {
@@ -33,6 +35,7 @@ const INFO = (function () {
   function createPolyline(trackPointObjects) {
     let latLngArray = [];
 
+    polylineGroup.clearLayers();
     for ( let i=0; i<trackPointObjects.length; i++ ) {
       let currentTrackpoint = []
 
@@ -42,7 +45,7 @@ const INFO = (function () {
       latLngArray.push(currentTrackpoint);
     }
 
-    gpxPolyline =  L.polyline(latLngArray, {color: 'var(--orange-70)'}).addTo(map);
+    gpxPolyline =  L.polyline(latLngArray, {color: 'var(--orange-70)'}).addTo(polylineGroup);
 
     return gpxPolyline;
   }
