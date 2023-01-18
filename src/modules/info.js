@@ -57,8 +57,6 @@ const INFO = (function () {
     }).addTo(map);
   }
 
-
-
   class Statistic {
     constructor(name, value) {
       this.name = name;
@@ -316,7 +314,7 @@ const INFO = (function () {
     // console.log(`Your average power is: ${avgPower} W`);
 
     return avgPower;
-  };
+  }
 
   function calculateCalories( avgPower, movingTime ) {
     let kiloCalories;
@@ -325,7 +323,6 @@ const INFO = (function () {
 
     return kiloCalories;
   }
-
 
   function prepareElevationGraph( trackPointObjects, fidelityPerc ) {
     // We need to divide the ride into equal length segments.
@@ -337,7 +334,7 @@ const INFO = (function () {
     let xAxis = UTIL.series( 0, rideDistance, samplePoints );
 
     // Then get points closest to our criteria, and read their values.
-    let yAxis = [];
+    let elevationGraph = [];
     let n = 0;
     let currentDist;
     let currentEle;
@@ -347,18 +344,41 @@ const INFO = (function () {
       currentEle = trackPointObjects[i].ele;
       // console.log(currentDist);
       if ( currentDist >= (xAxis[n])){
-        yAxis.push(currentEle);
+        elevationGraph.push(currentEle);
         n++;
       } 
       
       i++;
     }
 
-    if (yAxis.length = (xAxis.length - 1 )) {
-      yAxis.push(trackPointObjects.at(-1).ele);
+    if (elevationGraph.length = (xAxis.length - 1 )) {
+      elevationGraph.push(trackPointObjects.at(-1).ele);
     }
 
-    displayLineChart( graphId, yAxis )
+    let maxHeightGraph = [];
+    let maxHeight = [...elevationGraph];
+
+    function compareNumbers(a, b) {
+      return a - b;
+    }
+
+    maxHeight.sort(compareNumbers);
+    maxHeight = maxHeight.at(-1);
+    console.log( maxHeight );
+
+    for ( let i = 0; i< elevationGraph.length; i++) {
+      if (elevationGraph[i] === maxHeight) {
+        maxHeightGraph.push(maxHeight);
+      } else {
+        maxHeightGraph.push(null);
+      }
+    }
+
+    console.log(maxHeightGraph);
+
+    let graphs = [ elevationGraph, maxHeightGraph ]
+
+    displayLineChart( graphId, elevationGraph )
   }
 
   function prepareSpeedGraph( trackPointObjects, fidelityPerc ) {
@@ -538,18 +558,15 @@ const INFO = (function () {
 
     let labelsList = ['downhill', 'flat', 'mild uphill', 'steep uphill'];
     let newlabelsList = [];
-    console.log(valueArray);
     let valueSum = UTIL.sumArray(valueArray);
     for ( let i=0; i<labelsList.length; i++) {
       let currentPercentage = (valueArray[i]) * 100 / valueSum;
-      console.log(currentPercentage);
       if (currentPercentage < 5) {
         newlabelsList.push(' ');
       } else {
         newlabelsList.push(labelsList[i]);
       }
     }
-    console.log(newlabelsList);
 
     var data = {
       // Our series array that contains series objects or in this case series data arrays
@@ -558,8 +575,6 @@ const INFO = (function () {
       // A labels array that can contain any sort of values
       labels: newlabelsList,
     };
-
-    console.log(data.labels.length);
 
     let joinedLabels = [];
     let joinLabels = function (data) {
