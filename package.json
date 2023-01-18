@@ -17,8 +17,11 @@
   },
   "homepage": "https://github.com/mateuszrymar/gpx-analyzer",
   "dependencies": {
+    "@barba/core": "^2.9.7",
     "@zip.js/zip.js": "^2.6.61",
+    "barba.js": "^1.0.0",
     "chartist": "^1.3.0",
+    "gsap": "^3.11.4",
     "leaflet": "^1.9.3",
     "path": "^0.12.7"
   },

@@ -2,6 +2,7 @@ import "../node_modules/leaflet/dist/leaflet.js";
 import "../node_modules/leaflet/dist/leaflet.css";
 import "../node_modules/chartist/dist/index.js";
 import "../node_modules/chartist/dist/index.css";
+import "../node_modules/gsap/dist/gsap.min.js";
 import "./styles.css";
 import './images/Background-mobile-small.jpg';
 import './images/favicon.ico';
@@ -14,7 +15,7 @@ import { getZip } from './modules/zipreader.js';
 import zipFile_1 from './gpx_examples/short-optimized.zip';
 import zipFile_2 from './gpx_examples/medium-optimized.zip';
 import zipFile_3 from './gpx_examples/long-optimized.zip';
-
+import barba from '@barba/core';
 
 const DOM = {
 	// These elements will be modified by state manager and can't have event listeners on them:
@@ -67,8 +68,18 @@ const APP = (function () {
 	//Here we prevent unwanted behaviour before loading the DOM:
 	document.addEventListener("DOMContentLoaded", () => {
 		console.log('DOM loaded.');
-		DOM.home.classList.remove("no-click");
+		DOM.home.classList.remove("no-click");		
 	});
+	
+	// Here we set up Barba to manage all transitions:
+	document.addEventListener("DOMContentLoaded", () => {
+		
+		barba.init({
+			// ...
+		});
+
+	});
+
 
 	const init = () => {
 			
@@ -100,9 +111,11 @@ const APP = (function () {
 				document.getElementsByClassName("power__bike-weight-input")[0].setAttribute("value", bikeWeight);
 				console.log('Weight values were set from localStorage.');
 			}			
-		})();			
-
+		})();		
+		
 	}
+
+	
 	
 	const validateUpload = (clickedEvent) => {
 		let currentEvent = clickedEvent;

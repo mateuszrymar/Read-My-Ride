@@ -12,14 +12,17 @@
 
 </head>
 
-<body>
-  <div class="page__container">
+<body data-barba="wrapper">
+  
+
+  <main class="page__container" data-barba="container" data-barba-namespace="page">
+
     <header class="header">
       <h1 class="header__text">read my ride</h1>
       <p class="header__description medium-text">This tool analyzes your rides.</p>
     </header>
 
-    <article class="home  card  no-click" style="display: block;">
+    <article class="home  card  no-click  left" style="display: block;">
       <div class="home__upload" style = "visibility: visible">
         <input class="upload__input" type="file" name="file" style="display: none"/>
         <button class="upload__button   button  zoom">+</button>
@@ -32,15 +35,15 @@
         </div>
       </div>
       <footer class="home__examples" style = "visibility: visible">
-        <a class="examples__tile-1  example-tile  small-text  zoom">
+        <a class="examples__tile-1  example-tile  small-text  zoom" data-barba-prevent>
           <img class="thumbnail" src="images/mapicon.svg">
           <span class="example-name  small-text">short.gpx</span>
         </a>
-        <a class="examples__tile-2  example-tile  small-text  zoom">
+        <a class="examples__tile-2  example-tile  small-text  zoom" data-barba-prevent>
           <img class="thumbnail" src="images/mapicon.svg">
           <span class="example-name  small-text">med.gpx</span>
         </a>
-        <a class="examples__tile-3  example-tile  small-text  zoom">
+        <a class="examples__tile-3  example-tile  small-text  zoom" data-barba-prevent>
           <img class="thumbnail" src="images/mapicon.svg">
           <span class="example-name  small-text">long.gpx</span>
         </a>
@@ -52,10 +55,10 @@
   
       <aside class="info__load-panel  card  card--dark">
         <div class="load__group  input-group">
-          <a class="load__link">
+          <a class="load__link" data-barba-prevent>
             <button class="load__button  button  button--dark">+</button>
           </a>
-          <a>
+          <a data-barba-prevent>
             <span class="load__text  text  large-text  text--lighter">Load another ride</span>
           </a>
         </div>  
@@ -168,6 +171,6 @@
       <a href="http://koprivakart.com/" class="footer__photo-credit  medium-underlined-text"><p>photo: Jan Kopřiva</p></a>
     </footer>
 
-  </div>  
+  </main>  
 </body>
 </html>
