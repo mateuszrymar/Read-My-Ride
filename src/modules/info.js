@@ -532,16 +532,30 @@ const INFO = (function () {
   }
 
   function displayPieChart( graphId, valueArray, min, max ) {
+
+    let labelsList = ['downhill', 'flat', 'mild uphill', 'steep uphill'];
+    let newlabelsList = [];
+    console.log(valueArray);
+    let valueSum = UTIL.sumArray(valueArray);
+    for ( let i=0; i<labelsList.length; i++) {
+      let currentPercentage = (valueArray[i]) * 100 / valueSum;
+      console.log(currentPercentage);
+      if (currentPercentage < 5) {
+        newlabelsList.push(' ');
+      } else {
+        newlabelsList.push(labelsList[i]);
+      }
+    }
+    console.log(newlabelsList);
+
     var data = {
       // Our series array that contains series objects or in this case series data arrays
       series: valueArray,
 
       // A labels array that can contain any sort of values
-      labels: ['downhill', 'flat', 'mild uphill', 'steep uphill'],
-
+      labels: newlabelsList,
     };
 
-    console.log(valueArray);
     console.log(data.labels.length);
 
     let joinedLabels = [];
