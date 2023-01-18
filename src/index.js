@@ -131,10 +131,9 @@ const APP = (function () {
 					// On wrong extension do that:
 					isUploadValid = false;
 					UTIL.StateManager.setState('home_uploadError');
+					document.getElementsByClassName("upload__error")[0].innerHTML = 
+							`Your file was not a .gpx.`;
 
-					setTimeout(() => {
-						UTIL.StateManager.setState('home_baseState');
-					}, 3000);
 
 					reject( Error('This tool accepts only .gpx files.' ));
 
@@ -185,11 +184,15 @@ const APP = (function () {
 			// And optionally, display a loading screen in the meantime.
 		})
 		.then (() => {
-			INFO.initMap();
-			// localStorage.clear();
-			INFO.createPolyline( trackPointObjects );
-			stats = INFO.calculateStats( trackPointObjects, gpxFileSize );
-			UTIL.StateManager.setState('info_baseState');
+			try {
+				INFO.initMap();
+			} catch {
+				console.log('The map was already initialized.')
+			} finally {
+				INFO.createPolyline( trackPointObjects );
+				stats = INFO.calculateStats( trackPointObjects, gpxFileSize );
+				UTIL.StateManager.setState('info_baseState');
+			}
 		})
 		.then(() => {
 			INFO.submitWeight();
@@ -209,7 +212,7 @@ const APP = (function () {
 	}
 
 	/*
-	// create a stateManager utility, store homeBaseState properties (mostly none).
+	create a stateManager utility, store homeBaseState properties (mostly none).
 
 	if we get a valid upload, or one of the examples was clicked,
 		process data and switch to INFO screen.

@@ -119,7 +119,6 @@ const HOME = (function () {
 				missingInfoIndices.push(foundIndex);
 				foundIndex = hasInfo.indexOf(elementToSearchFor, foundIndex + 1);
 			}
-			console.log(missingInfoIndices);
 
 			const missingInfoNames = missingInfoIndices.map(x=>names[x]);
 
@@ -131,6 +130,9 @@ const HOME = (function () {
 			);
 
 			UTIL.StateManager.setState('home_gpxDataError');
+			document.getElementsByClassName("upload__error")[0].innerHTML = 
+					`${missingInfoNames} data is missing in your GPX.<br>Please provide a valid file.`;
+
 
 			throw new Error(`${missingInfoNames} data is missing in your GPX. Please provide a valid file.`);
 			return;

@@ -295,17 +295,21 @@ const UTIL = (function () {
 				newState = storedStates[findStateIndex(newStateName)];
 				switchStates( oldState, baseState );
 				switchStates( baseState, newState );
-			} else throw new Error ('This state has not been specified yet.')
+				// now we change all DOM objects.
+				newState.domElements.forEach(item => {
+					// console.log(document.getElementsByClassName(item.id)[0]);
+					document.getElementsByClassName(item.id)[0].setAttribute('style', `${item.style}`);
+					// document.getElementsByClassName(item.id)[0].innerHTML = `${item.innerHtml}`;
+					// console.log(document.getElementsByClassName(item.id)[0]);
+					// document.getElementsByClassName(item.id)[0].innerHTML = `${item.innerHtml}`;
+					// document.getElementsByClassName(item.id)[0].style = `${item.style}`;
+					// document.getElementsByClassName(item.id)[0].style = `${item.style}`;
+				});
 
-			// now we change all DOM objects.
-			newState.domElements.forEach(item => {
-				if ( item.innerHtml !== '' ) {
-					document.getElementsByClassName(item.id)[0].innerHTML = `${item.innerHtml}`;
-				};
-				if ( item.style !== '' ) {
-					document.getElementsByClassName(item.id)[0].style = `${item.style}`;
-				};
-			});
+			} else throw new Error ('This state has not been specified yet.');
+
+			console.log(newState);
+			
 
 		}
 
