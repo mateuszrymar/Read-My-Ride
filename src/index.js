@@ -71,15 +71,43 @@ const APP = (function () {
 		DOM.home.classList.remove("no-click");		
 	});
 	
-	// Here we set up Barba to manage all transitions:
+	// Here we set up Barba library to manage all transitions:
+	
 	document.addEventListener("DOMContentLoaded", () => {
 		
 		barba.init({
-			// ...
+			
+			sync: true,
+
+			transitions: [{
+
+				async leave(data) {
+					const done = this.async();
+					pageTransition();
+					await delay(1500);
+					done();
+				},
+
+				async enter(data) {
+					contentAnimation();
+				},
+
+				async once(data) {
+					contentAnimation();
+				},
+
+			}]
 		});
 
 	});
 
+	function pageTransition() {
+		let timeLine = gsap.timeline();
+		timeLine.to( 'div.transition div', { duration: .5, scaleY: 1, transformOrigin: 'bottom left', } )
+		timeLine.to( 'div.transition div', { duration: .5, scaleY: 0, transformOrigin: 'bottom left', } )
+	}
+
+	function contentAnimation() {}
 
 	const init = () => {
 			
