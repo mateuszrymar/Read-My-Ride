@@ -365,7 +365,6 @@ const INFO = (function () {
 
     maxHeight.sort(compareNumbers);
     maxHeight = maxHeight.at(-1);
-    console.log( maxHeight );
 
     for ( let i = 0; i< elevationGraph.length; i++) {
       if (elevationGraph[i] === maxHeight) {
@@ -374,8 +373,6 @@ const INFO = (function () {
         maxHeightGraph.push(null);
       }
     }
-
-    console.log(maxHeightGraph);
 
     document.getElementsByClassName("graph__max-elev-label")[0].innerHTML = 
     `${ parseInt(maxHeight) } m`;
@@ -436,8 +433,6 @@ const INFO = (function () {
         maxSpeedGraph.push(null);
       }
     }
-
-    console.log(maxSpeedGraph);
 
     document.getElementsByClassName("graph__max-speed-label")[0].innerHTML = 
     `${ maxSpd } kph`;
