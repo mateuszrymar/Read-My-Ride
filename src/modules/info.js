@@ -355,6 +355,7 @@ const INFO = (function () {
       elevationGraph.push(trackPointObjects.at(-1).ele);
     }
 
+    // Max height point:
     let maxHeightGraph = [];
     let maxHeight = [...elevationGraph];
 
@@ -376,9 +377,12 @@ const INFO = (function () {
 
     console.log(maxHeightGraph);
 
-    let graphs = [ elevationGraph, maxHeightGraph ]
+    document.getElementsByClassName("graph__max-elev-label")[0].innerHTML = 
+    `${ parseInt(maxHeight) } m`;
 
-    displayLineChart( graphId, elevationGraph )
+    let graphs = [ elevationGraph, maxHeightGraph ];
+
+    displayLineChart( graphId, graphs )
   }
 
   function prepareSpeedGraph( trackPointObjects, fidelityPerc ) {
@@ -392,34 +396,54 @@ const INFO = (function () {
     let xAxis = UTIL.series( 0, rideDistance, samplePoints );
 
     // Then get points closest to our criteria, and read their values.
-    let yAxis = [];
+    let speedGraph = [];
     let n = 0;
     let currentDist;
     let currentEle;
     let currentSpeed;
 
-    // let graphMargin = 20; // percent
-    // let graphTop = (maxSpd * ( 1 + graphMargin/100 )) / 3.6;
-    // let graphBottom = (maxSpd * ( graphMargin/100 )) / 3.6;
-    // console.log(graphBottom);
-
     for (let i = 0; i < trackPointObjects.length;) {
       currentDist = Number(trackPointObjects[i].totDist) / 1000;
       currentSpeed = trackPointObjects[i].speed;
-      // console.log(currentDist);
       if ( currentDist >= (xAxis[n])){
-        yAxis.push(currentSpeed);
+        speedGraph.push(currentSpeed);
         n++;
       } 
       
       i++;
     }
-
-    if (yAxis.length = (xAxis.length - 1 )) {
-      yAxis.push(trackPointObjects.at(-1).speed);
+    
+    if (speedGraph.length = (xAxis.length - 1 )) {
+      // console.log(speedGraph.at(-1));
+      speedGraph.push(speedGraph.at(-1));
     }
 
-    displayLineChart( graphId, yAxis, 0, );
+    // Max speed point:
+    let maxSpeedGraph = [];
+    let maxSpeed = [...speedGraph];
+
+    function compareNumbers(a, b) {
+      return a - b;
+    }
+
+    maxSpeed.sort(compareNumbers);
+    maxSpeed = maxSpeed.at(-1);
+
+    for ( let i = 0; i< speedGraph.length; i++) {
+      if (speedGraph[i] === maxSpeed) {
+        maxSpeedGraph.push(maxSpeed);
+      } else {
+        maxSpeedGraph.push(null);
+      }
+    }
+
+    console.log(maxSpeedGraph);
+
+    document.getElementsByClassName("graph__max-speed-label")[0].innerHTML = 
+    `${ maxSpd } kph`;
+    let graphs = [ speedGraph, maxSpeedGraph ];
+
+    displayLineChart( graphId, graphs, 0, );
   }
 
   function prepareGradientsGraph (trackPointObjects) {
@@ -520,13 +544,22 @@ const INFO = (function () {
       labels: [ ],
       // Our series array that contains series objects or in this case series data arrays
       series: [
-        valueArray,
+        {name: 'series-1', data: valueArray[0]},
+        {name: 'series-2', data: valueArray[1]},
       ]
     };
     var options = {
       fullWidth: true,
       showArea: true,
-      showPoint: false,
+      // showPoint: false,
+      series: {
+        'series-1': {
+          showPoint: false,
+        },
+        'series-2': {
+          showPoint: true,
+        }
+      },
       lineSmooth: false,
       chartPadding: 10,
       // X-Axis specific configuration
@@ -561,7 +594,7 @@ const INFO = (function () {
     let valueSum = UTIL.sumArray(valueArray);
     for ( let i=0; i<labelsList.length; i++) {
       let currentPercentage = (valueArray[i]) * 100 / valueSum;
-      if (currentPercentage < 5) {
+      if (currentPercentage < 3) {
         newlabelsList.push(' ');
       } else {
         newlabelsList.push(labelsList[i]);
@@ -608,6 +641,33 @@ const INFO = (function () {
     new PieChart(`#${graphId}`, data, options);    
   }
 
+  function moveLabels() {
+    // Elevation
+    setTimeout(() => {
+      let a = document.getElementsByClassName('ct-point')[0];
+      let top = parseFloat( a.y1.baseVal.valueAsString ) - 24;
+      let left = parseFloat( a.x1.baseVal.valueAsString ) - 16;
+      let label = document.getElementsByClassName("graph__max-elev-label")[0];
+      setLabel ( label, top, left );
+    }, 0);
+    // Speed
+    setTimeout(() => {
+      let a = document.getElementsByClassName('ct-point')[1];
+      let top = parseFloat( a.y1.baseVal.valueAsString ) - 24;
+      let left = parseFloat( a.x1.baseVal.valueAsString ) - 16;
+      let label = document.getElementsByClassName("graph__max-speed-label")[0];
+      setLabel ( label, top, left );
+    }, 0);
+  }
+
+  function setLabel ( label, top, left ) {
+    label.setAttribute('style', `
+      position: absolute;
+      top: ${top}px;
+      left: ${left}px;
+    `);
+  }
+
   function submitWeight(event) {
 
     if (event) {event.preventDefault()};    
@@ -652,6 +712,7 @@ const INFO = (function () {
     prepareGradientsGraph,
     backToHome,
     submitWeight,
+    moveLabels,
     userWeight,
     bikeWeight,
   }

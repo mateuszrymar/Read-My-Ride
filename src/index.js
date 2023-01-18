@@ -207,6 +207,7 @@ const APP = (function () {
 			INFO.prepareGradientsGraph( trackPointObjects );
 		})
 		.then(() => {
+			INFO.moveLabels();
 			return;
 		})
 	}
