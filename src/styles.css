@@ -267,6 +267,8 @@ a {
   border-radius: 1.75rem;
 }
 .example-tile{
+  /* visibility: hidden; */
+
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -290,6 +292,27 @@ a {
 }
 .example-name{
   pointer-events: none;
+}
+.examples__loadbar{
+  position: absolute;
+  bottom: 4.75rem;
+}
+.loadbar {
+  width: calc(var(--card-width) - 1rem - 4rem);
+  transform: translateY(2px);
+  opacity: 0;
+  height: 2px;
+  background-color: var(--grey-20);
+  pointer-events: none;
+  z-index: 2;
+}
+.loadbar-status {
+  opacity: 1;
+  width: calc(var(--card-width) - 1rem - 4rem);
+  transform: scaleX(0);
+  transform-origin: center left;
+  box-shadow: 0 0 3px 1px var(--green-40),
+  inset 0px 0px 6px 1px var(--green-70);
 }
 
 /* Info Page Elements */
