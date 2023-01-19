@@ -155,7 +155,7 @@ a {
 .card{
   background-color: var(--grey-10);
   position: relative;
-  margin: 0.25rem 0;
+  margin: 0;
   border-radius: 1.75rem;
   padding: 1rem;
   width: 17.5rem;
@@ -318,12 +318,27 @@ input:focus {
 }
 
 .stats__map{
-  /* height: 100px;
-  width: 100px; */
   width: calc(var(--card-width) - 1rem);
   height: calc(var(--card-width) - 1rem);
   border: 0.5rem solid var(--grey-10);
 }
+.leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar {
+  border: none;
+  box-shadow: none;
+}
+.leaflet-touch .leaflet-bar a:first-child,
+.leaflet-touch .leaflet-bar a:last-child {
+  background-color: var(--grey-10);
+  color: var(--grey-40);
+  border-radius: 50%;
+  border-top-left-radius: 50%;
+  border-top-right-radius: 50%;
+  box-shadow: 0 0 3px var(--grey-80);
+  border: 1px solid var(--grey-40);
+  margin: .5rem;
+
+}
+
 
 .graph-panel{
   display: flex;
@@ -459,6 +474,12 @@ input:focus {
 /* Media Queries */
 /* Mobile */
 @media (max-width: 767px) {  
+  .card{
+    margin: 0.25rem 0;
+  }
+  .info__load-panel{
+    margin: 0;
+  }
   .page__container{
     align-items: center;
   }
