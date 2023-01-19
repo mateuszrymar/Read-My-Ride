@@ -20,6 +20,7 @@ const INFO = (function () {
   let bikeWeight;
   let avgPower;
   let kCalBurnt;
+  let infoToHomeTransition = .6; //[s]
 
 
   function initMap() {
@@ -690,8 +691,15 @@ const INFO = (function () {
   }
 
   function backToHome() {
-    UTIL.StateManager.setState(`home_baseState`);
-    APP.init();
+    UTIL.infoLeaveAnimation();
+
+    let delayInMs = infoToHomeTransition * 1000;
+    setTimeout(() => {
+      UTIL.StateManager.setState(`home_baseState`);
+      APP.init();
+      UTIL.pageReloadAnimation();
+    }, delayInMs);
+
   }
 
   return {
@@ -710,6 +718,7 @@ const INFO = (function () {
     moveLabels,
     userWeight,
     bikeWeight,
+    infoToHomeTransition,
   }
 })();
 

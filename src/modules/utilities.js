@@ -1,3 +1,7 @@
+import { gsap } from "../../node_modules/gsap/dist/gsap.min.js";
+import { INFO } from './info.js';
+
+
 const UTIL = (function () {
 	let performanceList = [];
 	let storedStates = [];
@@ -399,6 +403,39 @@ const UTIL = (function () {
 		}
 	})();
 
+	function pageLoadAnimation() {
+		gsap.from( '.header', { duration: .8, x: '150%', ease: 'power4.out' });
+		gsap.from( '.home', { duration: .8, x: '-150%', ease: 'power4.out' });
+		gsap.from( '.home > * > * ', { duration: .4, opacity: 0, ease: 'none', delay: .2, stagger: .05 });
+	}
+
+	function pageReloadAnimation() {
+		gsap.to( '.home > * > * ', { opacity: 0, delay: -.2 });
+		gsap.from( '.home', { duration: .8, x: '-150%', ease: 'power4.out' });
+		gsap.to( '.home > * > * ', { duration: .4, opacity: 1, ease: 'none', delay: .2, stagger: .05 });
+	}
+
+	function homeLeaveAnimation() {
+		gsap.to( '.home', { duration: .8, x: '600%', ease: 'power4.out', delay: .4 });
+		gsap.to( '.home > * > * ', { duration: .6, opacity: 0, ease: 'none', delay: -0.2, stagger: .05, });
+		gsap.to( '.info__load-panel', {x: 0, delay: -2 });
+		gsap.to( '.info__stats-panel', {x: 0, delay: -2 });
+		gsap.to( '.stats__stats > * > * ', {opacity: 1, delay: -2 });
+		gsap.to( '.graph-panel > * > * ', {opacity: 1, delay: -2 });
+	}
+
+	function infoLoadAnimation() {
+		gsap.from( '.info__load-panel', { duration: .8, x: '-600%', ease: 'power4.out', delay: .2 });
+		gsap.from( '.info__stats-panel', { duration: .8, x: '-150%', ease: 'power4.out', delay: .2 });
+		gsap.from( '.stats__stats > * > * ', { duration: 1, opacity: 0, ease: 'power4.out', delay: .5, stagger: .1 });
+		gsap.from( '.graph-panel > * > * ', { duration: 1, opacity: 0, ease: 'power4.out', delay: .5, stagger: .1 });
+	}
+
+	function infoLeaveAnimation() {
+		gsap.to( '.info__load-panel', { duration: .8, x: '600%', ease: 'power4.out', delay: .4 });
+		gsap.to( '.info__stats-panel', { duration: .8, x: '150%', ease: 'power4.out', delay: .4 });
+		gsap.to( '.graph-panel > * > * ', { duration: .6, opacity: 1, ease: 'none', delay: -0.2, stagger: .05, });
+	}
 	
 	return { 
 		secondsToMinutesAndSeconds, 
@@ -406,6 +443,11 @@ const UTIL = (function () {
 		sumArray,
 		series,
 		smoothArray,
+		pageLoadAnimation,
+		homeLeaveAnimation,
+		infoLoadAnimation,
+		infoLeaveAnimation,
+		pageReloadAnimation,
 		PerformanceStat,
 		TrackPoint,
 		performanceList,

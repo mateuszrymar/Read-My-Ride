@@ -2,7 +2,7 @@ import "../node_modules/leaflet/dist/leaflet.js";
 import "../node_modules/leaflet/dist/leaflet.css";
 import "../node_modules/chartist/dist/index.js";
 import "../node_modules/chartist/dist/index.css";
-import { gsap } from "../node_modules/gsap/dist/gsap";
+import { gsap } from "../node_modules/gsap/dist/gsap.min.js";
 import "./styles.css";
 import './images/Background-mobile-small.jpg';
 import './images/favicon.ico';
@@ -58,6 +58,7 @@ const APP = (function () {
 	let trackPointObjects = [];
 	let userWeight = 70;
 	let bikeWeight = 12;
+	
 
 	UTIL.StateManager.getStateManager(); // Initialization.
 	
@@ -141,7 +142,7 @@ const APP = (function () {
 				} else {
 					isUploadValid = true;
 					console.log('File is valid.');
-					homeLeaveAnimation();
+					UTIL.homeLeaveAnimation();
 					const reader = new FileReader();
 					gpxFileSize = gpxFile.size;
 
@@ -160,7 +161,7 @@ const APP = (function () {
 
 			async function loadFile(event) {
 				// event.preventDefault();
-				homeLeaveAnimation();
+				UTIL.homeLeaveAnimation();
 				gpxFile = (event.target.href);
 				const response = await fetch(event.target.href);
 				const zippedBlob = await response.blob();
@@ -174,29 +175,9 @@ const APP = (function () {
 		}, isUploadValid)
 	}
 
-	function pageLoadAnimation() {
-		gsap.from( '.header', { duration: .8, x: '150%', ease: 'power4.out' });
-		gsap.from( '.home', { duration: .8, x: '-150%', ease: 'power4.out' });
-		gsap.from( '.home > * > * ', { duration: .4, opacity: 0, ease: 'none', delay: .2, stagger: .05 });
-		$(window).trigger('resize');
-	}
-
-	function homeLeaveAnimation() {
-		gsap.to( '.home', { duration: .8, x: '600%', ease: 'power4.out', delay: .4 });
-		gsap.to( '.home > * > * ', { duration: .6, opacity: 0, ease: 'none', delay: -0.2, stagger: .05, });
-		$(window).trigger('resize');
-	}
-
-	function infoLoadAnimation() {
-		gsap.from( '.info__load-panel', { duration: .8, x: '150%', ease: 'power4.out' });
-		// gsap.from( '.info__stats-panel', { duration: .8, x: '-150%', ease: 'power4.out' });
-		// gsap.to( 'table > * > * ', { duration: 2, opacity: 0, ease: 'none', delay: 2, stagger: .5, color: 'red' });
-		$(window).trigger('resize');
-	}
 
 	init();
-	pageLoadAnimation();
-	// testAnimation();
+	UTIL.pageLoadAnimation();
 
 	function runCheck(clickedEvent) {
 		clickedEvent.preventDefault();
@@ -218,7 +199,7 @@ const APP = (function () {
 				INFO.createPolyline( trackPointObjects );
 				stats = INFO.calculateStats( trackPointObjects, gpxFileSize );
 				UTIL.StateManager.setState('info_baseState');
-				infoLoadAnimation();
+				UTIL.infoLoadAnimation();
 			}
 		})
 		.then(() => {
