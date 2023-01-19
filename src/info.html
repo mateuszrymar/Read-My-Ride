@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+  
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Read my ride</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link rel="stylesheet"href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap">
+
+</head>
+
+<body data-barba="wrapper">
+  
+  <div class="transition">
+    <div></div>
+  </div>
+
+  <main class="page__container" data-barba="container" data-barba-namespace="page">
+
+    <header class="header">
+      <h1 class="header__text">read my ride</h1>
+      <p class="header__description medium-text">This tool analyzes your rides.</p>
+    </header>
+       
+    <main class="info" style="display:flex">
+  
+      <aside class="info__load-panel  card  card--dark">
+        <div class="load__group  input-group">
+          <a class="load__link" data-barba-prevent>
+            <button class="load__button  button  button--dark">+</button>
+          </a>
+          <a data-barba-prevent>
+            <span class="load__text  text  large-text  text--lighter">Load another ride</span>
+          </a>
+        </div>  
+      </aside>
+  
+      <main class="info__stats-panel">
+  
+        <article id="map" class="stats__map  card">
+        </article>
+  
+        <aside class="stats__stats  card  scrollable">
+          <div class="stats">
+            <h3 class="stats__header  xl-text">Statistics</h3>
+            <table class="stats__table  medium-text" id="stats__table">
+              <tr>
+                <td>Distance:</td>
+                <td><b>00.00</b> km</td>
+              </tr>
+              <tr>
+                <td>Moving time:</td>
+                <td><b>0:00:00</b></td>
+              </tr>
+              <tr>
+                <td>Total time:</td>
+                <td><b>0:00:00</b></td>
+              </tr>
+              <tr>
+                <td>Avg. speed:</td>
+                <td><b>0</b> km/h</td>
+              </tr>
+              <tr>
+                <td>Max speed:</td>
+                <td><b>0</b> km/h</td>
+              </tr>
+              <tr>
+                <td>Elev. Gain:</td>
+                <td><b>0</b> m</td>
+              </tr>
+              <tr>
+                <td>Elev. Loss:</td>
+                <td><b>0</b> m</td>
+              </tr>
+              <tr>
+                <td>Avg. gradient:</td>
+                <td><b>0</b> %</td>
+              </tr>
+              <tr>
+                <td>Max. gradient:</td>
+                <td><b>0</b> %</td>
+              </tr>
+            </table>
+            <br>
+          </div>
+  
+          <div class="stats__power">
+            <h3 class="power__header  large-text">Power info</h3>
+            <div class="power__input-box  card--inner">
+              <form class="power__input  input-group">
+                <span class="power__your-weight-label  label  medium-text">Your weight:</span>
+                <input type="number" class="power__your-weight-input  text  large-text  text--lighter"></input>
+                <span class="power__your-weight-label  label  medium-text">kg</span>
+              </form>  
+              <form class="power__input  input-group">
+                <span class="power__bike-weight-label  label  medium-text">Bike weight:</span>
+                <input type="number" class="power__bike-weight-input  text  large-text  text--lighter"></input>
+                <span class="power__your-weight-label  label  medium-text">kg</span>
+                <button type="submit" class="power__weight-submit  button  zoom">+</button>                
+              </form>
+            </div>
+            <table class="power__table  medium-text">
+              <tr>
+                <td>Avg. power:</td>
+                <td><b>0</b> W</td>
+              </tr>
+              <tr>
+                <td>Energy burnt:</td>
+                <td><b>0</b> kCal</td>
+              </tr>
+            </table>
+          </div>
+        </aside>
+  
+        <aside class="graph-panel  card  scrollable">
+          <article class="graph__elevation  card--inner">
+            <h4 class="graph__header  medium-text  text--lighter">Elevation</h4>
+            <div class="ct-chart ct-golden-section" id="graph__elevation">
+              <span class="graph__max-elev-label  medium-text">800m</span>
+            </div>
+          </article>
+          <article class="graph__speed  card--inner">
+            <h4 class="graph__header  medium-text  text--lighter">Speed</h4>
+            <div class="ct-chart ct-golden-section" id="graph__speed">
+              <span class="graph__max-speed-label  medium-text">45kph</span>
+            </div>
+          </article>
+          <article class="graph__gradients  card--inner">
+            <h4 class="graph__header  medium-text  text--lighter">Gradients by time</h4>
+            <div class="ct-chart ct-minor-third  small-text" id="graph__gradients">
+            </div>
+          </article>
+        </aside>
+  
+  
+      </main>
+      
+    </main>
+    
+    <footer class="footer" style="display: none;">
+      <a href="https://github.com/mateuszrymar" class="footer__webdesign-credit  medium-underlined-text"><p>webdesign: Mateusz Rymar</p></a>
+      <a href="http://koprivakart.com/" class="footer__photo-credit  medium-underlined-text"><p>photo: Jan Kopřiva</p></a>
+    </footer>
+
+  </main>  
+</body>
+</html>

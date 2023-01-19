@@ -81,20 +81,33 @@ const APP = (function () {
 
 			transitions: [{
 
-				async leave(data) {
-					const done = this.async();
-					pageTransition();
-					await delay(1500);
-					done();
+				name: 'opacity-transition',
+				leave(data) {
+					return gsap.to(data.current.container, {
+						opacity: 0
+					});
 				},
+				enter(data) {
+					return gsap.from(data.next.container, {
+						opacity: 0
+					});
+				}
 
-				async enter(data) {
-					contentAnimation();
-				},
+				// async leave(data) {
+				// 	const done = this.async();
+				// 	pageTransition();
+				// 	await delay(1500);
+				// 	done();
+				// },
 
-				async once(data) {
-					contentAnimation();
-				},
+				// async enter(data) {
+				// 	contentAnimation();
+				// },
+
+				// async once(data) {
+				// 	console.log('once');
+				// 	contentAnimation();
+				// },
 
 			}]
 		});
@@ -102,12 +115,18 @@ const APP = (function () {
 	});
 
 	function pageTransition() {
-		let timeLine = gsap.timeline();
+		console.log('page transition runs.')
+		var timeLine = gsap.timeline();
 		timeLine.to( 'div.transition div', { duration: .5, scaleY: 1, transformOrigin: 'bottom left', } )
 		timeLine.to( 'div.transition div', { duration: .5, scaleY: 0, transformOrigin: 'bottom left', } )
 	}
 
-	function contentAnimation() {}
+	function contentAnimation() {
+		console.log('content animation runs.')
+		// var timeLine = gsap.timeline();
+		// timeLine.from( '.left', { duration: 1.5, translateY: 50, opacity: 0 }, 'delay: 2')
+		// timeLine.to( '.home', { clipPath:' polygon(10% 0, 100% 0%, 90% 100%, 0% 100%)' },  'delay: 2');
+	}
 
 	const init = () => {
 			

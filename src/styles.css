@@ -146,6 +146,7 @@ a {
 
 /* Header */
 .header {
+  position: fixed;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -208,6 +209,7 @@ a {
   transform: scale(1.1);
   transition: transform .2s;
   transition-timing-function: ease;
+  box-shadow: 0 0 8px var(--green-20);
 }
 
 /* Home Page Elements */
@@ -216,8 +218,7 @@ a {
   width: 16.5625rem;
   height: auto;
   border-radius: 2.625rem;
-  clip-path: polygon(10% 0, 100% 0%, 90% 100%, 0% 100%);
-
+  /* clip-path: polygon(10% 100%, 100% 100%, 90% 100%, 0% 100%); */
 }
 .home__upload{
   display: grid;
