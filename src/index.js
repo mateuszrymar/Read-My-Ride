@@ -2,13 +2,14 @@ import "../node_modules/leaflet/dist/leaflet.js";
 import "../node_modules/leaflet/dist/leaflet.css";
 import "../node_modules/chartist/dist/index.js";
 import "../node_modules/chartist/dist/index.css";
+import { gsap } from "../node_modules/gsap/dist/gsap";
 import "./styles.css";
 import './images/Background-mobile-small.jpg';
 import './images/favicon.ico';
 import './images/mapicon.svg';
 
-import { HOME } from './modules/home.js';
 import { INFO } from './modules/info.js';
+import { HOME } from './modules/home.js';
 import { UTIL } from './modules/utilities.js';
 import { getZip } from './modules/zipreader.js';
 import zipFile_1 from './gpx_examples/short-optimized.zip';
@@ -140,6 +141,7 @@ const APP = (function () {
 				} else {
 					isUploadValid = true;
 					console.log('File is valid.');
+					homeLeaveAnimation();
 					const reader = new FileReader();
 					gpxFileSize = gpxFile.size;
 
@@ -150,7 +152,7 @@ const APP = (function () {
 					reader.addEventListener("load", () => {
 						// this will then display a text file
 						// console.log(reader.result);
-						gpxFileContent = reader.result;
+						gpxFileContent = reader.result;						
 						resolve( 'File is valid.' );
 					}, false);
 				}
@@ -158,6 +160,7 @@ const APP = (function () {
 
 			async function loadFile(event) {
 				// event.preventDefault();
+				homeLeaveAnimation();
 				gpxFile = (event.target.href);
 				const response = await fetch(event.target.href);
 				const zippedBlob = await response.blob();
@@ -171,14 +174,37 @@ const APP = (function () {
 		}, isUploadValid)
 	}
 
+	function pageLoadAnimation() {
+		gsap.from( '.header', { duration: .8, x: '150%', ease: 'power4.out' });
+		gsap.from( '.home', { duration: .8, x: '-150%', ease: 'power4.out' });
+		gsap.from( '.home > * > * ', { duration: .4, opacity: 0, ease: 'none', delay: .2, stagger: .05 });
+		$(window).trigger('resize');
+	}
+
+	function homeLeaveAnimation() {
+		gsap.to( '.home', { duration: .8, x: '600%', ease: 'power4.out', delay: .4 });
+		gsap.to( '.home > * > * ', { duration: .6, opacity: 0, ease: 'none', delay: -0.2, stagger: .05, });
+		$(window).trigger('resize');
+	}
+
+	function infoLoadAnimation() {
+		gsap.from( '.info__load-panel', { duration: .8, x: '150%', ease: 'power4.out' });
+		// gsap.from( '.info__stats-panel', { duration: .8, x: '-150%', ease: 'power4.out' });
+		// gsap.to( 'table > * > * ', { duration: 2, opacity: 0, ease: 'none', delay: 2, stagger: .5, color: 'red' });
+		$(window).trigger('resize');
+	}
+
 	init();
+	pageLoadAnimation();
+	// testAnimation();
 
 	function runCheck(clickedEvent) {
 		clickedEvent.preventDefault();
 		trackPointObjects = [];
-
+		
 		validateUpload(clickedEvent)
 		.then (() => {			
+			// homeLeaveAnimation();			
 			trackPointObjects = HOME.processGpx( gpxFileContent, gpxFileSize );
 			
 			// And optionally, display a loading screen in the meantime.
@@ -192,6 +218,7 @@ const APP = (function () {
 				INFO.createPolyline( trackPointObjects );
 				stats = INFO.calculateStats( trackPointObjects, gpxFileSize );
 				UTIL.StateManager.setState('info_baseState');
+				infoLoadAnimation();
 			}
 		})
 		.then(() => {

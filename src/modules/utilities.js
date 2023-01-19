@@ -83,6 +83,12 @@ const UTIL = (function () {
 
 		return smoothNumbers;
 	}	
+
+	function sleep(ms) {
+		return new Promise(
+			resolve => setTimeout(resolve, ms)
+		);
+	}
 	
 	class PerformanceStat {
 		constructor(name, value) {
