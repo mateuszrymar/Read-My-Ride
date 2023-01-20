@@ -406,20 +406,20 @@ const UTIL = (function () {
 	function pageLoadAnimation() {
 		console.log('page load');
 
-		gsap.from( '.header', { duration: .8, x: '150%', ease: 'power4.out' });
-		gsap.from( '.home', { duration: .8, x: '-150%', ease: 'power4.out' });
-		gsap.from( '.home > * > :not(.examples__loadbar) ', { duration: .4, opacity: 0, ease: 'none', delay: .2, stagger: .05 });
+		gsap.fromTo( '.header',{ x: '150%' }, { duration: .8, x: '0', ease: 'power4.out' });
+		gsap.fromTo( '.home', { x: '-150%' }, { duration: .8, x: '0', ease: 'power4.out' });
+		gsap.fromTo( '.home > * > :not(.examples__loadbar) ', { opacity: 0 }, { duration: .4, opacity: 1, ease: 'none', delay: .2, stagger: .05 });
 
 	}
 
 	function pageReloadAnimation() {
 		console.log('page reload');
 		// Reset
-		gsap.to( '.home', {x: 0, delay: -2 });
+		// gsap.to( '.home', {x: 0, delay: -2 });
 
 		//Animation
 		gsap.to( '.home > * > :not(.examples__loadbar) ', { opacity: 0, delay: -.2 });
-		gsap.from( '.home', { duration: .8, x: '-150%', ease: 'power4.out' });
+		gsap.fromTo( '.home', { x: '-150%' }, { duration: .8, x: '0', ease: 'power4.out' });
 		gsap.to( '.home > * > :not(.examples__loadbar) ', { duration: .4, opacity: 1, ease: 'none', delay: .2, stagger: .05 });
 		gsap.to( '.loadbar', { opacity: 0, delay: -2 } );
 		gsap.to( '.loadbar-status', { transform: 'scaleX(0)', delay: -2 } );
@@ -430,8 +430,8 @@ const UTIL = (function () {
 	function homeLeaveAnimation() {
 		console.log('home leave');
 		//Reset
-		gsap.to( '.info__load-panel', {x: 0, delay: -2 });
-		gsap.to( '.info__stats-panel', {x: 0, delay: -2 });
+		// gsap.to( '.info__load-panel', {x: 0, delay: -2 });
+		// gsap.to( '.info__stats-panel', {x: 0, delay: -2 });
 
 		//Animation
 		gsap.to( '.home > * > :not(.examples__loadbar) ', { duration: .6, opacity: 0, ease: 'none', delay: -0.2, stagger: .1, });
@@ -443,11 +443,13 @@ const UTIL = (function () {
 
 	function infoLoadAnimation() {
 		console.log('info load');
+		
+			gsap.fromTo( '.info__load-panel', {x: '-600%'}, { duration: .8, x: '0', ease: 'power4.out', delay: .2 });
+			gsap.fromTo( '.info__stats-panel',{x: '-150%'}, { duration: .8, x: '0', ease: 'power4.out', delay: .2 });
+			gsap.from( '.stats__stats > * > * ', { duration: 1, opacity: 0, ease: 'power4.out', delay: .5, stagger: .1 });
+			gsap.from( '.graph-panel > * > * ', { duration: 1, opacity: 0, ease: 'power4.out', delay: .5, stagger: .1 });
+		
 
-		gsap.from( '.info__load-panel', { duration: .8, x: '-600%', ease: 'power4.out', delay: .2 });
-		gsap.from( '.info__stats-panel', { duration: .8, x: '-150%', ease: 'power4.out', delay: .2 });
-		gsap.from( '.stats__stats > * > * ', { duration: 1, opacity: 0, ease: 'power4.out', delay: .5, stagger: .1 });
-		gsap.from( '.graph-panel > * > * ', { duration: 1, opacity: 0, ease: 'power4.out', delay: .5, stagger: .1 });
 	}
 
 	function infoLeaveAnimation() {
