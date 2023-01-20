@@ -405,40 +405,56 @@ const UTIL = (function () {
 
 	function pageLoadAnimation() {
 		console.log('page load');
+		var pageLoadTimeline = gsap.timeline({});
 
-		gsap.fromTo( '.header',{ x: '150%' }, { duration: .8, x: '0', ease: 'power4.out' });
-		gsap.fromTo( '.home', { x: '-150%' }, { duration: .8, x: '0', ease: 'power4.out' });
-		gsap.fromTo( '.home > * > :not(.examples__loadbar) ', { opacity: 0 }, { duration: .4, opacity: 1, ease: 'none', delay: .2, stagger: .05 });
+		pageLoadTimeline.fromTo( '.header',{ x: '150%' }, { duration: .8, x: '0', ease: 'power4.out' }, 0);
+		pageLoadTimeline.fromTo( '.home', { x: '-150%' }, { duration: .8, x: '0', ease: 'power4.out' }, 0);
+		pageLoadTimeline.fromTo( '.home > * > :not(.examples__loadbar) ',
+			 { opacity: 0 }, { duration: .4, opacity: 1, ease: 'none', delay: .2, stagger: .05 }, 0);
 
 	}
 
 	function pageReloadAnimation() {
+		// TODO: this function may be unnecessary. try to use pageLoad instead.
 		console.log('page reload');
-		// Reset
-		// gsap.to( '.home', {x: 0, delay: -2 });
+		var pageReloadTimeline = gsap.timeline({});
 
-		//Animation
-		gsap.to( '.home > * > :not(.examples__loadbar) ', { opacity: 0, delay: -.2 });
-		gsap.fromTo( '.home', { x: '-150%' }, { duration: .8, x: '0', ease: 'power4.out' });
-		gsap.to( '.home > * > :not(.examples__loadbar) ', { duration: .4, opacity: 1, ease: 'none', delay: .2, stagger: .05 });
-		gsap.to( '.loadbar', { opacity: 0, delay: -2 } );
-		gsap.to( '.loadbar-status', { transform: 'scaleX(0)', delay: -2 } );
-
-
+		pageReloadTimeline.to( '.home > * > :not(.examples__loadbar) ', { opacity: 0, delay: -.2 }, 0);
+		pageReloadTimeline.fromTo( '.home', { x: '-150%' }, { duration: .8, x: '0', ease: 'power4.out' }, 0);
+		pageReloadTimeline.to( '.home > * > :not(.examples__loadbar) ',
+			 { duration: .4, opacity: 1, ease: 'none', delay: .2, stagger: .05 }, 0 );
+		pageReloadTimeline.to( '.loadbar', { opacity: 0, delay: -2 }, 0 );
+		pageReloadTimeline.to( '.loadbar-status', { transform: 'scaleX(0)', delay: -2 }, 0 );
 	}
+
+	// This timeline needts to be in global scope, because we may need to kill it if an error occurs:
+	var homeLeaveTimeline = gsap.timeline({});
 
 	function homeLeaveAnimation() {
 		console.log('home leave');
-		//Reset
-		// gsap.to( '.info__load-panel', {x: 0, delay: -2 });
-		// gsap.to( '.info__stats-panel', {x: 0, delay: -2 });
 
 		//Animation
-		gsap.to( '.home > * > :not(.examples__loadbar) ', { duration: .6, opacity: 0, ease: 'none', delay: -0.2, stagger: .1, });
-		gsap.to( '.stats__stats > * > * ', {opacity: 1, delay: -2 });
-		gsap.to( '.graph-panel > * > * ', {opacity: 1, delay: -2 });
-		gsap.to( '.loadbar', { opacity: 1, duration: 0.4, ease: 'power4.out', delay: 0.4} );
-		gsap.to( '.loadbar-status', { transform: 'scaleX(1)', ease: 'none', duration: 2.5, delay: 0} );
+		homeLeaveTimeline.fromTo( '.home > * > :not(.examples__loadbar) ', 
+			{ opacity: 1},
+			{ duration: .6, opacity: 0, ease: 'none', delay: -0.2, stagger: .1, }, 0 );
+		homeLeaveTimeline.fromTo( '.stats__stats > * > * ',
+			{ opacity: 0 },
+			{ opacity: 1, delay: -2 }, 0 );
+		homeLeaveTimeline.fromTo( '.graph-panel > * > * ',
+			{ opacity: 0},
+			{ opacity: 1, delay: -2 }, 0 );
+		homeLeaveTimeline.fromTo( '.loadbar',
+			{ opacity: 0, delay: 0 },
+			{ opacity: 1, duration: 0.4, ease: 'power4.out', delay: 0},  );
+		homeLeaveTimeline.fromTo( '.loadbar-status',
+			{ transform: 'scaleX(0)',},
+			{ transform: 'scaleX(1)', ease: 'none', duration: 2.5, delay: 0},  );
+	}
+
+	function homeLeaveAnimationError() {
+		console.log(homeLeaveTimeline);
+		homeLeaveTimeline.pause();
+		homeLeaveTimeline.revert();
 	}
 
 	function infoLoadAnimation() {
@@ -448,8 +464,6 @@ const UTIL = (function () {
 			gsap.fromTo( '.info__stats-panel',{x: '-150%'}, { duration: .8, x: '0', ease: 'power4.out', delay: .2 });
 			gsap.from( '.stats__stats > * > * ', { duration: 1, opacity: 0, ease: 'power4.out', delay: .5, stagger: .1 });
 			gsap.from( '.graph-panel > * > * ', { duration: 1, opacity: 0, ease: 'power4.out', delay: .5, stagger: .1 });
-		
-
 	}
 
 	function infoLeaveAnimation() {
@@ -458,6 +472,7 @@ const UTIL = (function () {
 		gsap.to( '.info__stats-panel', { duration: .8, x: '150%', ease: 'power4.out', delay: .4 });
 		gsap.to( '.graph-panel > * > * ', { duration: .6, opacity: 1, ease: 'none', delay: -0.2, stagger: .05, });
 	}
+
 	
 	return { 
 		secondsToMinutesAndSeconds, 
@@ -467,6 +482,7 @@ const UTIL = (function () {
 		smoothArray,
 		pageLoadAnimation,
 		homeLeaveAnimation,
+		homeLeaveAnimationError,
 		infoLoadAnimation,
 		infoLeaveAnimation,
 		pageReloadAnimation,

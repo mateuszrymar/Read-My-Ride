@@ -303,7 +303,7 @@ a {
 }
 .examples__loadbar{
   position: absolute;
-  bottom: 4.75rem;
+  bottom: 4.25rem;
 }
 .loadbar {
   width: calc(var(--card-width) - 1rem - 4rem);

@@ -184,13 +184,14 @@ const APP = (function () {
 		trackPointObjects = [];
 		
 		validateUpload(clickedEvent)
-		.then (() => {			
-			// homeLeaveAnimation();			
+		.then (() => {
+			console.log('this shouldn`t fire')
 			trackPointObjects = HOME.processGpx( gpxFileContent, gpxFileSize );
 			
 			// And optionally, display a loading screen in the meantime.
 		})
 		.then (() => {
+			// UTIL.homeLeaveAnimation();			
 			try {
 				INFO.initMap();
 			} catch {

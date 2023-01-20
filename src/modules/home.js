@@ -129,9 +129,13 @@ const HOME = (function () {
 				[ `${missingInfoNames} data is missing in your GPX.`, ],
 			);
 
+			UTIL.homeLeaveAnimationError();
+
 			UTIL.StateManager.setState('home_gpxDataError');
 			document.getElementsByClassName("upload__error")[0].innerHTML = 
 					`${missingInfoNames} data is missing in your GPX.<br>Please provide a valid file.`;
+			
+			
 
 
 			throw new Error(`${missingInfoNames} data is missing in your GPX. Please provide a valid file.`);
