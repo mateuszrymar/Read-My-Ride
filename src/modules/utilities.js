@@ -414,7 +414,10 @@ const UTIL = (function () {
 
 	function pageReloadAnimation() {
 		console.log('page reload');
+		// Reset
+		gsap.to( '.home', {x: 0, delay: -2 });
 
+		//Animation
 		gsap.to( '.home > * > :not(.examples__loadbar) ', { opacity: 0, delay: -.2 });
 		gsap.from( '.home', { duration: .8, x: '-150%', ease: 'power4.out' });
 		gsap.to( '.home > * > :not(.examples__loadbar) ', { duration: .4, opacity: 1, ease: 'none', delay: .2, stagger: .05 });
@@ -426,18 +429,16 @@ const UTIL = (function () {
 
 	function homeLeaveAnimation() {
 		console.log('home leave');
-
-		// gsap.to( '.home', { duration: .8, x: '600%', ease: 'power4.out', delay: .4 });
-		gsap.to( '.home > * > :not(.examples__loadbar) ', { duration: .6, opacity: 0, ease: 'none', delay: -0.2, stagger: .1, });
+		//Reset
 		gsap.to( '.info__load-panel', {x: 0, delay: -2 });
 		gsap.to( '.info__stats-panel', {x: 0, delay: -2 });
+
+		//Animation
+		gsap.to( '.home > * > :not(.examples__loadbar) ', { duration: .6, opacity: 0, ease: 'none', delay: -0.2, stagger: .1, });
 		gsap.to( '.stats__stats > * > * ', {opacity: 1, delay: -2 });
 		gsap.to( '.graph-panel > * > * ', {opacity: 1, delay: -2 });
 		gsap.to( '.loadbar', { opacity: 1, duration: 0.4, ease: 'power4.out', delay: 0.4} );
-		// gsap.to( '.loadbar-status', { opacity: 1, delay: -2 } );
-		gsap.to( '.loadbar-status', { transform: 'scaleX(1)', ease: 'none', duration: 2.5, delay: 0} )
-
-
+		gsap.to( '.loadbar-status', { transform: 'scaleX(1)', ease: 'none', duration: 2.5, delay: 0} );
 	}
 
 	function infoLoadAnimation() {
@@ -454,8 +455,6 @@ const UTIL = (function () {
 		gsap.to( '.info__load-panel', { duration: .8, x: '600%', ease: 'power4.out', delay: .4 });
 		gsap.to( '.info__stats-panel', { duration: .8, x: '150%', ease: 'power4.out', delay: .4 });
 		gsap.to( '.graph-panel > * > * ', { duration: .6, opacity: 1, ease: 'none', delay: -0.2, stagger: .05, });
-		// gsap.to( '.examples__loadbar', { opacity: 0, delay: -2 } );
-
 	}
 	
 	return { 
