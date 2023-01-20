@@ -282,13 +282,21 @@ a {
   border-radius: 0.8125rem;
   z-index: 1;
 }
-.thumbnail{
+.thumbnail, .load-btn-icon{
   object-fit: cover;
   position: relative;
   width: 1.75rem;
   height: 1.75rem;
   z-index: 10;
   pointer-events: none;
+}
+.load-btn-icon{
+  fill: var(--grey-40);
+  object-fit: contain;
+  transform: scale(0.8);
+}
+.load__button:hover > svg {
+  fill: var(--grey-10);
 }
 .example-name{
   pointer-events: none;
