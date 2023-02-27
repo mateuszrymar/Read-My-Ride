@@ -1,4 +1,4 @@
-## Live: https://mateuszrymar.github.io/Drone-Hunter/
+## Live: https://readmyride.netlify.app/
 
 ## What does this app do?
   Nowadays many cyclists use tracking apps (for example: [Strava](https://www.strava.com/)) to record their rides. 
